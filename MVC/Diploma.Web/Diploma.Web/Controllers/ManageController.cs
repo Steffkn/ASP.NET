@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Diploma.Web.Models;
+using Diploma.Web.App_Start;
 
 namespace Diploma.Web.Controllers
 {
