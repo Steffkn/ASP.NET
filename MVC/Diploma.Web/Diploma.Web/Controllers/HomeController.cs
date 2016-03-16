@@ -1,15 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-
-namespace Diploma.Web.Controllers
+﻿namespace Diploma.Web.Controllers
 {
+    using System.Web.Mvc;
+    using static Diploma.Web.AutofacConfig;
+
     public class HomeController : Controller
     {
+        private IService service;
+
+        public HomeController(IService service)
+        {
+            this.service = service;
+        }
+
         public ActionResult Index()
         {
+            this.service.Work();
             return View();
         }
 
