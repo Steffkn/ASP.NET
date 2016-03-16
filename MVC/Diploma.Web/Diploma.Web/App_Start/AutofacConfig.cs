@@ -1,10 +1,12 @@
 ﻿namespace Diploma.Web
 {
+    using System.Data.Entity;
     using System.Reflection;
     using System.Web.Mvc;
-    using System.Diagnostics;
     using Autofac;
     using Autofac.Integration.Mvc;
+    using Models;
+    using Diploma.Common;
 
     public static class AutofacConfig
     {
@@ -38,7 +40,13 @@
 
         private static void RegisterServices(ContainerBuilder builder)
         {
-            // builder.Register(x => new Service()).As<IService>().InstancePerRequest();
+            builder.Register(x => new ApplicationDbContext())
+                .As<DbContext>()
+                .InstancePerRequest();
+
+            builder.RegisterGeneric(typeof(DbRepositoryT<>))
+                .As(typeof(IDbRepositoryT<>))
+                .InstancePerRequest();
         }
     }
 }
