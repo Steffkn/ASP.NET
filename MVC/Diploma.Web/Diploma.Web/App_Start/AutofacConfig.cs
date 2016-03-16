@@ -38,21 +38,7 @@
 
         private static void RegisterServices(ContainerBuilder builder)
         {
-            builder.Register(x => new Service())
-                .As<IService>().InstancePerRequest();
-        }
-
-        public interface IService
-        {
-            void Work();
-        }
-
-        public class Service : IService
-        {
-            public void Work()
-            {
-                Trace.Write("I am working");
-            }
+            //builder.Register(x => new Service()).As<IService>().InstancePerRequest();
         }
     }
 }
