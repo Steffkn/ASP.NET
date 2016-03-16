@@ -60,6 +60,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationDbContext.cs" />
+    <Compile Include="Migrations\201603161829245_InitialCreate.cs" />
+    <Compile Include="Migrations\201603161829245_InitialCreate.Designer.cs">
+      <DependentUpon>201603161829245_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -67,6 +72,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Diploma.Common\Diploma.Common.csproj">
+      <Project>{6ade5a07-0a5e-4e13-96f6-3659013fd6a8}</Project>
+      <Name>Diploma.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Diploma.Models\Diploma.Models.csproj">
       <Project>{4151bf7c-4348-402e-8220-0489c2369122}</Project>
       <Name>Diploma.Models</Name>
@@ -76,6 +85,11 @@
     <Analyzer Include="..\..\Diploma.Web\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\Newtonsoft.Json.dll" />
     <Analyzer Include="..\..\Diploma.Web\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\..\Diploma.Web\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201603161829245_InitialCreate.resx">
+      <DependentUpon>201603161829245_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
