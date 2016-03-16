@@ -1,13 +1,12 @@
-﻿using Diploma.Common.Models;
-using System;
-using System.Collections.Generic;
-namespace Diploma.Common
+﻿namespace Diploma.Common
 {
+    using System;
     using System.Data.Entity;
     using System.Linq;
+    using Diploma.Common.Models;
 
     // TODO: Why BaseModel<int> instead BaseModel<TKey>?
-    public class DbRepositoryT<T> : IDbRepository<T>
+    public class DbRepositoryT<T> : IDbRepositoryT<T>
         where T : BaseModel<int>
     {
         public DbRepositoryT(DbContext context)

@@ -38,7 +38,7 @@
 
         private static void RegisterServices(ContainerBuilder builder)
         {
-            //builder.Register(x => new Service()).As<IService>().InstancePerRequest();
+            // builder.Register(x => new Service()).As<IService>().InstancePerRequest();
         }
     }
 }
