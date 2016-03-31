@@ -1,0 +1,25 @@
+﻿@model Blog.Web.ViewModels.Post.PostViewModel
+@{
+    ViewBag.Title = "ById";
+}
+<div class="container bg-primary">
+    <div class="jumbotron">
+        <ul class="list-group text-primary">
+            <li>Category: @Model.Category</li>
+            <li>Greated: @Model.CreatedOn</li>
+            <li>Author: @Model.AuthorID</li>
+        </ul>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-3">
+            <img src="@Model.ImageURL" alt="@Model.ImageURL" class="img-thumbnail" />
+        </div>
+        <div class="col-xs-9">
+            @Model.Content
+        </div>
+    </div>
+    <div class="row">
+        &nbsp;
+    </div>
+</div>
