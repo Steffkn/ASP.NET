@@ -20,6 +20,7 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home", new { area = string.Empty }, null)</li>
+                    <li>@Html.ActionLink("AdminPanel", "Index", "Administration", new { area = "Administration" }, null)</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

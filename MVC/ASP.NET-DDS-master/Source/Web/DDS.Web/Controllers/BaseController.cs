@@ -2,8 +2,8 @@
 {
     using System.Web.Mvc;
     using AutoMapper;
-    using Infrastructure.Mapping;
     using DDS.Services.Web;
+    using Infrastructure.Mapping;
 
     public abstract class BaseController : Controller
     {

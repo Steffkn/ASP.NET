@@ -1,7 +1,8 @@
 ﻿namespace DDS.Data.Models
 {
-    using DDS.Data.Common.Models;
     using System.Collections.Generic;
+
+    using DDS.Data.Common.Models;
 
     public class Tag : BaseModel<int>
     {

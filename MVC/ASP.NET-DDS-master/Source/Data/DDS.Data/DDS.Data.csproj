@@ -60,13 +60,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationDbContext.cs" />
-    <Compile Include="Migrations\201604191645471_Initial.cs" />
-    <Compile Include="Migrations\201604191645471_Initial.Designer.cs">
-      <DependentUpon>201604191645471_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201604191654411_AddBaseTables.cs" />
-    <Compile Include="Migrations\201604191654411_AddBaseTables.Designer.cs">
-      <DependentUpon>201604191654411_AddBaseTables.cs</DependentUpon>
+    <Compile Include="Migrations\201605131115434_Initial.cs" />
+    <Compile Include="Migrations\201605131115434_Initial.Designer.cs">
+      <DependentUpon>201605131115434_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -100,11 +96,8 @@
     </AdditionalFiles>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201604191645471_Initial.resx">
-      <DependentUpon>201604191645471_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201604191654411_AddBaseTables.resx">
-      <DependentUpon>201604191654411_AddBaseTables.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201605131115434_Initial.resx">
+      <DependentUpon>201605131115434_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,14 +1,12 @@
 ﻿namespace DDS.Web
 {
     using System;
-
+    using DDS.Data;
+    using DDS.Data.Models;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
     using Microsoft.AspNet.Identity.Owin;
     using Microsoft.Owin;
-
-    using DDS.Data;
-    using DDS.Data.Models;
 
     // Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.
     public class ApplicationUserManager : UserManager<ApplicationUser>
@@ -65,6 +63,4 @@
             return manager;
         }
     }
-
-    // Configure the application sign-in manager which is used in this application.
 }

@@ -1,29 +1,34 @@
 ﻿namespace DDS.Web.Controllers
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
-
+    using DDS.Data.Models;
+    using DDS.Web.ViewModels.Account;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.Owin;
     using Microsoft.Owin.Security;
-
-    using DDS.Data.Models;
-    using DDS.Web.ViewModels.Account;
-
+    using Services.Data;
+    using Services.Data.Interfaces;
+    using Common;
     [Authorize]
     public class AccountController : BaseController
     {
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
+        private readonly IStudentsService students;
+
         private ApplicationSignInManager signInManager;
 
         private ApplicationUserManager userManager;
 
-        public AccountController()
+        public AccountController(
+            IStudentsService students)
         {
+            this.students = students;
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
@@ -170,10 +175,27 @@
         {
             if (this.ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await this.UserManager.CreateAsync(user, model.Password);
+                var hasher = new PasswordHasher();
+                var user = new ApplicationUser
+                {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                    PasswordHash = hasher.HashPassword(model.Password),
+                };
+
+                var result = await this.UserManager.UserValidator.ValidateAsync(user);
                 if (result.Succeeded)
                 {
+                    var student = new Student()
+                    {
+                        User = user,
+                        FNumber = model.Student.FNumber
+                    };
+                    this.students.Create(student);
+                    this.userManager.AddToRole(user.Id, GlobalConstants.StudentRoleName);
                     await this.SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771

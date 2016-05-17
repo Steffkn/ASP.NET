@@ -1,9 +1,18 @@
 ﻿namespace DDS.Web.ViewModels.Account
 {
     using System.ComponentModel.DataAnnotations;
+    using Data.Models;
 
     public class RegisterViewModel
     {
+        [Required]
+        [Display(Name = "First name")]
+        public string FirstName { get; set; }
+
+        [Required]
+        [Display(Name = "Last name")]
+        public string LastName { get; set; }
+
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
@@ -19,5 +28,7 @@
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        public Student Student { get; set; }
     }
 }

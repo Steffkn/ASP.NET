@@ -7,13 +7,13 @@ namespace DDS.Data.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class AddBaseTables : IMigrationMetadata
+    public sealed partial class Initial : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddBaseTables));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Initial));
         
         string IMigrationMetadata.Id
         {
-            get { return "201604191654411_AddBaseTables"; }
+            get { return "201605131115434_Initial"; }
         }
         
         string IMigrationMetadata.Source

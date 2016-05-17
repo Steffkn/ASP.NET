@@ -18,6 +18,7 @@ namespace DDS.Data.Migrations
 
         protected override void Seed(DDS.Data.ApplicationDbContext context)
         {
+            const string Name = "Admin";
             const string AdministratorUserName = "admin@admin.com";
             const string AdministratorPassword = AdministratorUserName;
 
@@ -37,7 +38,13 @@ namespace DDS.Data.Migrations
                 // Create admin user
                 var userStore = new UserStore<ApplicationUser>(context);
                 var userManager = new UserManager<ApplicationUser>(userStore);
-                var user = new ApplicationUser { UserName = AdministratorUserName, Email = AdministratorUserName };
+                var user = new ApplicationUser
+                {
+                    UserName = AdministratorUserName,
+                    Email = AdministratorUserName,
+                    FirstName = Name,
+                    LastName = Name
+                };
                 userManager.Create(user, AdministratorPassword);
 
                 // Assign user to admin role
