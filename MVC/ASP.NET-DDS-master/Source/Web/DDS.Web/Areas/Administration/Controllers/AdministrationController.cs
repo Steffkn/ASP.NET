@@ -1,34 +1,31 @@
 ﻿namespace DDS.Web.Areas.Administration.Controllers
 {
-    using System.Collections.Generic;
+    using System;
     using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
     using App_Start;
-    using Data;
+    using Data.Models;
     using DDS.Common;
     using DDS.Web.Controllers;
+    using DDS.Web.Infrastructure;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.Owin;
-    using Services.Data;
     using Services.Data.Interfaces;
     using ViewModels;
-    using DDS.Web.Infrastructure;
 
     [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
     public class AdministrationController : BaseController
     {
         private readonly IAdministrationService users;
 
-        private ApplicationDbContext context = new ApplicationDbContext();
         private ApplicationRoleManager roleManager;
         private ApplicationUserManager userManager;
 
         public AdministrationController(
-            IAdministrationService users,
-            IRolesService roles)
+            IAdministrationService users)
         {
             this.users = users;
         }
@@ -59,6 +56,7 @@
             }
         }
 
+        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
         public ActionResult Index()
         {
             var allusers = this.users.GetAll().ToList();
@@ -126,48 +124,94 @@
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,FirstName,LastName,Email,PhoneNumber,UserName,RolesList")] UserViewModel model)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,FirstName,LastName,Email,PhoneNumber,UserName,RolesValues")] UserViewModel model)
         {
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
+                var userRoles = await this.UserManager.GetRolesAsync(model.Id);
+                var result = await this.UserManager.AddToRolesAsync(model.Id, model.RolesValues.Except(userRoles).ToArray());
 
-                var userRoles = await UserManager.GetRolesAsync(model.Id);
-
-                IList<string> roles = new List<string>();
-
-                foreach (var role in model.RolesList)
+                if (!result.Succeeded)
                 {
-                    if (role.Selected)
+                    this.ModelState.AddModelError("", result.Errors.First());
+                    return this.View();
+                }
+
+                result = await this.UserManager.RemoveFromRolesAsync(model.Id, userRoles.Except(model.RolesValues).ToArray());
+
+                if (!result.Succeeded)
+                {
+                    this.ModelState.AddModelError("", result.Errors.First());
+                    return this.View();
+                }
+
+                var user = this.UserManager.FindById(model.Id);
+                var teacher = this.users.GetAllTeachers().FirstOrDefault(t => t.User.Id == model.Id);
+
+                if (this.UserManager.IsInRole(model.Id, GlobalConstants.TeacherRoleName))
+                {
+                    if (teacher == null)
                     {
-                        roles.Add(role.Text);
+                        user.Teacher = new Teacher()
+                        {
+                            CreatedOn = DateTime.Now,
+                        };
+
+                        this.UserManager.Update(user);
+                    }
+                    else
+                    {
+                        teacher.IsDeleted = false;
+                        teacher.ModifiedOn = DateTime.Now;
+                        teacher.DeletedOn = null;
+                        this.users.EditTeacher(teacher);
+                    }
+                }
+                else
+                {
+                    if (teacher != null)
+                    {
+                        teacher.IsDeleted = true;
+                        teacher.DeletedOn = DateTime.Now;
+                        this.users.EditTeacher(teacher);
                     }
                 }
 
-                //selectedRole = selectedRole ?? new string[] { };
+                var student = this.users.GetAllStudents().FirstOrDefault(t => t.User.Id == model.Id);
 
-                var result = await this.UserManager.AddToRolesAsync(model.Id,
-                    roles.ToArray().Except(userRoles).ToArray());
-
-                if (!result.Succeeded)
+                if (this.UserManager.IsInRole(model.Id, GlobalConstants.StudentRoleName))
                 {
-                    ModelState.AddModelError("", result.Errors.First());
-                    return View();
+                    if (student == null)
+                    {
+                        user.Student = new Student()
+                        {
+                            CreatedOn = DateTime.Now,
+                        };
+
+                        this.UserManager.Update(user);
+                    }
+                    else
+                    {
+                        student.IsDeleted = false;
+                        student.ModifiedOn = DateTime.Now;
+                        student.DeletedOn = null;
+                        this.users.EditStudent(student);
+                    }
+                }
+                else
+                {
+                    if (student != null)
+                    {
+                        student.IsDeleted = true;
+                        student.DeletedOn = DateTime.Now;
+                        this.users.EditStudent(student);
+                    }
                 }
 
-                result = await this.UserManager.RemoveFromRolesAsync(model.Id,
-                    userRoles.Except(roles).ToArray<string>());
-                if (!result.Succeeded)
-                {
-                    ModelState.AddModelError("", result.Errors.First());
-                    return View();
-                }
-
-                //this.userManager.AddToRole(userModel.Id);
-                //db.Entry(userModel).State = EntityState.Modified;
-                //db.SaveChanges();
-                return RedirectToAction("Index");
+                return this.RedirectToAction("Index");
             }
-            return View(model);
+
+            return this.View(model);
         }
 
     }

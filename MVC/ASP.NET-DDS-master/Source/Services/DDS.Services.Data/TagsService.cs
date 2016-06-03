@@ -3,6 +3,7 @@
     using System.Linq;
     using DDS.Data.Common;
     using DDS.Data.Models;
+    using Interfaces;
 
     public class TagsService : ITagsService
     {

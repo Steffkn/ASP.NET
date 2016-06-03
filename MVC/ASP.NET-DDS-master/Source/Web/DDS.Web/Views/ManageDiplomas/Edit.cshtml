@@ -1,0 +1,73 @@
+﻿@model DDS.Web.ViewModels.ManageDiplomas.EditDiplomaViewModel
+
+@{
+    ViewBag.Title = "Редактиране на диплома";
+}
+
+@using (Html.BeginForm("Edit", "ManageDiplomas", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <h2>Редактиране на диплома</h2>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group col-md-10">
+            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-10">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label" })
+            @Html.TextAreaFor(model => model.Description, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-10">
+            @Html.LabelFor(model => model.ExperimentalPart, htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => model.ExperimentalPart, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.ExperimentalPart, "", new { @class = "text-danger" })
+        </div>
+
+        <div id="divlist" class="form-group col-md-10">
+            @Html.LabelFor(model => model.ContentCSV, htmlAttributes: new { @class = "control-label" })
+            <input id="btnAdd" type="button" value="AddRow" onclick="AddRow();" class="btn btn-default" />
+            @{var index = 0;
+            }
+            @if (Model != null)
+            {
+                foreach (var item in Model.ContentCSV)
+                {
+                    @Html.TextBox("ContentCSV[" + index.ToString() + "]", item, new { @class = "form-control" })
+                    index++;
+                }
+            }
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-1 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+                @Html.ActionLink("Cancel", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
+            </div>
+        </div>
+    </div>
+                }
+
+<script>
+    function AddRow() {
+        var lastTBox = $('#divlist :last-child.form-control');
+        var tbName = lastTBox.attr('name');
+        var index = 0;
+        if (tbName != null && tbName.length > 0) {
+            index = tbName.split('ContentCSV[')[1].replace(']', '');
+            index++;
+        }
+        var box = $("<input>");
+        box.attr("id", "ContentCSV[" + index + "]");
+        box.attr("name", "ContentCSV[" + index + "]");
+        box.attr("class", "form-control text-box single-line");
+
+        $('#divlist').append(box);
+    };
+</script>

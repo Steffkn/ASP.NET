@@ -57,6 +57,7 @@
         {
             base.OnModelCreating(modelBuilder);
 
+            // configure Student
             modelBuilder.Entity<Student>()
                         .HasKey(s => s.Id);
 
@@ -65,13 +66,29 @@
                 .HasRequired(s => s.User)
                 .WithOptional(u => u.Student);
 
-            modelBuilder.Entity<Student>()
+            // configure Diploma
+            modelBuilder.Entity<Diploma>()
+                        .HasKey(s => s.Id);
+
+            // Map one-to-many relationship
+            modelBuilder.Entity<Diploma>()
+                .HasRequired<Teacher>(d => d.Teacher)
+                .WithMany(t => t.Diplomas);
+
+            // configure Teacher
+            modelBuilder.Entity<Teacher>()
                         .HasKey(s => s.Id);
 
             // Map one-to-zero or one relationship
             modelBuilder.Entity<Teacher>()
                 .HasRequired(t => t.User)
                 .WithOptional(u => u.Teacher);
+
+            modelBuilder.Entity<Teacher>()
+                .HasMany<Student>(s => s.Students);
+
+            modelBuilder.Entity<Teacher>()
+                .HasMany<Diploma>(s => s.Diplomas);
         }
 
         private void ApplyAuditInfoRules()

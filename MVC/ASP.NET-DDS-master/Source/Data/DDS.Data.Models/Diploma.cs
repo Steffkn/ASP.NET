@@ -17,7 +17,10 @@
 
         public virtual ICollection<Tag> Tags { get; set; }
 
-        public Teacher Leader { get; set; }
+        public int TeacherID { get; set; }
+
+        [ForeignKey("TeacherID")]
+        public virtual Teacher Teacher { get; set; }
 
         public bool ApprovedByLeader { get; set; }
 

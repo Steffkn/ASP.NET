@@ -1,0 +1,84 @@
+﻿@model PagedList.IPagedList<DDS.Web.ViewModels.ManageDiplomas.CommonDiplomaViewModel>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "Details";
+}
+
+@using (Html.BeginForm("Index", "Diploma", FormMethod.Get))
+{
+    <p>
+        Find by name: @Html.TextBox("searchString", ViewBag.CurrentFilter as string)
+        <input type="submit" value="Search" />
+    </p>
+}
+
+@if (TempData["NotFound"] != null && (bool)TempData["NotFound"] == true)
+{
+    <div class="alert alert-warning">
+        <p>Няма намерени дипломи!</p>
+    </div>
+}
+
+<table class="table table-hover table-responsive">
+    <thead>
+        <tr>
+            <th class="">#</th>
+            <th class="col-md-4">
+                @Html.ActionLink("Заглавие", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
+                @* @Html.DisplayNameFor(modelItem => item.Title)*@
+            </th>
+            <th class="col-md-6">
+                @Html.DisplayName("Описание")
+            </th>
+            <th class="col-md-2">
+                @Html.ActionLink("Дата на добавяне", "Index", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
+                @* @Html.DisplayNameFor(model => model.CreatedOn)*@
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int index = 0;}
+        @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @{index++;}
+                    @index
+                    @Html.Hidden("RedirectToDetails", Url.Action("Details", "Home", new { id = item.Id }))
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedOn)
+                </td>
+            </tr>
+                        }
+    </tbody>
+</table>
+
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new
+{
+    page,
+    sortOrder = ViewBag.CurrentSort,
+    currentFilter = ViewBag.CurrentFilter
+}))
+
+@section scripts{
+    <script type="text/javascript">
+        window.onload = function () {
+            $('.table > tbody > tr').on('click', function () {
+                var url = $(this).find("#RedirectToDetails").val();
+                location.href = url;
+            });
+        }
+    </script>
+}

@@ -1,6 +1,6 @@
 ﻿@model DDS.Web.Areas.Administration.ViewModels.UserViewModel
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Edit", "Administration", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
 
@@ -52,12 +52,8 @@
 
         <div class="form-group">
             @Html.Label("Roles", new { @class = "control-label col-md-2" })
-            <span class=" col-md-10">
-                @foreach (var item in Model.RolesList)
-                {
-                    @Html.EditorFor(model => model.RolesList, new { @class = "checkbox-inline" })
-                    @Html.LabelFor(model => model.RolesList, new { @class = "control-label" })
-                }
+            <span class="col-md-10">
+                @Html.ListBox("rolesValues", Model.RolesList)
             </span>
         </div>
 

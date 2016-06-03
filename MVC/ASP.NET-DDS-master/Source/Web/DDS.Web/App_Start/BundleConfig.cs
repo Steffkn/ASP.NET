@@ -16,11 +16,12 @@
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include("~/Scripts/jquery-{version}.js"));
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include("~/Scripts/jquery.validate*"));
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include("~/Scripts/bootstrap.js"));
+            bundles.Add(new ScriptBundle("~/bundles/select2").Include("~/Scripts/select2/select2.full.min.js"));
         }
 
         private static void RegisterStyles(BundleCollection bundles)
         {
-            bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/cerulean.bootstrap.css", "~/Content/site.css"));
+            bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/cerulean.bootstrap.css", "~/Content/Site.css", "~/Content/select2.min.css"));
         }
     }
 }

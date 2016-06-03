@@ -195,7 +195,7 @@
                         FNumber = model.Student.FNumber
                     };
                     this.students.Create(student);
-                    this.userManager.AddToRole(user.Id, GlobalConstants.StudentRoleName);
+                    this.UserManager.AddToRole(user.Id, GlobalConstants.StudentRoleName);
                     await this.SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771

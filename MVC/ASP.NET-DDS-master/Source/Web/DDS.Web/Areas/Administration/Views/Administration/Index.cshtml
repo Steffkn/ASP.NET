@@ -47,15 +47,13 @@
                 <span>
                     @foreach (var role in item.RolesList)
                     {
-                        @*@Html.CheckBox(role.Text, role.Selected, new { @class = "checkbox-inline", @name = "SelectedRole", @id = role.Text + item.Id })*@
-                        @Html.Label(role.Text, new { @class = "control-label" })
+                        @Html.Label(role.Text, new { @class = "control-label " + role.Text })
+                        @Html.Raw(" ")
                     }
                 </span>
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @*@Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })*@
             </td>
         </tr>
     }

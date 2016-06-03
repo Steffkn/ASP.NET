@@ -16,18 +16,32 @@ namespace DDS.Data.Migrations
                         Description = c.String(),
                         ExperimentalPart = c.String(),
                         ContentCSV = c.String(),
+                        TeacherID = c.Int(nullable: false),
                         ApprovedByLeader = c.Boolean(nullable: false),
                         ApprovedByHead = c.Boolean(nullable: false),
                         CreatedOn = c.DateTime(nullable: false),
                         ModifiedOn = c.DateTime(),
                         IsDeleted = c.Boolean(nullable: false),
                         DeletedOn = c.DateTime(),
-                        Leader_Id = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Teachers", t => t.Leader_Id)
-                .Index(t => t.IsDeleted)
-                .Index(t => t.Leader_Id);
+                .ForeignKey("dbo.Teachers", t => t.TeacherID, cascadeDelete: true)
+                .Index(t => t.TeacherID)
+                .Index(t => t.IsDeleted);
+            
+            CreateTable(
+                "dbo.Tags",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        Name = c.String(),
+                        CreatedOn = c.DateTime(nullable: false),
+                        ModifiedOn = c.DateTime(),
+                        IsDeleted = c.Boolean(nullable: false),
+                        DeletedOn = c.DateTime(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .Index(t => t.IsDeleted);
             
             CreateTable(
                 "dbo.Teachers",
@@ -129,20 +143,6 @@ namespace DDS.Data.Migrations
                 .Index(t => t.RoleId);
             
             CreateTable(
-                "dbo.Tags",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        Name = c.String(),
-                        CreatedOn = c.DateTime(nullable: false),
-                        ModifiedOn = c.DateTime(),
-                        IsDeleted = c.Boolean(nullable: false),
-                        DeletedOn = c.DateTime(),
-                    })
-                .PrimaryKey(t => t.Id)
-                .Index(t => t.IsDeleted);
-            
-            CreateTable(
                 "dbo.AspNetRoles",
                 c => new
                     {
@@ -170,8 +170,7 @@ namespace DDS.Data.Migrations
         public override void Down()
         {
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
-            DropForeignKey("dbo.TagDiplomas", "Diploma_Id", "dbo.Diplomas");
-            DropForeignKey("dbo.TagDiplomas", "Tag_Id", "dbo.Tags");
+            DropForeignKey("dbo.Diplomas", "TeacherID", "dbo.Teachers");
             DropForeignKey("dbo.Teachers", "User_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.Students", "Teacher_Id", "dbo.Teachers");
             DropForeignKey("dbo.Students", "User_Id", "dbo.AspNetUsers");
@@ -179,11 +178,11 @@ namespace DDS.Data.Migrations
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.Students", "SelectedDiploma_Id", "dbo.Diplomas");
-            DropForeignKey("dbo.Diplomas", "Leader_Id", "dbo.Teachers");
+            DropForeignKey("dbo.TagDiplomas", "Diploma_Id", "dbo.Diplomas");
+            DropForeignKey("dbo.TagDiplomas", "Tag_Id", "dbo.Tags");
             DropIndex("dbo.TagDiplomas", new[] { "Diploma_Id" });
             DropIndex("dbo.TagDiplomas", new[] { "Tag_Id" });
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
-            DropIndex("dbo.Tags", new[] { "IsDeleted" });
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
@@ -195,17 +194,18 @@ namespace DDS.Data.Migrations
             DropIndex("dbo.Students", new[] { "IsDeleted" });
             DropIndex("dbo.Teachers", new[] { "User_Id" });
             DropIndex("dbo.Teachers", new[] { "IsDeleted" });
-            DropIndex("dbo.Diplomas", new[] { "Leader_Id" });
+            DropIndex("dbo.Tags", new[] { "IsDeleted" });
             DropIndex("dbo.Diplomas", new[] { "IsDeleted" });
+            DropIndex("dbo.Diplomas", new[] { "TeacherID" });
             DropTable("dbo.TagDiplomas");
             DropTable("dbo.AspNetRoles");
-            DropTable("dbo.Tags");
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");
             DropTable("dbo.Students");
             DropTable("dbo.Teachers");
+            DropTable("dbo.Tags");
             DropTable("dbo.Diplomas");
         }
     }

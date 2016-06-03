@@ -1,4 +1,4 @@
-﻿namespace DDS.Services.Data
+﻿namespace DDS.Services.Data.Interfaces
 {
     using System.Linq;
     using DDS.Data.Models;
