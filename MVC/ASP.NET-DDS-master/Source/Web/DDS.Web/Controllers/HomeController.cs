@@ -1,12 +1,10 @@
 ﻿namespace DDS.Web.Controllers
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
-    using System.Web.Script.Serialization;
     using Common;
     using Data.Models;
     using Infrastructure.Mapping;
@@ -15,14 +13,14 @@
     using ViewModels.Home;
     using ViewModels.ManageDiplomas;
     using ViewModels.Shared;
-    using Services.Web;
+    using PagedList;
     public class HomeController : BaseController
     {
         private readonly IDiplomasService diplomas;
         private readonly ITeachersService teachers;
         private readonly ITagsService tags;
 
-        private IQueryable<TagViewModel> AllOptionsList;
+        private IQueryable<TagViewModel> allOptionsList;
 
         private ApplicationUserManager userManager;
 
@@ -34,13 +32,7 @@
             this.diplomas = diplomas;
             this.teachers = teachers;
             this.tags = tags;
-            //var listOfTags = new string[] { "JavaScript", "Java", "Objective-C", "Oracle", "Unix", "Linux", "Windows", "MS Office", "Autodesk", "Bootstrap", "C", "C++", "C#", "CSharp", "CoffeeScript", "SASS", "LESS", "F#" };
-            //foreach (var item in listOfTags)
-            //{
-            //    this.tags.EnsureCategory(item);
-            //}
-
-            this.AllOptionsList = this.GetSelect2Options();
+            this.allOptionsList = this.GetSelect2Options();
         }
 
         public ApplicationUserManager UserManager
@@ -78,8 +70,7 @@
                 return this.RedirectToAction("Index", "Home");
             }
 
-            var user = this.teachers.GetByIdFullObject(diploma.TeacherID)
-                                    .First();
+            var user = this.teachers.GetFullObjectById(diploma.TeacherID);
 
             var result = new DisplayDiplomaViewModel()
             {
@@ -94,8 +85,8 @@
                 ModifiedOn = diploma.ModifiedOn.ToString(),
                 DeletedOn = diploma.DeletedOn.ToString(),
                 IsDeleted = diploma.IsDeleted,
-                ApprovedByLeader = diploma.ApprovedByLeader,
-                ApprovedByHead = diploma.ApprovedByHead,
+                ApprovedByLeader = diploma.IsApprovedByLeader,
+                ApprovedByHead = diploma.IsApprovedByHead,
                 TeacherID = diploma.TeacherID,
                 TeacherName = string.Format("{0} {1}", user.User.FirstName, user.User.LastName),
                 Tags = diploma.Tags.Select(t =>
@@ -119,7 +110,7 @@
             }
 
             int intId = id ?? 0;
-            var diploma = await this.diplomas.GetByIdFullObject(intId);
+            var diploma = await this.diplomas.GetFullObjectById(intId);
 
             if (diploma == null)
             {
@@ -144,7 +135,7 @@
                                     new SelectListItem
                                     {
                                         Text = t.Name,
-                                        Value = t.Id.ToString(),
+                                        Value = t.Name,
                                     })
                 //TeacherName = diploma.Teacher.User.FirstName,
             };
@@ -159,6 +150,22 @@
         {
             if (this.ModelState.IsValid)
             {
+                var diploma = new Diploma()
+                {
+                    Id = viewModel.Id,
+                    Title = viewModel.Title,
+                    Description = viewModel.Description,
+                    ExperimentalPart = viewModel.ExperimentalPart,
+                    ContentCSV = string.Join(",", viewModel.ContentCSV),
+                    IsSelectedByStudent = true,
+                };
+                diploma.Tags = new List<Tag>();
+                foreach (var tag in viewModel.TagsNames)
+                {
+                    diploma.Tags.Add(this.tags.EnsureCategory(tag));
+                }
+
+                this.diplomas.Edit(diploma);
             }
 
             return this.View(viewModel);
@@ -169,78 +176,78 @@
             var resultList = new List<TagViewModel>();
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                resultList = this.AllOptionsList
+                resultList = this.allOptionsList
                     .Where(n => n.text.ToLower()
                     .Contains(searchTerm.ToLower()))
                     .ToList();
             }
             else
             {
-                resultList = this.AllOptionsList.ToList();
+                resultList = this.allOptionsList.ToList();
             }
 
-            var results = resultList.Skip((pageNumber - 1) * pageSize)
+            var results = resultList.OrderBy(t => t.text).Skip((pageNumber - 1) * pageSize)
                                                     .Take(pageSize)
                                                     .ToList();
 
             return this.Json(new { Results = results, Total = resultList.Count }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Select()
-        {
-            var test = new TestViewModel();
-            test.Id = 10;
-            test.Title = "title of the century";
+        //public ActionResult Select()
+        //{
+        //    var test = new TestViewModel();
+        //    test.Id = 10;
+        //    test.Title = "title of the century";
 
-            var list = new List<Tag>();
-            list.Add(new Tag { Id = 1, Name = "test one" });
-            list.Add(new Tag { Id = 2, Name = "test two" });
-            list.Add(new Tag { Id = 3, Name = "test tree" });
-            list.Add(new Tag { Id = 4, Name = "test tree" });
+        //    var list = new List<Tag>();
+        //    list.Add(new Tag { Id = 1, Name = "test one" });
+        //    list.Add(new Tag { Id = 2, Name = "test two" });
+        //    list.Add(new Tag { Id = 3, Name = "test tree" });
+        //    list.Add(new Tag { Id = 4, Name = "test tree" });
 
-            test.Tags = list;
+        //    test.Tags = list;
 
-            ViewBag.Message = "";
-            return this.View(test);
-        }
+        //    ViewBag.Message = "";
+        //    return this.View(test);
+        //}
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Select(TestViewModel viewModel)
-        {
-            if (this.ModelState.IsValid)
-            {
-                ViewBag.ModelState = "Model is valid TestViewModel";
-            }
-            else
-            {
-                ViewBag.ModelState = "Model is <strong>NOT</strong> valid TestViewModel";
-            }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Select(TestViewModel viewModel)
+        //{
+        //    if (this.ModelState.IsValid)
+        //    {
+        //        ViewBag.ModelState = "Model is valid TestViewModel";
+        //    }
+        //    else
+        //    {
+        //        ViewBag.ModelState = "Model is <strong>NOT</strong> valid TestViewModel";
+        //    }
 
-            var tags = "";
-            foreach (var item in viewModel.SelectedTags)
-            {
-                tags = tags + " " + this.tags.GetById(item).Name;
-            }
+        //    var tags = "";
+        //    foreach (var item in viewModel.SelectedTags)
+        //    {
+        //        tags = tags + " " + this.tags.GetById(item).Name;
+        //    }
 
-            ViewBag.Message = tags;
+        //    ViewBag.Message = tags;
 
-            var list = new List<Tag>();
-            list.Add(new Tag { Id = 1, Name = "test one" });
-            list.Add(new Tag { Id = 2, Name = "test two" });
-            list.Add(new Tag { Id = 3, Name = "test tree" });
-            list.Add(new Tag { Id = 4, Name = "test tree" });
+        //    var list = new List<Tag>();
+        //    list.Add(new Tag { Id = 1, Name = "test one" });
+        //    list.Add(new Tag { Id = 2, Name = "test two" });
+        //    list.Add(new Tag { Id = 3, Name = "test tree" });
+        //    list.Add(new Tag { Id = 4, Name = "test tree" });
 
-            var result = new List<Tag>();
-            for (int i = 0; i < viewModel.SelectedTags.Length; i++)
-            {
-                result.Add(list.Find(x => x.Id == viewModel.SelectedTags[i]));
-            }
+        //    var result = new List<Tag>();
+        //    for (int i = 0; i < viewModel.SelectedTags.Length; i++)
+        //    {
+        //        result.Add(list.Find(x => x.Id == viewModel.SelectedTags[i]));
+        //    }
 
-            viewModel.Tags = result;
+        //    viewModel.Tags = result;
 
-            return this.View(viewModel);
-        }
+        //    return this.View(viewModel);
+        //}
 
         public IQueryable<TagViewModel> GetSelect2Options()
         {
@@ -256,6 +263,60 @@
             }
 
             return optionList.AsQueryable();
+        }
+
+        public ActionResult Diplomas(string sortOrder, string currentFilter, string searchString, int? page)
+        {
+            this.ViewBag.CurrentSort = sortOrder;
+            this.ViewBag.NameSortParm = string.IsNullOrEmpty(sortOrder) ? "name_desc" : string.Empty;
+            this.ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            this.ViewBag.CurrentFilter = searchString;
+
+            var diplomas = this.diplomas.GetAll().To<CommonDiplomaViewModel>();
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                diplomas = diplomas.Where(s => s.Title.Contains(searchString)
+                                       || s.Description.Contains(searchString));
+            }
+
+            if (diplomas.LongCount() <= 0)
+            {
+                this.TempData["NotFound"] = true;
+            }
+            else
+            {
+                switch (sortOrder)
+                {
+                    case "name_desc":
+                        diplomas = diplomas.OrderByDescending(s => s.Title);
+                        break;
+                    case "Date":
+                        diplomas = diplomas.OrderBy(s => s.CreatedOn);
+                        break;
+                    case "date_desc":
+                        diplomas = diplomas.OrderByDescending(s => s.CreatedOn);
+                        break;
+                    default:
+                        // Title ascending
+                        diplomas = diplomas.OrderBy(s => s.Title);
+                        break;
+                }
+            }
+
+            int pageSize = 5;
+            int pageNumber = page ?? 1;
+            return this.View(diplomas.ToPagedList(pageNumber, pageSize));
         }
     }
 }

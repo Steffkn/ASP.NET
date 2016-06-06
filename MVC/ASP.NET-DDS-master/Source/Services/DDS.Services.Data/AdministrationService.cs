@@ -93,9 +93,7 @@
 
         public void EditStudent(Student entity)
         {
-            this.db.Students.FirstOrDefault(t => t.Id == entity.Id).DeletedOn = entity.DeletedOn;
-            this.db.Students.FirstOrDefault(t => t.Id == entity.Id).IsDeleted = entity.IsDeleted;
-            this.db.Students.FirstOrDefault(t => t.Id == entity.Id).ModifiedOn = entity.ModifiedOn;
+            this.db.Students.FirstOrDefault(t => t.Id == entity.Id).ModifiedOn = DateTime.Now;
             this.db.SaveChanges();
         }
     }

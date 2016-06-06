@@ -1,25 +1,18 @@
 ﻿namespace DDS.Services.Data.Interfaces
 {
     using System.Collections.Generic;
-
     using DDS.Data.Models;
 
-    public interface ITeachersService
+    public interface ITeachersService : IBaseServices<Teacher>
     {
-        Teacher GetById(int id);
-
         Teacher GetByUserId(string id);
 
-        IEnumerable<Teacher> GetByIdFullObject(int id);
+        Teacher GetFullObjectById(int id);
 
         IEnumerable<Diploma> GetAllDiplomas(int id);
 
-        void AddDiploma(Diploma entity);
+        void AddDiploma(int teacherID, Diploma entity);
 
-        void Delete(Teacher entity);
-
-        void Create(Teacher entity);
-
-        void Edit(Teacher entity);
+        void AddStudent(int teacherID, Student entity);
     }
 }

@@ -22,8 +22,10 @@
         [ForeignKey("TeacherID")]
         public virtual Teacher Teacher { get; set; }
 
-        public bool ApprovedByLeader { get; set; }
+        public bool IsApprovedByLeader { get; set; }
 
-        public bool ApprovedByHead { get; set; }
+        public bool IsSelectedByStudent { get; set; }
+
+        public bool IsApprovedByHead { get; set; }
     }
 }

@@ -6,7 +6,7 @@
     {
         [Required]
         [EmailAddress]
-        [Display(Name = "Email")]
+        [Display(Name = "Е-майл")]
         public string Email { get; set; }
     }
 }

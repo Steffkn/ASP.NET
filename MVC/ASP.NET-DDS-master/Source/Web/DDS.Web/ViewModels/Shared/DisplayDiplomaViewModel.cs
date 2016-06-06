@@ -25,7 +25,7 @@
         [Display(Name = "Съдържание")]
         public IList<string> ContentCSV { get; set; }
 
-        public int[] TagsID { get; set; }
+        public string[] TagsNames { get; set; }
 
         public IEnumerable<SelectListItem> Tags { get; set; }
 

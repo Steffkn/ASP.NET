@@ -13,6 +13,7 @@
     using Services.Data;
     using Services.Data.Interfaces;
     using Common;
+
     [Authorize]
     public class AccountController : BaseController
     {
@@ -89,7 +90,7 @@
             var result =
                 await
                 this.SignInManager.PasswordSignInAsync(
-                    model.Email,
+                    model.UserName,
                     model.Password,
                     model.RememberMe,
                     shouldLockout: false);
@@ -178,9 +179,10 @@
                 var hasher = new PasswordHasher();
                 var user = new ApplicationUser
                 {
-                    UserName = model.Email,
+                    UserName = model.UserName,
                     Email = model.Email,
                     FirstName = model.FirstName,
+                    MiddleName = model.MiddleName,
                     LastName = model.LastName,
                     SecurityStamp = Guid.NewGuid().ToString(),
                     PasswordHash = hasher.HashPassword(model.Password),

@@ -5,11 +5,10 @@
     using System.Web;
     using System.Web.Mvc;
 
+    using DDS.Web.ViewModels.Manage;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.Owin;
     using Microsoft.Owin.Security;
-
-    using DDS.Web.ViewModels.Manage;
 
     [Authorize]
     public class ManageController : BaseController
@@ -80,30 +79,30 @@
         public async Task<ActionResult> Index(ManageMessageId? message)
         {
             this.ViewBag.StatusMessage = message == ManageMessageId.ChangePasswordSuccess
-                                             ? "Your password has been changed."
+                                             ? "Паролата Ви е променена."
                                              : message == ManageMessageId.SetPasswordSuccess
-                                                   ? "Your password has been set."
+                                                   ? "Паролата Ви е зададена."
                                                    : message == ManageMessageId.SetTwoFactorSuccess
                                                          ? "Your two-factor authentication provider has been set."
                                                          : message == ManageMessageId.Error
-                                                               ? "An error has occurred."
+                                                               ? "Възникна грешка."
                                                                : message == ManageMessageId.AddPhoneSuccess
-                                                                     ? "Your phone number was added."
+                                                                     ? "Вашият телефон бе добавен."
                                                                      : message == ManageMessageId.RemovePhoneSuccess
-                                                                           ? "Your phone number was removed."
+                                                                           ? "Вашия телефон бе изтрит."
                                                                            : string.Empty;
 
             var userId = this.User.Identity.GetUserId();
             var model = new IndexViewModel
-                            {
-                                HasPassword = this.HasPassword(),
-                                PhoneNumber = await this.UserManager.GetPhoneNumberAsync(userId),
-                                TwoFactor = await this.UserManager.GetTwoFactorEnabledAsync(userId),
-                                Logins = await this.UserManager.GetLoginsAsync(userId),
-                                BrowserRemembered =
+            {
+                HasPassword = this.HasPassword(),
+                PhoneNumber = await this.UserManager.GetPhoneNumberAsync(userId),
+                TwoFactor = await this.UserManager.GetTwoFactorEnabledAsync(userId),
+                Logins = await this.UserManager.GetLoginsAsync(userId),
+                BrowserRemembered =
                                     await
                                     this.AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
-                            };
+            };
             return this.View(model);
         }
 
@@ -145,27 +144,16 @@
         // POST: /Manage/AddPhoneNumber
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AddPhoneNumber(AddPhoneNumberViewModel model)
+        public ActionResult AddPhoneNumber(AddPhoneNumberViewModel model)
         {
             if (!this.ModelState.IsValid)
             {
                 return this.View(model);
             }
 
-            // Generate the token and send it
-            var code =
-                await this.UserManager.GenerateChangePhoneNumberTokenAsync(this.User.Identity.GetUserId(), model.Number);
-            if (this.UserManager.SmsService != null)
-            {
-                var message = new IdentityMessage
-                                  {
-                                      Destination = model.Number,
-                                      Body = "Your security code is: " + code
-                                  };
-                await this.UserManager.SmsService.SendAsync(message);
-            }
+            this.UserManager.SetPhoneNumber(this.User.Identity.GetUserId(), model.Number);
 
-            return this.RedirectToAction("VerifyPhoneNumber", new { PhoneNumber = model.Number });
+            return this.RedirectToAction("Index", ManageMessageId.AddPhoneSuccess);
         }
 
         // POST: /Manage/EnableTwoFactorAuthentication
@@ -235,7 +223,7 @@
             }
 
             // If we got this far, something failed, redisplay form
-            this.ModelState.AddModelError(string.Empty, "Failed to verify phone");
+            this.ModelState.AddModelError(string.Empty, "Неуспошно потвърждение на телефоният номер.");
             return this.View(model);
         }
 
@@ -334,7 +322,7 @@
             this.ViewBag.StatusMessage = message == ManageMessageId.RemoveLoginSuccess
                                              ? "The external login was removed."
                                              : message == ManageMessageId.Error
-                                                   ? "An error has occurred."
+                                                   ? "Възникна грешка."
                                                    : string.Empty;
             var user = await this.UserManager.FindByIdAsync(this.User.Identity.GetUserId());
             if (user == null)

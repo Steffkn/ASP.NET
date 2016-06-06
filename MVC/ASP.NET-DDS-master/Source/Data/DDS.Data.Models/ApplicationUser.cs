@@ -14,6 +14,12 @@
 
         public string LastName { get; set; }
 
+        public string MiddleName { get; set; }
+
+        public string Titles { get; set; }
+
+        public string Address { get; set; }
+
         public Student Student { get; set; }
 
         public Teacher Teacher { get; set; }

@@ -5,7 +5,7 @@
     public class ForgotViewModel
     {
         [Required]
-        [Display(Name = "Email")]
+        [Display(Name = "Е-майл")]
         public string Email { get; set; }
     }
 }

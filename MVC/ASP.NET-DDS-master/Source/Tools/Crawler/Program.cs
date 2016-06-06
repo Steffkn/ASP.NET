@@ -33,6 +33,11 @@
             //        Console.WriteLine(i);
             //    }
             //}
+
+            //var one = "Софтуерна система за разпределяне и съставяне на дипломни задания използвайки C#";
+            //var two = "Софтуерна система за разпределяне и съставяне на дипломни задания използвайки Java";
+            //var percentage = DDS.Web.Infrastructure.StringComparer.CalculateSimilarity(one, two);
+            //Console.WriteLine(percentage);
         }
     }
 }

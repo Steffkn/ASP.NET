@@ -1,0 +1,12 @@
+﻿@model PagedList.IPagedList<DDS.Web.ViewModels.ManageDiplomas.CommonDiplomaViewModel>
+@using PagedList.Mvc;
+
+<p>
+    Страница @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) от @Model.PageCount
+</p>
+@Html.PagedListPager(Model, page => Url.Action(ViewData["ActionName"] as string, new
+{
+    page,
+    sortOrder = ViewBag.CurrentSort,
+    currentFilter = ViewBag.CurrentFilter
+}))

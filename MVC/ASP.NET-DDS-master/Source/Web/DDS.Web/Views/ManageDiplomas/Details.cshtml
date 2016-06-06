@@ -1,13 +1,12 @@
-﻿@*@model DDS.Data.Models.Diploma*@
-@model DDS.Web.ViewModels.Shared.DisplayDiplomaViewModel
+﻿@model DDS.Web.ViewModels.Shared.DisplayDiplomaViewModel
 
 @{
     ViewBag.Title = "Детайли";
 }
 
-<h2>Детайли</h2>
+<h3>Детайли на дипломната работа</h3>
 
-<div>
+<div class="row">
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Title)
@@ -95,7 +94,7 @@
         }
     </dl>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary" })
-    @Html.ActionLink("Back", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
-</p>
+<div class="row">
+    @Html.ActionLink("Избери", "Edit", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary" })
+    @Html.ActionLink("Обратно", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
+</div>

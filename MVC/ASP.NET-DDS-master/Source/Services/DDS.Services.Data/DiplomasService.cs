@@ -1,32 +1,23 @@
 ﻿namespace DDS.Services.Data
 {
     using System;
-    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
+    using System.Threading.Tasks;
     using DDS.Data.Common;
     using DDS.Data.Models;
     using Interfaces;
-    using System.Threading.Tasks;
 
-    public class DiplomasService : IDiplomasService
+    public class DiplomasService : BaseService<Diploma>, IDiplomasService
     {
-        private readonly IDbRepository<Diploma> diplomas;
-
         public DiplomasService(IDbRepository<Diploma> diplomas)
+            : base(diplomas)
         {
-            this.diplomas = diplomas;
         }
 
-        public Diploma GetById(int id)
+        public async Task<Diploma> GetFullObjectById(int id)
         {
-            var diploma = this.diplomas.GetById(id);
-            return diploma;
-        }
-
-        public async Task<Diploma> GetByIdFullObject(int id)
-        {
-            var diploma = this.diplomas.All().Where(d => d.Id == id);
+            var diploma = this.Items.All().Where(d => d.Id == id);
             diploma.Include(e => e.Tags)
                 .Include(e => e.Teacher)
                 .Include(e => e.Teacher.User);
@@ -35,47 +26,33 @@
 
         public IQueryable<Diploma> GetByTeacherId(int id)
         {
-            var diplomas = this.diplomas.All().Where(d => d.TeacherID == id);
+            var diplomas = this.Items.All().Where(d => d.TeacherID == id);
             return diplomas;
         }
 
         public IQueryable<Diploma> GetRandomDiplomas(int count)
         {
-            return this.diplomas.All().OrderBy(x => Guid.NewGuid()).Take(count);
+            return this.Items.All().OrderBy(x => Guid.NewGuid()).Take(count);
         }
 
-        public IQueryable<Diploma> GetAll()
+        public override void Edit(Diploma entity)
         {
-            return this.diplomas.All().OrderBy(x => x.Title);
-        }
+            this.Items.GetById(entity.Id).Title = entity.Title;
+            this.Items.GetById(entity.Id).Description = entity.Description;
+            this.Items.GetById(entity.Id).IsApprovedByHead = entity.IsApprovedByHead;
+            this.Items.GetById(entity.Id).IsApprovedByLeader = entity.IsApprovedByLeader;
+            this.Items.GetById(entity.Id).ContentCSV = entity.ContentCSV;
+            this.Items.GetById(entity.Id).ExperimentalPart = entity.ExperimentalPart;
+            this.Items.GetById(entity.Id).IsSelectedByStudent = entity.IsSelectedByStudent;
+            foreach (var tag in entity.Tags)
+            {
+                if (!this.Items.GetById(entity.Id).Tags.Contains(tag))
+                {
+                    this.Items.GetById(entity.Id).Tags.Add(tag);
+                }
+            }
 
-        public IQueryable<Diploma> GetAllByCreatedDate()
-        {
-            return this.diplomas.All().OrderBy(x => x.CreatedOn);
-        }
-
-        public void Delete(Diploma entity)
-        {
-            this.diplomas.Delete(entity);
-            this.diplomas.Save();
-        }
-
-        public void Create(Diploma entity)
-        {
-            this.diplomas.Add(entity);
-            this.diplomas.Save();
-        }
-
-        public void Edit(Diploma entity)
-        {
-            this.diplomas.GetById(entity.Id).Title = entity.Title;
-            this.diplomas.GetById(entity.Id).Description = entity.Description;
-            this.diplomas.GetById(entity.Id).ApprovedByHead = entity.ApprovedByHead;
-            this.diplomas.GetById(entity.Id).ApprovedByLeader = entity.ApprovedByLeader;
-            this.diplomas.GetById(entity.Id).ContentCSV = entity.ContentCSV;
-            this.diplomas.GetById(entity.Id).ExperimentalPart = entity.ExperimentalPart;
-            this.diplomas.GetById(entity.Id).ModifiedOn = DateTime.Now;
-            this.diplomas.Save();
+            base.Edit(entity);
         }
     }
 }

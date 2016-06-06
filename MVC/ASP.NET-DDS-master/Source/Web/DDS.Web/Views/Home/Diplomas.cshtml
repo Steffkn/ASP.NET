@@ -1,0 +1,76 @@
+﻿@model PagedList.IPagedList<DDS.Web.ViewModels.ManageDiplomas.CommonDiplomaViewModel>
+@using PagedList.Mvc;
+@using DDS.Web.Helpers;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "Дипломи";
+}
+
+@if (TempData["NotFound"] != null && (bool)TempData["NotFound"] == true)
+{
+    <div class="row">
+        @Html.Alert("", "Няма намерени дипломи!", AlertType.Warning)
+    </div>
+}
+
+<div class="row">
+    @using (Html.BeginForm("Diplomas", "Home", FormMethod.Get))
+    {
+        @Html.Partial("~/Views/Shared/_SearchBoxPartial.cshtml")
+    }
+</div>
+
+<table class="table table-hover table-responsive">
+    <thead>
+        <tr>
+            <th class="">#</th>
+            <th class="col-md-4">
+                @Html.ActionLink("Заглавие", "Diplomas", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
+            </th>
+            <th class="col-md-6">
+                @Html.DisplayName("Описание")
+            </th>
+            <th class="col-md-2">
+                @Html.ActionLink("Дата на добавяне", "Diplomas", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int index = (Model.PageNumber - 1) * Model.PageSize;}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @{index++;}
+                    @index
+                    @Html.Hidden("RedirectToDetails", Url.Action("Details", "Home", new { id = item.Id }))
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedOn)
+                </td>
+            </tr>
+                        }
+    </tbody>
+</table>
+<br />
+<div class="row">
+    @Html.Partial("_Pager", Model, new ViewDataDictionary { { "ActionName", "Diplomas" } })
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        window.onload = function () {
+            $('.table > tbody > tr').on('click', function () {
+                var url = $(this).find("#RedirectToDetails").val();
+                location.href = url;
+            });
+        }
+    </script>
+}

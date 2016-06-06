@@ -1,68 +1,74 @@
 ﻿@model DDS.Web.ViewModels.Shared.DisplayDiplomaViewModel
-
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Редактиране";
 }
-<style>
-    .select2-container {
-        min-width: 150px !important;
-    }
-</style>
-<h3>Можете да въведете промени по дипломата преди да потвърдите</h3>
 
-@using (Html.BeginForm("Edit", "Home", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-    <div class="form-horizontal">
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Id)
-
-        <div class="form-group col-md-10">
-            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label" })
-            @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
-        </div>
-
-        <div class="form-group col-md-10">
-            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label" })
-            @Html.TextAreaFor(model => model.Description, htmlAttributes: new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-        </div>
-
-        <div class="form-group col-md-10">
-            @Html.LabelFor(model => model.ExperimentalPart, htmlAttributes: new { @class = "control-label" })
-            @Html.EditorFor(model => model.ExperimentalPart, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.ExperimentalPart, "", new { @class = "text-danger" })
-        </div>
-
-        <div id="divlist" class="form-group col-md-10">
-            @Html.LabelFor(model => model.ContentCSV, htmlAttributes: new { @class = "control-label" })
-            <input id="btnAdd" type="button" value="AddRow" onclick="AddRow();" class="btn btn-default" />
-            @{var index = 0;
-            }
-            @if (Model != null)
-            {
-                foreach (var item in Model.ContentCSV)
-                {
-                    @Html.TextBox("ContentCSV[" + index.ToString() + "]", item, new { @class = "form-control" })
-                    index++;
-                }
-            }
-        </div>
-
-        <div class="form-group col-md-10">
-            @Html.DropDownListFor(model => model.TagsID, Enumerable.Empty<SelectListItem>(),
-                            htmlAttributes: new { @class = "form-control", multiple = "multiple", @id = "tagSelector" })
-        </div>
-
-        <div class="form-group col-md-10">
-            <div class="col-md-offset-1">
-                <input type="submit" value="Избери" class="btn btn-default" />
-                @Html.ActionLink("Отмени", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
+<div class="row">
+    <div class="col-md-8">
+        @using (Html.BeginForm("Edit", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <h3>Можете да въведете промени по дипломата преди да потвърдите</h3>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.Id)
+            <div class="form-group">
+                @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "col-xs-3 control-label" })
+                <div class="col-xs-9">
+                    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "col-xs-3 control-label" })
+                <div class="col-xs-9">
+                    @Html.TextAreaFor(model => model.Description, htmlAttributes: new { @class = "form-control", rows = "3" })
+                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ExperimentalPart, htmlAttributes: new { @class = "col-xs-3 control-label" })
+                <div class="col-xs-9">
+                    @Html.EditorFor(model => model.ExperimentalPart, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ExperimentalPart, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div id="divlist" class="form-group">
+                <div class="col-xs-3">
+                    @Html.LabelFor(model => model.ContentCSV, htmlAttributes: new { @class = "control-label" })
+                    <input id="btnAdd" type="button" value="Добави" onclick="AddRow();" class="btn-xs btn-success" />
+                </div>
+                    <div class="contentBoxes col-xs-9">
+                    @{var index = 0;}
+                    @if (Model != null)
+                    {
+                        foreach (var item in Model.ContentCSV)
+                        {
+                            @Html.TextBox("ContentCSV[" + index.ToString() + "]", item, new { @class = "form-control" })
+                            index++;
+                        }
+                    }
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("Технологии", htmlAttributes: new { @class = "col-xs-3 control-label" })
+                <div class="col-xs-9">
+                    @Html.DropDownListFor(model => model.TagsNames, Enumerable.Empty<SelectListItem>(),
+                            htmlAttributes: new { @class = "form-control", multiple = "multiple", @id = "tagSelector" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-3 col-xs-9">
+                    <input type="submit" value="Потвърди" class="btn btn-primary" />
+                    @Html.ActionLink("Отмени", "Doplomas", null, htmlAttributes: new { @class = "btn btn-default" })
+                </div>
+            </div>
+                        }
     </div>
-                }
+</div>
 
 @section scripts{
     <script type="text/javascript">
@@ -99,6 +105,8 @@
                         }
                     },
                     placeholder: "-- Избери таг --",
+                    tags: true,
+                    tokenSeparators: [',', ' '],
                     minimumInputLength: 0,
                     allowClear: true,
                 });
@@ -116,9 +124,9 @@
             var box = $("<input>");
             box.attr("id", "ContentCSV[" + index + "]");
             box.attr("name", "ContentCSV[" + index + "]");
-            box.attr("class", "form-control text-box single-line");
+            box.attr("class", "form-control");
 
-            $('#divlist').append(box);
+            $('#divlist .contentBoxes').append(box);
         };
     </script>
 }
