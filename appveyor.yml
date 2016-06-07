@@ -2,6 +2,4 @@ configuration: Debug
 
 before_build:
   -nuget restore
-  
-  builds:
-  verbosity: minimal
+
