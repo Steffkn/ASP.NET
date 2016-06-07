@@ -2,8 +2,8 @@
 configuration: Release
 
 before_build:
-  - nuget restore /MVC/ASP.NET-DDS-master/Source/DDS.sln
+  - nuget restore DDS.sln
 
 build:
   verbosity: minimal
-  project: /MVC/ASP.NET-DDS-master/Source/DDS.sln
+  project: DDS.sln
