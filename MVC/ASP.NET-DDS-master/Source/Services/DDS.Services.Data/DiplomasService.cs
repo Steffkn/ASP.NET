@@ -15,13 +15,10 @@
         {
         }
 
-        public async Task<Diploma> GetFullObjectById(int id)
+        public Diploma GetFullObjectById(int id)
         {
-            var diploma = this.Items.All().Where(d => d.Id == id);
-            diploma.Include(e => e.Tags)
-                .Include(e => e.Teacher)
-                .Include(e => e.Teacher.User);
-            return await diploma.FirstOrDefaultAsync();
+            var diploma = this.Items.All().Where(d => d.Id == id).Include(e => e.Tags).Include(e => e.Teacher).Include(e => e.Teacher.User);
+            return diploma.FirstOrDefault();
         }
 
         public IQueryable<Diploma> GetByTeacherId(int id)

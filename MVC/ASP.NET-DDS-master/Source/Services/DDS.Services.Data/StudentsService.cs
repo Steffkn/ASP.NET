@@ -25,5 +25,21 @@
             var student = this.Items.All().First(s => s.FNumber == number);
             return student;
         }
+
+        public Student GetByUserId(string userId)
+        {
+            return this.Items.All().FirstOrDefault(t => t.User.Id == userId);
+        }
+
+        public void AddDiploma(int studentId, Diploma entity)
+        {
+            this.Items.GetById(studentId).SelectedDiploma = entity;
+            this.Items.GetById(studentId).SelectedDiploma.Id = entity.Id;
+        }
+
+        public void RemoveDiploma(int studentId)
+        {
+            this.Items.GetById(studentId).SelectedDiploma = null;
+        }
     }
 }

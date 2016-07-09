@@ -2,22 +2,23 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
     using Common;
     using Data.Models;
     using Infrastructure.Mapping;
+    using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.Owin;
+    using PagedList;
     using Services.Data.Interfaces;
-    using ViewModels.Home;
     using ViewModels.ManageDiplomas;
     using ViewModels.Shared;
-    using PagedList;
+
     public class HomeController : BaseController
     {
         private readonly IDiplomasService diplomas;
         private readonly ITeachersService teachers;
+        private readonly IStudentsService students;
         private readonly ITagsService tags;
 
         private IQueryable<TagViewModel> allOptionsList;
@@ -27,10 +28,12 @@
         public HomeController(
             IDiplomasService diplomas,
             ITeachersService teachers,
+            IStudentsService students,
             ITagsService tags)
         {
             this.diplomas = diplomas;
             this.teachers = teachers;
+            this.students = students;
             this.tags = tags;
             this.allOptionsList = this.GetSelect2Options();
         }
@@ -50,9 +53,7 @@
 
         public ActionResult Index()
         {
-            var randomDiplomas = this.diplomas.GetRandomDiplomas(9)
-                                                .To<CommonDiplomaViewModel>();
-            return this.View(randomDiplomas.ToList());
+            return this.View();
         }
 
         public ActionResult Details(int? id)
@@ -102,7 +103,7 @@
 
         [HttpGet]
         [Authorize(Roles = GlobalConstants.StudentRoleName)]
-        public async Task<ActionResult> Edit(int? id)
+        public ActionResult Edit(int? id)
         {
             if (id == null)
             {
@@ -110,12 +111,20 @@
             }
 
             int intId = id ?? 0;
-            var diploma = await this.diplomas.GetFullObjectById(intId);
+            var diploma = this.diplomas.GetFullObjectById(intId);
 
             if (diploma == null)
             {
+                this.TempData["NotFound"] = true;
                 this.TempData["Message"] = "Дипломата не бе намерена!";
                 return this.RedirectToAction("Index", "Home");
+            }
+
+            if (diploma.IsSelectedByStudent)
+            {
+                this.TempData["NotFound"] = true;
+                this.TempData["Message"] = "Тази диплома е вече избрана!";
+                return this.RedirectToAction("Diplomas", "Home");
             }
 
             var count = diploma.Tags.Count();
@@ -150,25 +159,40 @@
         {
             if (this.ModelState.IsValid)
             {
-                var diploma = new Diploma()
+                var dbDiploma = this.diplomas.GetFullObjectById(viewModel.Id);
+
+                dbDiploma.Title = viewModel.Title;
+                dbDiploma.Description = viewModel.Description;
+                dbDiploma.ExperimentalPart = viewModel.ExperimentalPart;
+                dbDiploma.ContentCSV = string.Join(",", viewModel.ContentCSV);
+                dbDiploma.IsSelectedByStudent = true;
+                //dbDiploma.Tags = new List<Tag>();
+
+                foreach (var viewModelTag in viewModel.TagsNames)
                 {
-                    Id = viewModel.Id,
-                    Title = viewModel.Title,
-                    Description = viewModel.Description,
-                    ExperimentalPart = viewModel.ExperimentalPart,
-                    ContentCSV = string.Join(",", viewModel.ContentCSV),
-                    IsSelectedByStudent = true,
-                };
-                diploma.Tags = new List<Tag>();
-                foreach (var tag in viewModel.TagsNames)
-                {
-                    diploma.Tags.Add(this.tags.EnsureCategory(tag));
+                    var tagId = 0;
+                    Tag tag;
+                    if (int.TryParse(viewModelTag, out tagId))
+                    {
+                        tag = this.tags.GetById(tagId);
+                    }
+                    else
+                    {
+                        tag = this.tags.EnsureCategory(viewModelTag);
+                    }
+
+                    dbDiploma.Tags.Add(tag);
                 }
 
-                this.diplomas.Edit(diploma);
+                this.diplomas.Save();
+
+                var student = this.students.GetByUserId(this.User.Identity.GetUserId());
+                student.SelectedDiploma = dbDiploma;
+
+                this.students.Save();
             }
 
-            return this.View(viewModel);
+            return this.RedirectToAction("Index");
         }
 
         public JsonResult GetAllTags(string searchTerm, int pageSize, int pageNumber)
@@ -282,7 +306,7 @@
 
             this.ViewBag.CurrentFilter = searchString;
 
-            var diplomas = this.diplomas.GetAll().To<CommonDiplomaViewModel>();
+            var diplomas = this.diplomas.GetAll().Where(d => !d.IsSelectedByStudent).To<CommonDiplomaViewModel>();
 
             if (!string.IsNullOrEmpty(searchString))
             {
@@ -314,7 +338,7 @@
                 }
             }
 
-            int pageSize = 5;
+            int pageSize = GlobalConstants.PageSize;
             int pageNumber = page ?? 1;
             return this.View(diplomas.ToPagedList(pageNumber, pageSize));
         }

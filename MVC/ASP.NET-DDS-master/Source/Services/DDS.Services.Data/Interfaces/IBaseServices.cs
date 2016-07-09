@@ -10,7 +10,13 @@
 
         void Delete(T entity);
 
+        void UnDelete(T entity);
+
+        void HardDelete(T entity);
+
         void Edit(T entity);
+
+        void Save();
 
         T GetById(int id);
 

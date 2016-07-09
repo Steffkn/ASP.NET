@@ -35,6 +35,18 @@
             this.Items.Save();
         }
 
+        public void UnDelete(T entity)
+        {
+            this.Items.UnDelete(entity);
+            this.Items.Save();
+        }
+
+        public void HardDelete(T entity)
+        {
+            this.Items.HardDelete(entity);
+            this.Items.Save();
+        }
+
         /// <summary>
         /// Adds entity of type BaseModel<int>. Calls Items.Save() method!
         /// </summary>
@@ -91,6 +103,11 @@
         public IQueryable<T> GetDeleted()
         {
             return this.Items.AllWithDeleted().Where(x => x.IsDeleted == true);
+        }
+
+        public void Save()
+        {
+            this.Items.Save();
         }
     }
 }

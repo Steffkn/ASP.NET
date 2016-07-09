@@ -13,18 +13,18 @@
         public int Id { get; set; }
 
         [Required]
-        [Display(Name = "Title")]
+        [Display(Name = "Тема")]
         public string Title { get; set; }
 
         [Required]
-        [Display(Name = "Description")]
+        [Display(Name = "Описание")]
         public string Description { get; set; }
 
-        [Display(Name = "Content")]
+        [Display(Name = "Съдържание")]
         public IList<string> ContentCSV { get; set; }
 
         [Required]
-        [Display(Name = "Experimental part")]
+        [Display(Name = "Експериментална част")]
         public string ExperimentalPart { get; set; }
 
         public ICollection<Tag> Tags { get; set; }

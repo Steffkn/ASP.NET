@@ -80,12 +80,15 @@
                     case "name_desc":
                         diplomas = diplomas.OrderByDescending(s => s.Title);
                         break;
+
                     case "Date":
                         diplomas = diplomas.OrderBy(s => s.CreatedOn);
                         break;
+
                     case "date_desc":
                         diplomas = diplomas.OrderByDescending(s => s.CreatedOn);
                         break;
+
                     default:
                         // Title ascending
                         diplomas = diplomas.OrderBy(s => s.Title);
@@ -134,6 +137,7 @@
         {
             if (id == null)
             {
+                this.TempData["Message"] = "Дипломата не е намерена!";
                 return this.RedirectToAction("Index", "ManageDiplomas");
             }
 
@@ -166,45 +170,21 @@
         {
             if (this.ModelState.IsValid)
             {
-                var diploma = new Diploma()
-                {
-                    Id = viewModel.Id,
-                    Teacher = this.teachers.GetByUserId(this.User.Identity.GetUserId()),
-                    Title = viewModel.Title,
-                    Description = viewModel.Description,
-                    ExperimentalPart = viewModel.ExperimentalPart,
-                    ContentCSV = string.Join(",", viewModel.ContentCSV),
-                };
+                var dDiploma = this.diplomas.GetById(viewModel.Id);
+                dDiploma.Title = viewModel.Title;
+                dDiploma.Description = viewModel.Description;
+                dDiploma.ExperimentalPart = viewModel.ExperimentalPart;
+                dDiploma.ContentCSV = string.Join(",", viewModel.ContentCSV);
 
-                this.diplomas.Edit(diploma);
+                this.diplomas.Save();
 
-                this.TempData["Message"] = "Дипломата бе променена!";
+                this.TempData["Message"] = "Дипломата е променена!";
                 return this.RedirectToAction("Index", "ManageDiplomas");
             }
 
             return this.View(viewModel);
         }
 
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return this.RedirectToAction("Index", "ManageDiplomas");
-            }
-
-            int intId = id ?? 0;
-            var diploma = this.diplomas.GetById(intId);
-
-            if (diploma == null)
-            {
-                this.TempData["Message"] = "Дипломата не бе намерена!";
-                return this.RedirectToAction("Index", "ManageDiplomas");
-            }
-
-            this.diplomas.Delete(diploma);
-            this.TempData["Message"] = "Дипломата е изтрита!";
-            return this.RedirectToAction("Index", "ManageDiplomas");
-        }
 
         public ActionResult Details(int? id)
         {
@@ -239,7 +219,7 @@
                 ApprovedByLeader = diploma.IsApprovedByLeader,
                 ApprovedByHead = diploma.IsApprovedByHead,
                 TeacherID = diploma.TeacherID,
-                TeacherName = string.Format("{0} {1}", user.User.FirstName, user.User.LastName)
+                TeacherName = string.Format("{0} {1} {1}", user.User.Titles, user.User.FirstName, user.User.LastName)
             };
 
             return this.View(result);
@@ -276,6 +256,7 @@
 
             if (diplomas.LongCount() <= 0)
             {
+                this.TempData["Message"] = "Няма намерени дипломи!";
                 this.TempData["NotFound"] = true;
             }
             else
@@ -304,6 +285,86 @@
             int pageSize = 5;
             int pageNumber = page ?? 1;
             return this.View(diplomas.ToPagedList(pageNumber, pageSize));
+        }
+
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return this.RedirectToAction("Index", "ManageDiplomas");
+            }
+
+            int intId = id ?? 0;
+            var diploma = this.diplomas.GetById(intId);
+
+            if (diploma == null)
+            {
+                this.TempData["Message"] = "Дипломата не бе намерена!";
+                return this.RedirectToAction("Index", "ManageDiplomas");
+            }
+
+            this.diplomas.Delete(diploma);
+            this.TempData["Message"] = "Дипломата е изтрита!";
+            return this.RedirectToAction("Index", "ManageDiplomas");
+        }
+
+        // Get: HardDelete
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult HardDelete(int? id)
+        {
+            if (id == null)
+            {
+                return this.RedirectToAction("Deleted");
+            }
+
+            int intId = id ?? 0;
+            var diploma = this.diplomas.GetDeleted().FirstOrDefault(d => d.Id == intId);
+
+            if (diploma == null)
+            {
+                this.TempData["NotFound"] = true;
+                this.TempData["Message"] = "Дипломата не бе намерена!";
+                return this.RedirectToAction("Deleted");
+            }
+
+            this.diplomas.HardDelete(diploma);
+            return this.RedirectToAction("Deleted");
+        }
+
+        public ActionResult HardDeleteAll()
+        {
+            var teacherID = this.teachers.GetByUserId(this.User.Identity.GetUserId()).Id;
+            var diplomas = this.diplomas.GetDeleted().Where(d => d.TeacherID == teacherID).ToList();
+
+            foreach (var diploma in diplomas)
+            {
+                this.diplomas.HardDelete(diploma);
+            }
+
+            return this.RedirectToAction("Index");
+        }
+
+        public ActionResult Return(int? id)
+        {
+            if (id == null)
+            {
+                return this.RedirectToAction("Index", "ManageDiplomas");
+            }
+
+            int intId = id ?? 0;
+            var diploma = this.diplomas.GetDeleted().FirstOrDefault(d => d.Id == id);
+
+            if (diploma == null)
+            {
+                this.TempData["Message"] = "Дипломата не бе намерена!";
+                return this.RedirectToAction("Index", "ManageDiplomas");
+            }
+
+            this.diplomas.UnDelete(diploma);
+            this.TempData["Message"] = "Дипломата е върната!";
+            return this.RedirectToAction("Index", "ManageDiplomas");
         }
     }
 }

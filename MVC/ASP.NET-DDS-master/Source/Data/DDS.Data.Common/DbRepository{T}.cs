@@ -51,6 +51,12 @@
             entity.DeletedOn = DateTime.Now;
         }
 
+        public void UnDelete(T entity)
+        {
+            entity.IsDeleted = false;
+            entity.DeletedOn = null;
+        }
+
         public void HardDelete(T entity)
         {
             this.DbSet.Remove(entity);

@@ -104,8 +104,8 @@
                 Id = user.Id,
                 UserName = user.UserName,
                 FirstName = user.FirstName,
-                Email = user.Email,
                 LastName = user.LastName,
+                Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 RolesList = this.UserManager.GetRoles(user.Id)
                                             .Select(role => new SelectListItem { Text = role, Value = role, Selected = true })

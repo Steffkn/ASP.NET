@@ -6,7 +6,7 @@
 
     public interface IDiplomasService : IBaseServices<Diploma>
     {
-        Task<Diploma> GetFullObjectById(int id);
+        Diploma GetFullObjectById(int id);
 
         IQueryable<Diploma> GetByTeacherId(int id);
 

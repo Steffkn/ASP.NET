@@ -11,7 +11,7 @@
         public int Id { get; set; }
 
         [Required]
-        [Display(Name = "Заглавие")]
+        [Display(Name = "Tema")]
         public string Title { get; set; }
 
         [Required]
@@ -49,7 +49,7 @@
         [Display(Name = "Изтрита на:")]
         public string DeletedOn { get; set; }
 
-        [Display(Name = "Is deleted?")]
+        [Display(Name = "Изтрита?")]
         public bool IsDeleted { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿@model DDS.Web.ViewModels.Shared.DisplayDiplomaViewModel
+
 @{
-    ViewBag.Title = "Редактиране";
+    ViewBag.Title = "Редактиране на диплома";
 }
 
 <div class="row">
@@ -8,7 +9,7 @@
         @using (Html.BeginForm("Edit", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
-            <h3>Можете да въведете промени по дипломата преди да потвърдите</h3>
+            <h3>@ViewBag.Title</h3>
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             @Html.HiddenFor(model => model.Id)
@@ -19,7 +20,6 @@
                     @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
                 </div>
             </div>
-
             <div class="form-group">
                 @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "col-xs-3 control-label" })
                 <div class="col-xs-9">
@@ -27,7 +27,6 @@
                     @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
                 </div>
             </div>
-
             <div class="form-group">
                 @Html.LabelFor(model => model.ExperimentalPart, htmlAttributes: new { @class = "col-xs-3 control-label" })
                 <div class="col-xs-9">
@@ -41,7 +40,7 @@
                     @Html.LabelFor(model => model.ContentCSV, htmlAttributes: new { @class = "control-label" })
                     <input id="btnAdd" type="button" value="Добави" onclick="AddRow();" class="btn-xs btn-success" />
                 </div>
-                    <div class="contentBoxes col-xs-9">
+                <div class="contentBoxes col-xs-9">
                     @{var index = 0;}
                     @if (Model != null)
                     {
@@ -85,8 +84,8 @@
                         delay: 150,
                         url: optionListUrl,
                         dataType: 'json',
-                        data: function (params) {
-                            params.page = params.page || 1;
+                            data: function (params) {
+                                params.page = params.page || 1;
                             return {
                                 searchTerm: params.term,
                                 pageSize: pageSize,

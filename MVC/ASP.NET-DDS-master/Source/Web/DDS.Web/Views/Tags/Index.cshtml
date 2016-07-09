@@ -1,0 +1,91 @@
+﻿@model DDS.Web.ViewModels.Tags.DiplomaTestViewModel
+@{
+    ViewBag.Title = "Начална страница";
+}
+
+<div class="row">
+    @foreach (var item in Model.Tags)
+            {
+        <div>@item.Value @item.Text @item.Selected</div>
+    }
+</div>
+
+@using (@Html.BeginForm("Index", "Tags", FormMethod.Post))
+{
+    <div class="row">
+        @Html.DropDownListFor(
+            model => model.TagsArray,
+            Model.Tags,
+            htmlAttributes: new { @class = "js-data-example-ajax col-sm-12", multiple = "multiple" })
+    </div>
+
+    <div class="row">
+        <input type="submit" name="submit" value="Submit" class="col-sm-12" />
+    </div>
+}
+
+<div class="row">
+    @foreach (var item in Model.Tags)
+            {
+        <div>@item.Value @item.Text @item.Selected</div>
+    }
+</div>
+
+
+@section scripts{
+    <script type="text/javascript">
+        var pageSize = 20;
+        var optionListUrl = '@Url.Action("GetAllSelectedTags", "Tags")';
+
+        var json_data = $(".js-data-example-ajax").select2();
+        console.log(json_data);
+        $(".js-data-example-ajax").select2({
+
+            ajax: {
+                url: optionListUrl,
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    params.page = params.page || 1;
+                    return {
+                        searchTerm: params.term, // search term
+                        pageNumber: params.page,
+                        pageSize: pageSize
+                    };
+                },
+                processResults: function (data, params) {
+                    params.page = params.page || 1;
+                    return {
+                        results: data.Results,
+                        pagination: {
+                            more: (params.page * pageSize) < data.Total
+                        }
+                    };
+                },
+                cache: true,
+            },
+            placeholder: "Select an option",
+            //language: "bg",
+            escapeMarkup: function (markup) {
+                return markup;
+            }, // let our custom formatter work
+            minimumInputLength: 1,
+            tags: true,
+            multiple: true,
+            tokenSeparators: [',', ' '],
+            //templateResult: formatData, // omitted for brevity, see the source of this page
+            //templateSelection: formatDataSelection // omitted for brevity, see the source of this page
+        });
+
+        function formatData(data) {
+            if (data.loading) return data.text;
+            markup = "<span>" + data.text + "</span>";
+            return markup;
+        }
+
+        function formatDataSelection(data) {
+            return data.text;
+        }
+
+    </script>
+}

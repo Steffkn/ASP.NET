@@ -1,22 +1,19 @@
 ﻿@model PagedList.IPagedList<DDS.Web.ViewModels.ManageDiplomas.CommonDiplomaViewModel>
 @using PagedList.Mvc;
+@using DDS.Web.Helpers;
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 @{
     ViewBag.Title = "Менажиране на дипломи";
 }
 
-@{if (TempData["Message"] != null)
-    {
-        <div class="panel">
-            <div class="panel-body">
-                <div class="alert alert-info">
-                    @TempData["Message"]
-                </div>
-            </div>
-        </div>
-    }
+@if (TempData["Message"] != null)
+{
+    <div class="row">
+        @Html.Alert("", TempData["Message"].ToString(), AlertType.Info)
+    </div>
 }
+
 
 <div class="row">
     <div class="col-xs-6">

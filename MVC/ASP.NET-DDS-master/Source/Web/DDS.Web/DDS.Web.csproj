@@ -211,11 +211,13 @@
     <Compile Include="Areas\Administration\Controllers\AdministrationController.cs" />
     <Compile Include="Areas\Administration\ViewModels\UserViewModel.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\APIController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="App_Start\GlimpseSecurityPolicy.cs" />
     <Compile Include="Controllers\ManageDiplomasController.cs" />
+    <Compile Include="Controllers\TagsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -245,6 +247,8 @@
     <Compile Include="ViewModels\Manage\VerifyPhoneNumberViewModel.cs" />
     <Compile Include="ViewModels\Shared\DisplayDiplomaViewModel.cs" />
     <Compile Include="ViewModels\Shared\TagViewModel.cs" />
+    <Compile Include="ViewModels\Tags\DiplomaTestViewModel.cs" />
+    <Compile Include="ViewModels\Tags\SelectTagViewModel.cs" />
     <Compile Include="ViewModels\Teacher\TeacherFullViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -378,12 +382,15 @@
     <Content Include="Views\Home\Diplomas.cshtml" />
     <Content Include="Views\Shared\_SearchBoxPartial.cshtml" />
     <Content Include="Views\Shared\_Pager.cshtml" />
+    <Content Include="Views\Shared\_DetailsForDiploma.cshtml" />
+    <Content Include="Views\Tags\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Administration\Models\" />
     <Folder Include="Areas\Administration\Views\Default\" />
     <Folder Include="Areas\Administration\Views\Shared\" />
+    <Folder Include="Views\API\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

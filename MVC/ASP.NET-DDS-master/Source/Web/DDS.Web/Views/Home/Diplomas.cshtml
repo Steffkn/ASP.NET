@@ -10,7 +10,7 @@
 @if (TempData["NotFound"] != null && (bool)TempData["NotFound"] == true)
 {
     <div class="row">
-        @Html.Alert("", "Няма намерени дипломи!", AlertType.Warning)
+        @Html.Alert("", this.TempData["Message"].ToString(), AlertType.Warning)
     </div>
 }
 
