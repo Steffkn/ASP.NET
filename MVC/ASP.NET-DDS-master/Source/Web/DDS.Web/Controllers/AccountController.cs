@@ -193,8 +193,7 @@
                 {
                     var student = new Student()
                     {
-                        User = user,
-                        FNumber = model.Student.FNumber
+                        User = user
                     };
                     this.students.Create(student);
                     this.UserManager.AddToRole(user.Id, GlobalConstants.StudentRoleName);

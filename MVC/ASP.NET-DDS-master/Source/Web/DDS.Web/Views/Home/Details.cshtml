@@ -1,110 +1,124 @@
 ﻿@model DDS.Web.ViewModels.Shared.DisplayDiplomaViewModel
-
+@using DDS.Web.Helpers;
 @{
     ViewBag.Title = "Детайли";
 }
 
 <h3>Детайли на дипломната работа</h3>
 
-<dl class="dl-horizontal">
-    <dt>
-        @Html.DisplayNameFor(model => model.TeacherName)
-    </dt>
-
-    <dd>
-        @Html.ActionLink(Model.TeacherName, "TeacherDetails", "Teacher", new { id = Model.TeacherID }, new { @class = "btn-link" })
-    </dd>
-
-    <dt>
-        @Html.DisplayNameFor(model => model.Title)
-    </dt>
-
-    <dd>
-        @Html.DisplayFor(model => model.Title)
-    </dd>
-
-    <dt>
-        @Html.DisplayNameFor(model => model.Description)
-    </dt>
-
-    <dd>
-        @Html.DisplayFor(model => model.Description)
-    </dd>
-
-    <dt>
-        @Html.DisplayNameFor(model => model.ContentCSV)
-    </dt>
-    <dd>
-        <ol>
-            @foreach (var item in Model.ContentCSV)
-            {
-                <li>@item</li>
-            }
-        </ol>
-    </dd>
-
-    <dt>
-        @Html.DisplayNameFor(model => model.ExperimentalPart)
-    </dt>
-
-    <dd>
-        @Html.DisplayFor(model => model.ExperimentalPart)
-    </dd>
+@if (this.TempData["selected"] != null)
+{
+    <div class="row">
+        @Html.Alert("", this.TempData["selected"].ToString(), AlertType.Warning)
+    </div>
+}
 
 
-    <dt>
-        @Html.DisplayNameFor(model => model.CreatedOn)
-    </dt>
-    <dd>
-        @Html.DisplayFor(model => model.CreatedOn)
-    </dd>
-
-    @if (Model.ModifiedOn != string.Empty)
-    {
+@using (Html.BeginForm("Select", "Home", new { id = Model.Id }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.ModifiedOn)
+            @Html.DisplayNameFor(model => model.TeacherName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.ModifiedOn)
+            @Html.ActionLink(Model.TeacherName, "TeacherDetails", "Teacher", new { id = Model.TeacherID }, new { @class = "btn-link" })
         </dd>
-    }
-    @if (Model.IsDeleted)
-    {
+
         <dt>
-            @Html.DisplayNameFor(model => model.DeletedOn)
+            @Html.DisplayNameFor(model => model.Title)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.DeletedOn)
+            @Html.DisplayFor(model => model.Title)
         </dd>
-    }
 
-    @if (Model.ApprovedByLeader)
-    {
         <dt>
-            @Html.DisplayNameFor(model => model.ApprovedByLeader)
+            @Html.DisplayNameFor(model => model.Description)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.ApprovedByLeader)
+            @Html.DisplayFor(model => model.Description)
         </dd>
-    }
-    @if (Model.ApprovedByLeader)
-    {
+
         <dt>
-            @Html.DisplayNameFor(model => model.ApprovedByHead)
+            @Html.DisplayNameFor(model => model.ContentCSV)
+        </dt>
+        <dd>
+            <ol>
+                @foreach (var item in Model.ContentCSV)
+                {
+                    <li>@item</li>
+                }
+            </ol>
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ExperimentalPart)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.ApprovedByHead)
+            @Html.DisplayFor(model => model.ExperimentalPart)
         </dd>
-    }
 
-    <dt></dt>
-    <dd>
-        @Html.ActionLink("Избери", "Edit", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary" })
-        @Html.ActionLink("Обратно", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
-    </dd>
 
-</dl>
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedOn)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CreatedOn)
+        </dd>
+
+        @if (Model.ModifiedOn != string.Empty)
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.ModifiedOn)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ModifiedOn)
+            </dd>
+        }
+        @if (Model.IsDeleted)
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.DeletedOn)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.DeletedOn)
+            </dd>
+        }
+
+        @if (Model.ApprovedByLeader)
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.ApprovedByLeader)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ApprovedByLeader)
+            </dd>
+        }
+        @if (Model.ApprovedByLeader)
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.ApprovedByHead)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ApprovedByHead)
+            </dd>
+        }
+
+        <dt></dt>
+        <dd>
+
+            <input type="submit" value="Избери" class="btn btn-primary" />
+            @* @Html.ActionLink("Избери", "Select", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary" }) *@
+            @Html.ActionLink("Обратно", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
+        </dd>
+
+    </dl>
+}

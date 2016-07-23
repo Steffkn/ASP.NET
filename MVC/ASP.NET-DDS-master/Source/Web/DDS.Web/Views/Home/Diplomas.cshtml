@@ -1,5 +1,4 @@
 ﻿@model PagedList.IPagedList<DDS.Web.ViewModels.ManageDiplomas.CommonDiplomaViewModel>
-@using PagedList.Mvc;
 @using DDS.Web.Helpers;
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
@@ -8,6 +7,13 @@
 }
 
 @if (TempData["NotFound"] != null && (bool)TempData["NotFound"] == true)
+{
+    <div class="row">
+        @Html.Alert("", this.TempData["Message"].ToString(), AlertType.Warning)
+    </div>
+}
+
+@if (TempData["Selected"] != null && (bool)TempData["Selected"] == true)
 {
     <div class="row">
         @Html.Alert("", this.TempData["Message"].ToString(), AlertType.Warning)

@@ -16,10 +16,9 @@
 
         public string MiddleName { get; set; }
 
-        public string Titles { get; set; }
+        public string ScienceDegree { get; set; }
 
-        public string Address { get; set; }
-
+        // what will happen with Ph.D. (maybe adding in future) this will be better solution
         public Student Student { get; set; }
 
         public Teacher Teacher { get; set; }

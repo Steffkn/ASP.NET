@@ -1,5 +1,6 @@
 ﻿namespace DDS.Web.Controllers
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Web;
     using System.Web.Mvc;
@@ -18,14 +19,17 @@
     {
         private readonly ITeachersService teachers;
         private readonly IDiplomasService diplomas;
+        private readonly ITagsService tags;
         private ApplicationUserManager userManager;
 
         public ManageDiplomasController(
             ITeachersService teachers,
-            IDiplomasService diplomas)
+            IDiplomasService diplomas,
+            ITagsService tags)
         {
             this.teachers = teachers;
             this.diplomas = diplomas;
+            this.tags = tags;
         }
 
         public ApplicationUserManager UserManager
@@ -112,22 +116,46 @@
         {
             if (this.ModelState.IsValid)
             {
-                var teacherID = this.teachers.GetByUserId(this.User.Identity.GetUserId());
+                var teacher = this.teachers.GetByUserId(this.User.Identity.GetUserId());
 
                 // create diploma
                 var diploma = new Diploma()
                 {
-                    Teacher = teacherID,
+                    Teacher = teacher,
                     Title = viewModel.Title,
                     Description = viewModel.Description,
                     ExperimentalPart = viewModel.ExperimentalPart,
                     ContentCSV = string.Join(",", viewModel.ContentCSV),
                 };
 
+                var listOfTags = new List<Tag>();
+                foreach (var viewModelTag in viewModel.TagsNames)
+                {
+                    var tagId = 0;
+                    Tag tag;
+                    if (int.TryParse(viewModelTag, out tagId))
+                    {
+                        tag = this.tags.GetById(tagId);
+                    }
+                    else
+                    {
+                        tag = this.tags.EnsureCategory(viewModelTag);
+                    }
+
+                    listOfTags.Add(tag);
+                }
+
+                diploma.Tags = listOfTags;
+
                 // add diploma to teacher
-                this.teachers.AddDiploma(teacherID.Id, diploma);
+                this.teachers.AddDiploma(teacher.Id, diploma);
                 this.TempData["Message"] = "Дипломата е създадена!";
+
                 return this.RedirectToAction("Index", "ManageDiplomas");
+            }
+            else
+            {
+                this.TempData["Message"] = "Дипломата е не пълна!";
             }
 
             return this.View(viewModel);
@@ -185,7 +213,6 @@
             return this.View(viewModel);
         }
 
-
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -218,8 +245,9 @@
                 IsDeleted = diploma.IsDeleted,
                 ApprovedByLeader = diploma.IsApprovedByLeader,
                 ApprovedByHead = diploma.IsApprovedByHead,
+                IsSelectedByStudent = diploma.IsSelectedByStudent,
                 TeacherID = diploma.TeacherID,
-                TeacherName = string.Format("{0} {1} {1}", user.User.Titles, user.User.FirstName, user.User.LastName)
+                TeacherName = string.Format("{0} {1} {1}", user.User.ScienceDegree, user.User.FirstName, user.User.LastName)
             };
 
             return this.View(result);

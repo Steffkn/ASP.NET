@@ -25,5 +25,9 @@
         [Required]
         [Display(Name = "Създадена на")]
         public string CreatedOn { get; set; }
+
+        [Required]
+        [Display(Name = "Избрана")]
+        public bool IsSelectedByStudent { get; set; }
     }
 }

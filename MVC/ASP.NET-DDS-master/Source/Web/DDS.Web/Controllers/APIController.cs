@@ -1,14 +1,10 @@
-﻿using DDS.Data.Common.Models;
-using DDS.Services.Data.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-
-namespace DDS.Web.Controllers
+﻿namespace DDS.Web.Controllers
 {
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Web.Mvc;
+    using DDS.Services.Data.Interfaces;
+
     public class APIController : BaseController
     {
         private readonly ITagsService tags;

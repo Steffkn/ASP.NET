@@ -92,9 +92,19 @@
         </dd>
     }
 
+    @if (Model.IsSelectedByStudent)
+    {
+        <dt>->
+            @Html.DisplayNameFor(model => model.IsSelectedByStudent)
+        </dt>
+
+        <dd>->
+            @Html.DisplayFor(model => model.IsSelectedByStudent)
+        </dd>
+    }
+
     <dt></dt>
     <dd>
-        @Html.ActionLink("Избери", "Edit", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary" })
         @Html.ActionLink("Обратно", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
     </dd>
 </dl>

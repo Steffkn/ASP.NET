@@ -24,8 +24,8 @@
 
         public bool IsApprovedByLeader { get; set; }
 
-        public bool IsSelectedByStudent { get; set; }
-
         public bool IsApprovedByHead { get; set; }
+
+        public bool IsSelectedByStudent { get; set; }
     }
 }

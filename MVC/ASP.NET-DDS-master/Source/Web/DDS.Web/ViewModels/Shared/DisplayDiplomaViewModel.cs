@@ -11,7 +11,7 @@
         public int Id { get; set; }
 
         [Required]
-        [Display(Name = "Tema")]
+        [Display(Name = "Тема")]
         public string Title { get; set; }
 
         [Required]
@@ -39,6 +39,9 @@
 
         [Display(Name = "Удобрена от канцелария")]
         public bool ApprovedByHead { get; set; }
+
+        [Display(Name = "Избрана от студент")]
+        public bool IsSelectedByStudent { get; set; }
 
         [Display(Name = "Създадена")]
         public string CreatedOn { get; set; }

@@ -7,7 +7,6 @@
 
     public class StudentsService : BaseService<Student>, IStudentsService
     {
-
         public StudentsService(IDbRepository<Student> students)
             : base(students)
         {

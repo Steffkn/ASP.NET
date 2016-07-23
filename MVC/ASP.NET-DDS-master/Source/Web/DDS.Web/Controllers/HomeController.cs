@@ -101,6 +101,32 @@
             return this.View(result);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = GlobalConstants.StudentRoleName)]
+        public ActionResult Select(int id)
+        {
+            var selectedDiploma = this.diplomas.GetFullObjectById(id);
+            var student = this.students.GetByUserId(this.User.Identity.GetUserId());
+
+            if (selectedDiploma.Teacher != null)
+            {
+                selectedDiploma.Teacher.Students.Count();
+                selectedDiploma.Teacher.Students.Add(student);
+            }
+
+            if (selectedDiploma != null && student != null)
+            {
+                selectedDiploma.IsSelectedByStudent = true;
+                student.SelectedDiploma = selectedDiploma;
+                this.students.Save();
+            }
+
+            this.TempData["Selected"] = selectedDiploma.IsSelectedByStudent;
+            this.TempData["Message"] = string.Format("Дипломата \'{0}\' е избрана успешно!", selectedDiploma.Title);
+            return this.RedirectToAction("Diplomas");
+        }
+
         [HttpGet]
         [Authorize(Roles = GlobalConstants.StudentRoleName)]
         public ActionResult Edit(int? id)
@@ -317,6 +343,7 @@
             if (diplomas.LongCount() <= 0)
             {
                 this.TempData["NotFound"] = true;
+                this.TempData["Message"] = "Не са намерени дипломи!";
             }
             else
             {
