@@ -1,0 +1,5 @@
+This article is all about calculating the similarity between two strings or two words in C#.  
+http://social.technet.microsoft.com/wiki/contents/articles/26805.c-calculating-percentage-similarity-of-2-strings.aspx
+
+ASP.NET MVC Solution Architecture – Best Practices
+https://chsakell.com/2015/02/15/asp-net-mvc-solution-architecture-best-practices/
