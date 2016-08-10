@@ -29,7 +29,7 @@
                         <li>@Html.ActionLink("Мои дипломи", "Index", "ManageDiplomas", new { area = string.Empty }, null)</li>
                     }
                     <li>@Html.ActionLink("Дипломи", "Diplomas", "Home", new { area = string.Empty }, null)</li>
-                    <li>@Html.ActionLink("Учители", "Select", "Home", new { area = string.Empty }, null)</li>
+                    <li>@Html.ActionLink("Преподаватели", "Teachers", "Home", new { area = string.Empty }, null)</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
@@ -37,6 +37,7 @@
     </div>
     <div class="container body-content">
         <br />
+       
         @RenderBody()
         <hr />
         <footer>

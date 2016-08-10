@@ -13,8 +13,17 @@
     </div>
 }
 
+@if (this.TempData["DiplomaIsSelected"] != null)
+{
+    <div class="row">
+        @Html.Alert("", this.TempData["DiplomaIsSelected"].ToString(), AlertType.Danger)
+    </div>
+}
 
-@using (Html.BeginForm("Select", "Home", new { id = Model.Id }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("Select", "Home", new
+{
+    id = Model.Id
+}, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
     <dl class="dl-horizontal">
@@ -23,7 +32,7 @@
         </dt>
 
         <dd>
-            @Html.ActionLink(Model.TeacherName, "TeacherDetails", "Teacher", new { id = Model.TeacherID }, new { @class = "btn-link" })
+            @Html.ActionLink(Model.TeacherName, "TeacherDetails", "Home", new { id = Model.TeacherID }, new { @class = "btn-link" })
         </dd>
 
         <dt>
@@ -41,7 +50,6 @@
         <dd>
             @Html.DisplayFor(model => model.Description)
         </dd>
-
         <dt>
             @Html.DisplayNameFor(model => model.ContentCSV)
         </dt>
@@ -70,7 +78,7 @@
             @Html.DisplayFor(model => model.CreatedOn)
         </dd>
 
-        @if (Model.ModifiedOn != string.Empty)
+        @if (Model.ModifiedOn != null)
         {
             <dt>
                 @Html.DisplayNameFor(model => model.ModifiedOn)
@@ -91,33 +99,36 @@
             </dd>
         }
 
-        @if (Model.ApprovedByLeader)
+        @if (Model.IsApprovedByLeader)
         {
             <dt>
-                @Html.DisplayNameFor(model => model.ApprovedByLeader)
+                @Html.DisplayNameFor(model => model.IsApprovedByLeader)
             </dt>
 
             <dd>
-                @Html.DisplayFor(model => model.ApprovedByLeader)
+                @Html.DisplayFor(model => model.IsApprovedByLeader)
             </dd>
         }
-        @if (Model.ApprovedByLeader)
+        @if (Model.IsApprovedByLeader)
         {
             <dt>
-                @Html.DisplayNameFor(model => model.ApprovedByHead)
+                @Html.DisplayNameFor(model => model.IsApprovedByLeader)
             </dt>
 
             <dd>
-                @Html.DisplayFor(model => model.ApprovedByHead)
+                @Html.DisplayFor(model => model.IsApprovedByLeader)
             </dd>
         }
 
         <dt></dt>
         <dd>
+            @if (this.TempData["DiplomaIsSelected"] == null)
+            {
+                <input type="submit" value="Избери" class="btn btn-primary" />
+            }
 
-            <input type="submit" value="Избери" class="btn btn-primary" />
             @* @Html.ActionLink("Избери", "Select", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary" }) *@
-            @Html.ActionLink("Обратно", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
+            @Html.ActionLink("Обратно", "Diplomas", null, htmlAttributes: new { @class = "btn btn-default" })
         </dd>
 
     </dl>

@@ -222,6 +222,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\CustomHelpers.cs" />
+    <Compile Include="Helpers\PrincipalExtensions.cs" />
     <Compile Include="ViewModels\Account\ExternalLoginConfirmationViewModel.cs" />
     <Compile Include="ViewModels\Account\ForgotPasswordViewModel.cs" />
     <Compile Include="ViewModels\Account\ExternalLoginListViewModel.cs" />
@@ -231,10 +232,12 @@
     <Compile Include="ViewModels\Account\ResetPasswordViewModel.cs" />
     <Compile Include="ViewModels\Account\SendCodeViewModel.cs" />
     <Compile Include="ViewModels\Account\VerifyCodeViewModel.cs" />
-    <Compile Include="ViewModels\Home\TestViewModel.cs" />
-    <Compile Include="ViewModels\ManageDiplomas\CommonDiplomaViewModel.cs" />
+    <Compile Include="ViewModels\Shared\CommonDiplomaViewModel.cs" />
     <Compile Include="ViewModels\ManageDiplomas\CreateDiplomaViewModel.cs" />
     <Compile Include="ViewModels\ManageDiplomas\EditDiplomaViewModel.cs" />
+    <Compile Include="ViewModels\Shared\SimpleStudentViewModel.cs" />
+    <Compile Include="ViewModels\ManageDiplomas\StudentDiplomaViewModel.cs" />
+    <Compile Include="ViewModels\ManageDiplomas\StudentViewModel.cs" />
     <Compile Include="ViewModels\Manage\AddPhoneNumberViewModel.cs" />
     <Compile Include="ViewModels\Manage\ChangePasswordViewModel.cs" />
     <Compile Include="ViewModels\Manage\FactorViewModel.cs" />
@@ -247,6 +250,8 @@
     <Compile Include="ViewModels\Manage\VerifyPhoneNumberViewModel.cs" />
     <Compile Include="ViewModels\Shared\DisplayDiplomaViewModel.cs" />
     <Compile Include="ViewModels\Shared\TagViewModel.cs" />
+    <Compile Include="ViewModels\Shared\TeacherDiplomasViewModel.cs" />
+    <Compile Include="ViewModels\Shared\TeacherViewModel.cs" />
     <Compile Include="ViewModels\Tags\DiplomaTestViewModel.cs" />
     <Compile Include="ViewModels\Tags\SelectTagViewModel.cs" />
     <Compile Include="ViewModels\Teacher\TeacherFullViewModel.cs" />
@@ -384,13 +389,16 @@
     <Content Include="Views\Shared\_Pager.cshtml" />
     <Content Include="Views\Shared\_DetailsForDiploma.cshtml" />
     <Content Include="Views\Tags\Index.cshtml" />
+    <Content Include="Views\Home\Teachers.cshtml" />
+    <Content Include="Views\Home\TeacherDetails.cshtml" />
+    <Content Include="Views\ManageDiplomas\Selected.cshtml" />
+    <Content Include="Views\Home\Tag.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Administration\Models\" />
     <Folder Include="Areas\Administration\Views\Default\" />
     <Folder Include="Areas\Administration\Views\Shared\" />
-    <Folder Include="Views\API\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

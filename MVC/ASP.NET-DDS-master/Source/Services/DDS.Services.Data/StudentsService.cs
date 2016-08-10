@@ -4,6 +4,7 @@
     using Data.Interfaces;
     using DDS.Data.Common;
     using DDS.Data.Models;
+    using System.Data.Entity;
 
     public class StudentsService : BaseService<Student>, IStudentsService
     {
@@ -40,5 +41,16 @@
         {
             this.Items.GetById(studentId).SelectedDiploma = null;
         }
+
+        public Student GetSelectedDiplomaByUser(string userId)
+        {
+            return this.Items.All().Include(s => s.SelectedDiploma).FirstOrDefault(t => t.User.Id == userId);
+        }
+
+        public Student GetSelectedDiploma(int studentId)
+        {
+            return this.Items.All().Include(s => s.SelectedDiploma).FirstOrDefault(t => t.Id == studentId);
+        }
+
     }
 }

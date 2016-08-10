@@ -9,5 +9,7 @@
         public string Name { get; set; }
 
         public virtual ICollection<Diploma> Diplomas { get; set; }
+
+        public virtual ICollection<Teacher> Teachers { get; set; }
     }
 }

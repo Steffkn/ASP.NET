@@ -1,5 +1,7 @@
 namespace DDS.Data.Migrations
 {
+    using System;
+    using System.Collections.Generic;
     using System.Data.Entity.Migrations;
     using System.Linq;
 
@@ -7,8 +9,7 @@ namespace DDS.Data.Migrations
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
     using Models;
-    using System;
-    using System.Collections.Generic;
+
     public sealed class Configuration : DbMigrationsConfiguration<ApplicationDbContext>
     {
         public Configuration()
@@ -225,6 +226,7 @@ namespace DDS.Data.Migrations
 
             var userTeacher = userManager.FindByName("misheto98").Teacher;
             var teacher = context.Teachers.FirstOrDefault(t => t.Id == userTeacher.Id);
+            var count = teacher.Tags.Count;
 
             var diplomaTags = new List<Tag>();
             diplomaTags.Add(allTags[2]);
@@ -243,6 +245,11 @@ namespace DDS.Data.Migrations
 
             teacher.Diplomas.Add(diploma);
 
+            foreach (var tag in diplomaTags)
+            {
+                teacher.Tags.Add(tag);
+            }
+
             diplomaTags = new List<Tag>();
             diplomaTags.Add(allTags[1]);
             diplomaTags.Add(allTags[3]);
@@ -259,6 +266,11 @@ namespace DDS.Data.Migrations
             };
 
             teacher.Diplomas.Add(diploma);
+
+            foreach (var tag in diplomaTags)
+            {
+                teacher.Tags.Add(tag);
+            }
 
             diplomaTags = new List<Tag>();
             diplomaTags.Add(allTags[0]);
@@ -278,6 +290,10 @@ namespace DDS.Data.Migrations
 
             teacher.Diplomas.Add(diploma);
 
+            foreach (var tag in diplomaTags)
+            {
+                teacher.Tags.Add(tag);
+            }
 
             diplomaTags = new List<Tag>();
             diplomaTags.Add(allTags[2]);
@@ -295,6 +311,11 @@ namespace DDS.Data.Migrations
 
             teacher.Diplomas.Add(diploma);
 
+            foreach (var tag in diplomaTags)
+            {
+                teacher.Tags.Add(tag);
+            }
+
             diplomaTags = new List<Tag>();
             diplomaTags.Add(allTags[2]);
             diplomaTags.Add(allTags[9]);
@@ -310,6 +331,11 @@ namespace DDS.Data.Migrations
             };
 
             teacher.Diplomas.Add(diploma);
+
+            foreach (var tag in diplomaTags)
+            {
+                teacher.Tags.Add(tag);
+            }
 
             diplomaTags = new List<Tag>();
             diplomaTags.Add(allTags[2]);
@@ -327,6 +353,11 @@ namespace DDS.Data.Migrations
 
             teacher.Diplomas.Add(diploma);
 
+            foreach (var tag in diplomaTags)
+            {
+                teacher.Tags.Add(tag);
+            }
+
             diplomaTags = new List<Tag>();
             diplomaTags.Add(allTags[2]);
             diplomaTags.Add(allTags[9]);
@@ -342,6 +373,11 @@ namespace DDS.Data.Migrations
             };
 
             teacher.Diplomas.Add(diploma);
+
+            foreach (var tag in diplomaTags)
+            {
+                teacher.Tags.Add(tag);
+            }
 
             userTeacher = userManager.FindByName("rali").Teacher;
             teacher = context.Teachers.FirstOrDefault(t => t.Id == userTeacher.Id);
@@ -362,6 +398,11 @@ namespace DDS.Data.Migrations
 
             teacher.Diplomas.Add(diploma);
 
+            foreach (var tag in diplomaTags)
+            {
+                teacher.Tags.Add(tag);
+            }
+
             diplomaTags = new List<Tag>();
             diplomaTags.Add(allTags[2]);
             diplomaTags.Add(allTags[9]);
@@ -378,6 +419,11 @@ namespace DDS.Data.Migrations
 
             teacher.Diplomas.Add(diploma);
 
+            foreach (var tag in diplomaTags)
+            {
+                teacher.Tags.Add(tag);
+            }
+
             diplomaTags = new List<Tag>();
             diplomaTags.Add(allTags[2]);
             diplomaTags.Add(allTags[9]);
@@ -393,6 +439,11 @@ namespace DDS.Data.Migrations
             };
 
             teacher.Diplomas.Add(diploma);
+
+            foreach (var tag in diplomaTags)
+            {
+                teacher.Tags.Add(tag);
+            }
         }
     }
 }

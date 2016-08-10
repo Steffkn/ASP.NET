@@ -1,11 +1,14 @@
 ﻿namespace DDS.Web.ViewModels.Shared
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Web.Mvc;
+    using AutoMapper;
     using Data.Models;
+    using Infrastructure.Mapping;
 
-    public class DisplayDiplomaViewModel
+    public class DisplayDiplomaViewModel : IMapFrom<Diploma>, IHaveCustomMappings
     {
         [Required]
         public int Id { get; set; }
@@ -27,6 +30,7 @@
 
         public string[] TagsNames { get; set; }
 
+        [Display(Name = "Категории")]
         public IEnumerable<SelectListItem> Tags { get; set; }
 
         public int TeacherID { get; set; }
@@ -35,24 +39,31 @@
         public string TeacherName { get; set; }
 
         [Display(Name = "Удобрена от ръководител")]
-        public bool ApprovedByLeader { get; set; }
+        public bool IsApprovedByLeader { get; set; }
 
         [Display(Name = "Удобрена от канцелария")]
-        public bool ApprovedByHead { get; set; }
+        public bool IsApprovedByHead { get; set; }
 
         [Display(Name = "Избрана от студент")]
         public bool IsSelectedByStudent { get; set; }
 
         [Display(Name = "Създадена")]
-        public string CreatedOn { get; set; }
+        public DateTime CreatedOn { get; set; }
 
         [Display(Name = "Последно променена")]
-        public string ModifiedOn { get; set; }
+        public DateTime? ModifiedOn { get; set; }
 
         [Display(Name = "Изтрита на:")]
-        public string DeletedOn { get; set; }
+        public DateTime? DeletedOn { get; set; }
 
         [Display(Name = "Изтрита?")]
         public bool IsDeleted { get; set; }
+
+        public void CreateMappings(IMapperConfiguration configuration)
+        {
+            configuration.CreateMap<Diploma, DisplayDiplomaViewModel>()
+                .ForMember(src => src.ContentCSV, dest => dest.Ignore())
+                .ForMember(src => src.Tags, dest => dest.Ignore());
+        }
     }
 }

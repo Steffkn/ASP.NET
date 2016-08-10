@@ -1,4 +1,4 @@
-﻿@model PagedList.IPagedList<DDS.Web.ViewModels.ManageDiplomas.CommonDiplomaViewModel>
+﻿@model PagedList.IPagedList<DDS.Web.ViewModels.Shared.CommonDiplomaViewModel>
 @using PagedList.Mvc;
 @using DDS.Web.Helpers;
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
@@ -45,8 +45,9 @@
     <tbody>
         @{ int index = (Model.PageNumber - 1) * Model.PageSize;}
         @foreach (var item in Model)
-            {
-            <tr>
+        {
+            <tr class="@(@item.IsSelectedByStudent ? "panel-warning" : "panel-default")">
+                                
                 <td>
                     @{index++;}
                     @index
@@ -71,7 +72,7 @@
                         }
                         else
                         {
-                            <a>Студент</a>
+                            <span class="text-success">Избрана</span>
                         }
                     </div>
                 </td>

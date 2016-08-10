@@ -2,23 +2,11 @@
 @using DDS.Web.Helpers;
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
+@using DDS.Web.Helpers;
 @{
-    ViewBag.Title = "Дипломи";
+    ViewBag.Title = "Дипломи по таг";
 }
 
-@if (TempData["NotFound"] != null && (bool)TempData["NotFound"] == true)
-{
-    <div class="row">
-        @Html.Alert("", this.TempData["Message"].ToString(), AlertType.Warning)
-    </div>
-}
-
-@if (TempData["Selected"] != null && (bool)TempData["Selected"] == true)
-{
-    <div class="row">
-        @Html.Alert("", this.TempData["Message"].ToString(), AlertType.Warning)
-    </div>
-}
 
 <div class="row">
     @using (Html.BeginForm("Diplomas", "Home", FormMethod.Get))
@@ -34,11 +22,14 @@
             <th class="col-md-4">
                 @Html.ActionLink("Заглавие", "Diplomas", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
             </th>
-            <th class="col-md-4">
+            <th class="col-md-2">
                 @Html.DisplayName("Описание")
             </th>
             <th class="col-md-2">
                 @Html.DisplayName("Преподавател")
+            </th>
+            <th class="col-md-2">
+                @Html.DisplayName("Категории")
             </th>
             <th class="col-md-2">
                 @Html.ActionLink("Дата на добавяне", "Diplomas", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
@@ -62,7 +53,13 @@
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 <td>
-                    @Html.ActionLink(item.TeacherName, "TeacherDetails", "Home", new { id = item.TeacherID}, new { @class = "font-color-blue" })
+                    @Html.ActionLink(item.TeacherName, "TeacherDetails", "Home", new { id = item.TeacherID }, new { @class = "font-color-blue" })
+                </td>
+                <td>
+                    @foreach (var tag in item.Tags)
+                    {
+                        @Html.DisplayFor(modelItem => tag.Text)
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.CreatedOn)

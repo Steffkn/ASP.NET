@@ -1,4 +1,8 @@
-﻿body {
+﻿html {
+    overflow-y: scroll;
+}
+
+body {
     padding-top: 50px;
     padding-bottom: 20px;
 }
@@ -37,4 +41,15 @@ textarea {
 
 .table-hover {
     cursor: help;
+}
+
+@media (min-width: 768px) {
+    .dl-horizontal dt {
+        width:220px;
+        white-space: normal;
+        margin-bottom: 5px;
+    }
+    .dl-horizontal dd {
+        margin-left:240px;
+    }
 }

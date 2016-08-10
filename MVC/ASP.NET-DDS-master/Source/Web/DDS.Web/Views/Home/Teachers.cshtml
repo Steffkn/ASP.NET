@@ -1,0 +1,40 @@
+﻿@model IEnumerable<DDS.Web.ViewModels.Shared.TeacherViewModel>
+
+@{
+    ViewBag.Title = "Teachers";
+}
+
+<h2>Teachers</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.TeacherName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Tags)
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.ActionLink(item.ScienceDegree + " " + item.TeacherName, "TeacherDetails", "Home", new { id = item.Id }, new { @class = "font-color-blue" })
+            </td>
+            <td>
+                @item.Email
+            </td>
+            <td>
+                @foreach (var tag in item.Tags)
+                {
+                    <a>@tag.Name</a>
+                }
+            </td>
+        </tr>
+    }
+
+</table>

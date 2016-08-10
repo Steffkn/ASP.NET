@@ -1,0 +1,96 @@
+﻿@model DDS.Web.ViewModels.Shared.TeacherDiplomasViewModel
+@using DDS.Web.Helpers;
+
+@{
+    ViewBag.Title = "Детайли";
+}
+
+
+@if (TempData["Message"] != null)
+{
+    <div class="row">
+        @Html.Alert("", TempData["Message"].ToString(), AlertType.Info)
+    </div>
+}
+
+<dl class="dl-horizontal">
+    <dt>
+        @Html.DisplayNameFor(model => model.TeacherDetails.TeacherName)
+    </dt>
+
+    <dd>
+        @Html.ActionLink(Model.TeacherDetails.ScienceDegree + " " + Model.TeacherDetails.TeacherName, "TeacherDetails", "Home", new { id = Model.TeacherDetails.Id }, new { @class = "btn-link" })
+    </dd>
+    <dt>
+        @Html.DisplayNameFor(model => model.TeacherDetails.Email)
+    </dt>
+
+    <dd>
+        @Model.TeacherDetails.Email
+    </dd>
+    <dt>
+        @Html.DisplayNameFor(model => model.TeacherDetails.PhoneNumber)
+    </dt>
+
+    <dd>
+        @Model.TeacherDetails.PhoneNumber
+    </dd>
+</dl>
+
+<table class="table table-hover table-responsive">
+    <thead>
+        <tr>
+            <th class="">#</th>
+            <th class="col-md-4">
+                @Html.ActionLink("Заглавие", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
+            </th>
+            <th class="col-md-6">
+                @Html.DisplayName("Описание")
+            </th>
+            <th class="col-md-2">
+                @Html.ActionLink("Дата на добавяне", "Index", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int index = 0;
+            foreach (var item in Model.Diplomas)
+            {
+                index++;
+                <tr>
+                    <td>
+                        @index
+                        @Html.Hidden("RedirectToDetails", Url.Action("Details", "Home", new { id = item.Id }))
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreatedOn)
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<br />
+@*<div class="row">
+        @Html.Partial("_Pager", Model, new ViewDataDictionary { { "ActionName", "Index" } })
+    </div>*@
+
+@section scripts{
+    <script type="text/javascript">
+        window.onload = function () {
+            $('.table > tbody > tr').on('click', function () {
+                var url = $(this).find("#RedirectToDetails").val();
+                location.href = url;
+            });
+
+            $('.alert').fadeIn('fast').delay(3000).fadeOut('slow');
+        }
+
+    </script>
+}

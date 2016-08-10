@@ -1,6 +1,7 @@
 ﻿namespace DDS.Web.Controllers
 {
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using System.Web;
     using System.Web.Mvc;
@@ -19,16 +20,19 @@
     {
         private readonly ITeachersService teachers;
         private readonly IDiplomasService diplomas;
+        private readonly IStudentsService students;
         private readonly ITagsService tags;
         private ApplicationUserManager userManager;
 
         public ManageDiplomasController(
             ITeachersService teachers,
             IDiplomasService diplomas,
+            IStudentsService students,
             ITagsService tags)
         {
             this.teachers = teachers;
             this.diplomas = diplomas;
+            this.students = students;
             this.tags = tags;
         }
 
@@ -103,6 +107,18 @@
             int pageSize = 5;
             int pageNumber = page ?? 1;
             return this.View(diplomas.ToPagedList(pageNumber, pageSize));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Approve(int Id)
+        {
+            var diploma = this.diplomas.GetById(Id);
+            diploma.IsApprovedByLeader = true;
+
+            this.diplomas.Save();
+
+            return this.RedirectToAction("Details", "ManageDiplomas", new { @id = Id });
         }
 
         public ActionResult Create()
@@ -228,28 +244,105 @@
                 return this.RedirectToAction("Index", "ManageDiplomas");
             }
 
-            var user = this.teachers.GetFullObjectById(diploma.TeacherID);
+            var result = new StudentDiplomaViewModel();
 
-            var result = new DisplayDiplomaViewModel()
+            var studentDetails = this.students.GetAll()
+                                              .Where(s => s.SelectedDiploma.Id == diploma.Id)
+                                              .Include(s => s.User)
+                                              .To<SimpleStudentViewModel>()
+                                              .FirstOrDefault();
+            result.Student = studentDetails;
+
+            var diplomaModel = this.diplomas.GetAll()
+                                             .Where(d => d.Id == intId)
+                                             .Include(d => d.Teacher)
+                                             .Include(d => d.Tags)
+                                             .To<DisplayDiplomaViewModel>();
+
+            result.Diploma = diplomaModel.FirstOrDefault();
+            result.Diploma.ContentCSV = diploma.ContentCSV.Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries).ToList();
+            result.Diploma.TeacherID = diploma.TeacherID;
+            result.Diploma.Tags = diploma.Tags.Select(t => new SelectListItem
             {
-                Id = diploma.Id,
-                Title = diploma.Title,
-                Description = diploma.Description,
-                ExperimentalPart = diploma.ExperimentalPart,
-                ContentCSV = diploma.ContentCSV
-                                    .Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries)
-                                    .ToList(),
-                CreatedOn = diploma.CreatedOn.ToString(),
-                ModifiedOn = diploma.ModifiedOn.ToString(),
-                DeletedOn = diploma.DeletedOn.ToString(),
-                IsDeleted = diploma.IsDeleted,
-                ApprovedByLeader = diploma.IsApprovedByLeader,
-                ApprovedByHead = diploma.IsApprovedByHead,
-                IsSelectedByStudent = diploma.IsSelectedByStudent,
-                TeacherID = diploma.TeacherID,
-                TeacherName = string.Format("{0} {1} {1}", user.User.ScienceDegree, user.User.FirstName, user.User.LastName)
-            };
+                Text = t.Name,
+                Disabled = true,
+                Selected = true,
+                Value = t.Id.ToString()
+            });
 
+            var teacher = this.teachers.GetFullObjectById(diploma.TeacherID);
+            result.Diploma.TeacherName = string.Format("{0} {1} {2}", teacher.User.ScienceDegree, teacher.User.FirstName, teacher.User.LastName).Trim();
+
+            return this.View(result);
+        }
+
+        public ActionResult Selected(int? id)
+        {
+            if (id == null)
+            {
+                return this.RedirectToAction("Index", "ManageDiplomas");
+            }
+
+            var result = new StudentDiplomaViewModel();
+            var student = new SimpleStudentViewModel();
+
+            int intId = id ?? 0;
+            var diploma = this.diplomas.GetById(intId);
+            if (diploma == null)
+            {
+                this.TempData["Message"] = "Дипломата не бе намерена!";
+                return this.RedirectToAction("Index", "ManageDiplomas");
+            }
+
+            var teacher = this.teachers.GetFullObjectById(diploma.TeacherID);
+
+            //var diplomaModel = new DisplayDiplomaViewModel()
+            //{
+            //    Id = diploma.Id,
+            //    Title = diploma.Title,
+            //    Description = diploma.Description,
+            //    ExperimentalPart = diploma.ExperimentalPart,
+            //    ContentCSV = diploma.ContentCSV
+            //                        .Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries)
+            //                        .ToList(),
+            //    CreatedOn = diploma.CreatedOn.ToString(),
+            //    ModifiedOn = diploma.ModifiedOn.ToString(),
+            //    DeletedOn = diploma.DeletedOn.ToString(),
+            //    IsDeleted = diploma.IsDeleted,
+            //    ApprovedByLeader = diploma.IsApprovedByLeader,
+            //    ApprovedByHead = diploma.IsApprovedByHead,
+            //    IsSelectedByStudent = diploma.IsSelectedByStudent,
+            //    TeacherID = diploma.TeacherID,
+            //    TeacherName = string.Format("{0} {1} {2}", teacher.User.ScienceDegree, teacher.User.FirstName, teacher.User.LastName).Trim()
+            //};
+
+            var diplomaModel = this.diplomas.GetAll()
+                 .Where(d => d.Id == intId)
+                 .Include(d => d.Teacher)
+                 .Include(d => d.Tags)
+                 .To<DisplayDiplomaViewModel>();
+
+            var studentDetails = this.students.GetAll()
+                 .Where(s => s.SelectedDiploma.Id == diploma.Id)
+                 .Include(s => s.User)
+                 .To<SimpleStudentViewModel>()
+                 .FirstOrDefault();
+
+            result.Diploma = diplomaModel.FirstOrDefault();
+
+            result.Diploma.ContentCSV = diploma.ContentCSV
+                                    .Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries)
+                                    .ToList();
+
+            result.Diploma.Tags = diploma.Tags.Select(t => new SelectListItem
+            {
+                Text = t.Name,
+                Disabled = true,
+                Selected = true,
+                Value = t.Id.ToString()
+            });
+
+            result.Student = studentDetails;
             return this.View(result);
         }
 
