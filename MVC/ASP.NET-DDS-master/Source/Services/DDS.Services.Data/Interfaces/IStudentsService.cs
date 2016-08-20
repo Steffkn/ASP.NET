@@ -1,12 +1,13 @@
 ﻿namespace DDS.Services.Data.Interfaces
 {
     using DDS.Data.Models;
+    using System.Linq;
 
     public interface IStudentsService : IBaseServices<Student>
     {
         Student GetByFNumber(int number);
 
-        Student GetByUserId(string userId);
+        IQueryable<Student> GetByUserId(string userId);
 
         void AddDiploma(int studentId, Diploma entity);
 

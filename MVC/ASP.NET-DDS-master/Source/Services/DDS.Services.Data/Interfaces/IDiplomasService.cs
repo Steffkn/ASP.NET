@@ -11,5 +11,7 @@
         IQueryable<Diploma> GetByTeacherId(int id);
 
         IQueryable<Diploma> GetRandomDiplomas(int count);
+
+        IQueryable<Diploma> GetWithID(int id);
     }
 }

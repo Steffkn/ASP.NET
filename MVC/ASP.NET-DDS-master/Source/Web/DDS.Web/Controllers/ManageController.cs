@@ -9,6 +9,7 @@
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.Owin;
     using Microsoft.Owin.Security;
+    using Services.Data.Interfaces;
 
     [Authorize]
     public class ManageController : BaseController
@@ -20,8 +21,13 @@
 
         private ApplicationUserManager userManager;
 
-        public ManageController()
+        private readonly IStudentsService students;
+        private readonly ITeachersService teachers;
+
+        public ManageController(IStudentsService students, ITeachersService teachers)
         {
+            this.students = students;
+            this.teachers = teachers;
         }
 
         public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
@@ -93,16 +99,33 @@
                                                                            : string.Empty;
 
             var userId = this.User.Identity.GetUserId();
+            var user = this.UserManager.FindById(userId);
+
             var model = new IndexViewModel
             {
+                UserId = userId,
                 HasPassword = this.HasPassword(),
                 PhoneNumber = await this.UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await this.UserManager.GetTwoFactorEnabledAsync(userId),
                 Logins = await this.UserManager.GetLoginsAsync(userId),
-                BrowserRemembered =
-                                    await
-                                    this.AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
+                BrowserRemembered = await this.AuthenticationManager.TwoFactorBrowserRememberedAsync(userId),
+                ScienceDegree = user.ScienceDegree,
             };
+
+            if (this.teachers.GetByUserId(model.UserId) == null)
+            {
+                user.Student = this.students.GetByUserId(userId).FirstOrDefault();
+                model.Address = user.Student.Address;
+                model.FNumber = user.Student.FNumber;
+                this.TempData["Student"] = true;
+            }
+            else
+            {
+                this.TempData["Student"] = false;
+            }
+
+            model.Student = user.Student;
+
             return this.View(model);
         }
 
@@ -154,6 +177,33 @@
             this.UserManager.SetPhoneNumber(this.User.Identity.GetUserId(), model.Number);
 
             return this.RedirectToAction("Index", ManageMessageId.AddPhoneSuccess);
+        }
+
+        // POST: /Manage/SaveInfo
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SaveInfo(IndexViewModel model)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.RedirectToAction("Index");
+            }
+
+            var user = this.UserManager.FindById(model.UserId);
+
+            user.PhoneNumber = model.PhoneNumber;
+            user.ScienceDegree = model.ScienceDegree;
+            this.UserManager.Update(user);
+
+            if (this.teachers.GetByUserId(model.UserId) == null)
+            {
+                user.Student = this.students.GetByUserId(model.UserId).FirstOrDefault();
+                user.Student.FNumber = model.FNumber;
+                user.Student.Address = model.Address;
+                this.students.Save();
+            }
+
+            return this.RedirectToAction("Index", "Home", null);
         }
 
         // POST: /Manage/EnableTwoFactorAuthentication

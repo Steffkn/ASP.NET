@@ -2,10 +2,10 @@
 @using DDS.Web.Helpers;
 
 @{
-    ViewBag.Title = "Детайли";
+    ViewBag.Title = "Детайли за предподавателя";
 }
 
-
+<h2>Детайли за предподавателя</h2>
 @if (TempData["Message"] != null)
 {
     <div class="row">
@@ -44,8 +44,11 @@
             <th class="col-md-4">
                 @Html.ActionLink("Заглавие", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
             </th>
-            <th class="col-md-6">
+            <th class="col-md-4">
                 @Html.DisplayName("Описание")
+            </th>
+            <th class="col-md-2">
+                @Html.DisplayName("Категории")
             </th>
             <th class="col-md-2">
                 @Html.ActionLink("Дата на добавяне", "Index", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
@@ -67,6 +70,12 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @foreach (var tag in item.Tags)
+                        {
+                            @Html.ActionLink(tag.Name, "Tag", new { id = tag.Id, teacherId = item.TeacherID }, new { @class = "btn btn-default" })<text> </text>
+                        }
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.CreatedOn)

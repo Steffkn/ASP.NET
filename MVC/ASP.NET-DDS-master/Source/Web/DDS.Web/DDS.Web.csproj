@@ -209,6 +209,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\Administration\AdministrationAreaRegistration.cs" />
     <Compile Include="Areas\Administration\Controllers\AdministrationController.cs" />
+    <Compile Include="Areas\Administration\Controllers\ManageDiplomaController.cs" />
     <Compile Include="Areas\Administration\ViewModels\UserViewModel.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\APIController.cs" />
@@ -283,6 +284,7 @@
     <Content Include="Areas\Administration\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Administration\Views\Administration\Index.cshtml" />
     <Content Include="Areas\Administration\Views\Administration\Edit.cshtml" />
+    <Content Include="Areas\Administration\Views\ManageDiploma\Diplomas.cshtml" />
     <None Include="Scripts\jquery-2.2.0.intellisense.js" />
     <Content Include="Scripts\jquery-2.2.0.js" />
     <Content Include="Scripts\jquery-2.2.0.min.js" />
@@ -484,4 +486,9 @@
   </Target>
   <Target Name="AfterBuild">
   </Target> -->
+  <Target Name="DeleteBinObjFolders" AfterTargets="Clean">
+    <RemoveDir Directories="..\..\Publish" />
+    <RemoveDir Directories=".\bin" />
+    <RemoveDir Directories="$(BaseIntermediateOutputPath)" />
+  </Target>
 </Project>

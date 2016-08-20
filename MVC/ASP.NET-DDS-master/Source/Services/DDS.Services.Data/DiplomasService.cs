@@ -21,6 +21,12 @@
             return diploma.FirstOrDefault();
         }
 
+        public IQueryable<Diploma> GetWithID(int id)
+        {
+            var diploma = this.Items.All().Where(d => d.Id == id);
+            return diploma;
+        }
+
         public IQueryable<Diploma> GetByTeacherId(int id)
         {
             var diplomas = this.Items.All().Where(d => d.TeacherID == id);

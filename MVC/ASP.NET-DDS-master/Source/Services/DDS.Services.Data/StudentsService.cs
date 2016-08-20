@@ -26,9 +26,14 @@
             return student;
         }
 
-        public Student GetByUserId(string userId)
+        //public Student GetByUserId(string userId)
+        //{
+        //    return this.Items.All().FirstOrDefault(t => t.User.Id == userId);
+        //}
+
+        public IQueryable<Student> GetByUserId(string userId)
         {
-            return this.Items.All().FirstOrDefault(t => t.User.Id == userId);
+            return this.Items.All().Where(t => t.User.Id == userId);
         }
 
         public void AddDiploma(int studentId, Diploma entity)

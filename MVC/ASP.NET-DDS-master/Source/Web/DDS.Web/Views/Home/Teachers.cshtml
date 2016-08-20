@@ -4,7 +4,7 @@
     ViewBag.Title = "Teachers";
 }
 
-<h2>Teachers</h2>
+<h2>Преподаватели</h2>
 
 <table class="table">
     <tr>
@@ -31,7 +31,7 @@
             <td>
                 @foreach (var tag in item.Tags)
                 {
-                    <a>@tag.Name</a>
+                    @Html.ActionLink(tag.Name, "Tag", new { id = tag.Id, teacherId = item.Id }, new { @class = "btn btn-default" })<text> </text>
                 }
             </td>
         </tr>

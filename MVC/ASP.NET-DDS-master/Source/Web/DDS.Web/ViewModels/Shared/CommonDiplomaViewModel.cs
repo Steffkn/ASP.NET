@@ -1,5 +1,6 @@
 ﻿namespace DDS.Web.ViewModels.Shared
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using AutoMapper;
     using Data.Models;
@@ -33,6 +34,8 @@
         [Required]
         [Display(Name = "Преподавател")]
         public string TeacherName { get; set; }
+
+        public ICollection<Tag> Tags { get; set; }
 
         [Required]
         public int TeacherID { get; set; }

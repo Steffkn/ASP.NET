@@ -20,10 +20,14 @@
     </div>
 }
 
-@using (Html.BeginForm("Select", "Home", new
+@if (this.TempData["UpdateProfile"] != null)
 {
-    id = Model.Id
-}, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    <div class="row">
+        @Html.Alert("", this.TempData["UpdateProfile"].ToString(), AlertType.Danger)
+    </div>
+}
+
+@using (Html.BeginForm("Select", "Home", new { id = Model.Id }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
     <dl class="dl-horizontal">
@@ -109,14 +113,14 @@
                 @Html.DisplayFor(model => model.IsApprovedByLeader)
             </dd>
         }
-        @if (Model.IsApprovedByLeader)
+        @if (Model.IsApprovedByHead)
         {
             <dt>
-                @Html.DisplayNameFor(model => model.IsApprovedByLeader)
+                @Html.DisplayNameFor(model => model.IsApprovedByHead)
             </dt>
 
             <dd>
-                @Html.DisplayFor(model => model.IsApprovedByLeader)
+                @Html.DisplayFor(model => model.IsApprovedByHead)
             </dd>
         }
 
@@ -127,7 +131,6 @@
                 <input type="submit" value="Избери" class="btn btn-primary" />
             }
 
-            @* @Html.ActionLink("Избери", "Select", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary" }) *@
             @Html.ActionLink("Обратно", "Diplomas", null, htmlAttributes: new { @class = "btn btn-default" })
         </dd>
 

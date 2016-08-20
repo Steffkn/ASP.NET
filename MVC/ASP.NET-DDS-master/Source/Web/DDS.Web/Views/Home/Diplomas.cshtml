@@ -6,6 +6,8 @@
     ViewBag.Title = "Дипломи";
 }
 
+<h2>Дипломи</h2>
+
 @if (TempData["NotFound"] != null && (bool)TempData["NotFound"] == true)
 {
     <div class="row">
@@ -34,13 +36,16 @@
             <th class="col-md-4">
                 @Html.ActionLink("Заглавие", "Diplomas", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
             </th>
-            <th class="col-md-4">
+            <th class="col-md-2 hidden-sm hidden-xs">
                 @Html.DisplayName("Описание")
             </th>
             <th class="col-md-2">
                 @Html.DisplayName("Преподавател")
             </th>
             <th class="col-md-2">
+                @Html.DisplayName("Категории")
+            </th>
+            <th class="col-md-2 hidden-xs">
                 @Html.ActionLink("Дата на добавяне", "Diplomas", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
             </th>
         </tr>
@@ -58,13 +63,19 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
-                <td>
+                <td class="hidden-sm hidden-xs">
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 <td>
                     @Html.ActionLink(item.TeacherName, "TeacherDetails", "Home", new { id = item.TeacherID}, new { @class = "font-color-blue" })
                 </td>
                 <td>
+                    @foreach (var tag in item.Tags)
+                    {
+                        @Html.ActionLink(tag.Name, "Tag", new { id = tag.Id, currentFilter = ViewBag.CurrentFilter }, new { @class = "btn btn-default" })<text> </text>
+                    }
+                </td>
+                <td class="hidden-xs">
                     @Html.DisplayFor(modelItem => item.CreatedOn)
                 </td>
             </tr>

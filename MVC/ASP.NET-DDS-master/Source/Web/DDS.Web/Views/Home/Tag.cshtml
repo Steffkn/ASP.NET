@@ -4,12 +4,13 @@
 
 @using DDS.Web.Helpers;
 @{
-    ViewBag.Title = "Дипломи по таг";
+    ViewBag.Title = "Дипломи по категория";
 }
 
+<h2>Дипломи по категория</h2>
 
 <div class="row">
-    @using (Html.BeginForm("Diplomas", "Home", FormMethod.Get))
+    @using (Html.BeginForm("Tag", "Home", FormMethod.Get))
     {
         @Html.Partial("~/Views/Shared/_SearchBoxPartial.cshtml")
     }
@@ -20,7 +21,7 @@
         <tr>
             <th class="">#</th>
             <th class="col-md-4">
-                @Html.ActionLink("Заглавие", "Diplomas", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
+                @Html.ActionLink("Заглавие", "Tag", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
             </th>
             <th class="col-md-2">
                 @Html.DisplayName("Описание")
@@ -32,7 +33,7 @@
                 @Html.DisplayName("Категории")
             </th>
             <th class="col-md-2">
-                @Html.ActionLink("Дата на добавяне", "Diplomas", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
+                @Html.ActionLink("Дата на добавяне", "Tag", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
             </th>
         </tr>
     </thead>
@@ -55,10 +56,10 @@
                 <td>
                     @Html.ActionLink(item.TeacherName, "TeacherDetails", "Home", new { id = item.TeacherID }, new { @class = "font-color-blue" })
                 </td>
-                <td>
+                <td class="btn-toolbar">
                     @foreach (var tag in item.Tags)
                     {
-                        @Html.DisplayFor(modelItem => tag.Text)
+                        @Html.ActionLink(tag.Name, "Tag", new { id = tag.Id, currentFilter = ViewBag.CurrentFilter }, new { @class = "btn btn-default" })<text> </text>
                     }
                 </td>
                 <td>
@@ -70,7 +71,7 @@
 </table>
 <br />
 <div class="row">
-    @Html.Partial("_Pager", Model, new ViewDataDictionary { { "ActionName", "Diplomas" } })
+    @Html.Partial("_Pager", Model, new ViewDataDictionary { { "ActionName", "Tag" } })
 </div>
 
 @section scripts{

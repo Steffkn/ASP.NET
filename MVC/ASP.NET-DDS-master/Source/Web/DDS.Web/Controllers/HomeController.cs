@@ -1,6 +1,7 @@
 ﻿namespace DDS.Web.Controllers
 {
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using System.Web;
     using System.Web.Mvc;
@@ -13,7 +14,6 @@
     using Services.Data.Interfaces;
     using ViewModels.ManageDiplomas;
     using ViewModels.Shared;
-    using System.Data.Entity;
 
     public class HomeController : BaseController
     {
@@ -55,7 +55,7 @@
         public ActionResult Index()
         {
             var currentUser = this.UserManager.FindById(this.User.Identity.GetUserId());
-            var currentStudent = this.students.GetByUserId(this.User.Identity.GetUserId());
+            var currentStudent = this.students.GetByUserId(this.User.Identity.GetUserId()).FirstOrDefault();
             if (currentStudent != null)
             {
                 if (currentStudent.SelectedDiploma != null)
@@ -69,8 +69,14 @@
 
         public ActionResult Details(int? id)
         {
+            if (id == null)
+            {
+                return this.RedirectToAction("Diplomas", "Home");
+            }
+
             var userID = this.User.Identity.GetUserId();
             var currentStudent = this.students.GetSelectedDiplomaByUser(userID);
+
             if (currentStudent != null)
             {
                 if (currentStudent.SelectedDiploma != null)
@@ -79,13 +85,16 @@
                 }
             }
 
-            if (id == null)
+            var student = this.students.GetByUserId(userID).Include(s => s.User).FirstOrDefault();
+
+            if (student.Address == null || student.FNumber == 0 || student.User.PhoneNumber == null)
             {
-                return this.RedirectToAction("Diplomas", "Home");
+                this.TempData["UpdateProfile"] = "Моля попълнете личната си информация преди да изберете дипломна работа!";
             }
 
             int intId = id ?? 0;
             var diploma = this.diplomas.GetById(intId);
+
             if (diploma == null)
             {
                 this.TempData["Message"] = "Дипломата не бе намерена!";
@@ -94,32 +103,24 @@
 
             var user = this.teachers.GetFullObjectById(diploma.TeacherID);
 
-            var result = new DisplayDiplomaViewModel()
-            {
-                Id = diploma.Id,
-                Title = diploma.Title,
-                Description = diploma.Description,
-                ExperimentalPart = diploma.ExperimentalPart,
-                ContentCSV = diploma.ContentCSV
-                                    .Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries)
-                                    .ToList(),
-                CreatedOn = diploma.CreatedOn,
-                ModifiedOn = diploma.ModifiedOn,
-                DeletedOn = diploma.DeletedOn,
-                IsDeleted = diploma.IsDeleted,
-                IsApprovedByLeader = diploma.IsApprovedByLeader,
-                IsApprovedByHead = diploma.IsApprovedByHead,
-                TeacherID = diploma.TeacherID,
-                TeacherName = string.Format("{0} {1}", user.User.FirstName, user.User.LastName),
-                Tags = diploma.Tags.Select(t =>
-                                    new SelectListItem
-                                    {
-                                        Text = t.Name,
-                                        Value = t.Id.ToString(),
-                                    })
-            };
+            var result = this.diplomas.GetWithID(intId)
+                                        .Include(d => d.Tags)
+                                        .Include(d => d.Teacher)
+                                        .To<DisplayDiplomaViewModel>().FirstOrDefault();
 
-            //var currentUser = this.UserManager.FindById(this.User.Identity.GetUserId());
+            result.ContentCSV = diploma.ContentCSV.Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            result.TeacherID = diploma.TeacherID;
+            result.Tags = diploma.Tags.Select(t => new SelectListItem
+            {
+                Text = t.Name,
+                Disabled = true,
+                Selected = true,
+                Value = t.Id.ToString()
+            });
+
+            var teacher = this.teachers.GetFullObjectById(diploma.TeacherID);
+            result.TeacherName = string.Format("{0} {1} {2}", teacher.User.ScienceDegree, teacher.User.FirstName, teacher.User.LastName).Trim();
 
             return this.View(result);
         }
@@ -130,7 +131,7 @@
         public ActionResult Select(int id)
         {
             var selectedDiploma = this.diplomas.GetFullObjectById(id);
-            var student = this.students.GetByUserId(this.User.Identity.GetUserId());
+            var student = this.students.GetByUserId(this.User.Identity.GetUserId()).FirstOrDefault();
 
             if (selectedDiploma.Teacher != null)
             {
@@ -369,36 +370,63 @@
             return this.View(teacherDiplomaVM);
         }
 
-        public ActionResult Tag(int? id, string sortOrder, string currentFilter, string searchString, int? page)
+        public ActionResult Tag(int? id, int? teacherId, string sortOrder, string currentFilter, string searchString, int? page)
         {
             if (id == null)
             {
-                return this.RedirectToAction("Diplomas", "Home");
+                return this.RedirectToAction("Diplomas");
             }
+
+            this.ViewBag.CurrentSort = sortOrder;
+            this.ViewBag.NameSortParm = string.IsNullOrEmpty(sortOrder) ? "name_desc" : string.Empty;
+            this.ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            this.ViewBag.CurrentFilter = searchString;
 
             int intId = id ?? 0;
+            var tag = this.tags.GetById(intId);
+            var diplomas = this.diplomas.GetAll().Where(d => !d.IsSelectedByStudent && (d.TeacherID == teacherId || teacherId == null)).To<CommonDiplomaViewModel>().ToList().Where(d => d.Tags.Contains(tag));
 
-            var tag = this.tags.GetAll().Where(t => t.Id == intId).Include(t => t.Diplomas);
-            var diplomas = tag.FirstOrDefault().Diplomas.AsQueryable().To<CommonDiplomaViewModel>();
-
-            switch (sortOrder)
+            if (!string.IsNullOrEmpty(searchString))
             {
-                case "name_desc":
-                    diplomas = diplomas.OrderByDescending(s => s.Title);
-                    break;
-                case "Date":
-                    diplomas = diplomas.OrderBy(s => s.CreatedOn);
-                    break;
-                case "date_desc":
-                    diplomas = diplomas.OrderByDescending(s => s.CreatedOn);
-                    break;
-                default:
-                    // Title ascending
-                    diplomas = diplomas.OrderBy(s => s.Title);
-                    break;
+                diplomas = diplomas.Where(s => s.Title.Contains(searchString)
+                                       || s.Description.Contains(searchString));
             }
 
-            var d = diplomas.FirstOrDefault();
+            if (diplomas.LongCount() <= 0)
+            {
+                this.TempData["NotFound"] = true;
+                this.TempData["Message"] = "Не са намерени дипломи!";
+            }
+            else
+            {
+                switch (sortOrder)
+                {
+                    case "name_desc":
+                        diplomas = diplomas.OrderByDescending(s => s.Title);
+                        break;
+                    case "Date":
+                        diplomas = diplomas.OrderBy(s => s.CreatedOn);
+                        break;
+                    case "date_desc":
+                        diplomas = diplomas.OrderByDescending(s => s.CreatedOn);
+                        break;
+                    default:
+                        // Title ascending
+                        diplomas = diplomas.OrderBy(s => s.Title);
+                        break;
+                }
+            }
+
             int pageSize = GlobalConstants.PageSize;
             int pageNumber = page ?? 1;
             return this.View(diplomas.ToPagedList(pageNumber, pageSize));
