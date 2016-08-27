@@ -1,4 +1,4 @@
-﻿@model DDS.Web.ViewModels.ManageDiplomas.EditDiplomaViewModel
+﻿@model DDS.Web.ViewModels.Shared.DisplayDiplomaViewModel
 
 @{
     ViewBag.Title = "Редактиране на диплома";
@@ -53,6 +53,12 @@
                 </div>
             </div>
             <div class="form-group">
+                @Html.LabelFor(model => model.Tags, htmlAttributes: new { @class = "col-xs-3 control-label" })
+                <div class="col-xs-9">
+                    @Html.DropDownListFor(model => model.TagsNames, Model.Tags, htmlAttributes: new { @class = "form-control", @multiple = "multiple", @id = "tagSelector" })
+                </div>
+            </div>
+            <div class="form-group">
                 <div class="col-md-offset-3 col-xs-9">
                     <input type="submit" value="Запази" class="btn btn-primary" />
                     @Html.ActionLink("Отмени", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
@@ -64,6 +70,47 @@
 
 @section scripts{
     <script>
+
+        window.onload = function () {
+            $(document).ready(function () {
+                var pageSize = 20;
+                var optionListUrl = '@Url.Action("GetAllTags", "Home")';
+
+                //Method which is to be called for populating options in dropdown //dynamically
+                $('#tagSelector').select2(
+                {
+                    ajax: {
+                        delay: 150,
+                        url: optionListUrl,
+                        cache: true,
+                        dataType: 'json',
+                        data: function (params) {
+                            params.page = params.page || 1;
+                            return {
+                                searchTerm: params.term,
+                                pageSize: pageSize,
+                                pageNumber: params.page
+                            };
+                        },
+
+                        processResults: function (data, params) {
+                            params.page = params.page || 1;
+                            return {
+                                results: data.Results,
+                                pagination: {
+                                    more: (params.page * pageSize) < data.Total
+                                }
+                            };
+                        }
+                    },
+                    placeholder: "-- Избери таг --",
+                    tags: true,
+                    tokenSeparators: [',', ' '],
+                    minimumInputLength: 0,
+                    allowClear: true,
+                });
+            });
+        }
         function AddRow() {
             var lastTBox = $('#divlist :last-child.form-control');
             var tbName = lastTBox.attr('name');
@@ -79,5 +126,6 @@
 
             $('#divlist .contentBoxes').append(box);
         };
+
     </script>
 }

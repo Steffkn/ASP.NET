@@ -200,7 +200,11 @@
             }
 
             int intId = id ?? 0;
+
             var diploma = this.diplomas.GetObjectById(intId);
+            var diplomaModel = this.diplomas.GetById(intId)
+                                             .Include(d => d.Tags)
+                                             .To<DisplayDiplomaViewModel>().FirstOrDefault(); /*this.diplomas.GetById(intId).To<EditDiplomaViewModel>().FirstOrDefault();*/
 
             if (diploma == null)
             {
@@ -208,32 +212,61 @@
                 return this.RedirectToAction("Index", "ManageDiplomas");
             }
 
-            var viewModel = new EditDiplomaViewModel()
-            {
-                Id = diploma.Id,
-                Title = diploma.Title,
-                Description = diploma.Description,
-                ExperimentalPart = diploma.ExperimentalPart,
-                ContentCSV = diploma.ContentCSV
-                                    .Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries)
-                                    .ToList()
-            };
+            //var viewModel = new EditDiplomaViewModel()
+            //{
+            //    Id = diploma.Id,
+            //    Title = diploma.Title,
+            //    Description = diploma.Description,
+            //    ExperimentalPart = diploma.ExperimentalPart,
+            //    ContentCSV = diploma.ContentCSV
+            //                        .Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries)
+            //                        .ToList()
+            //};
 
-            return this.View(viewModel);
+            diplomaModel.ContentCSV = diploma.ContentCSV.Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries).ToList();
+            diplomaModel.Tags = diploma.Tags.Select(t => new SelectListItem
+            {
+                Text = t.Name,
+                Disabled = false,
+                Selected = true,
+                Value = t.Id.ToString()
+            });
+            return this.View(diplomaModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(EditDiplomaViewModel viewModel)
+        public ActionResult Edit(DisplayDiplomaViewModel viewModel)
         {
             if (this.ModelState.IsValid)
             {
-                var dDiploma = this.diplomas.GetObjectById(viewModel.Id);
-                dDiploma.Title = viewModel.Title;
-                dDiploma.Description = viewModel.Description;
-                dDiploma.ExperimentalPart = viewModel.ExperimentalPart;
-                dDiploma.ContentCSV = string.Join(",", viewModel.ContentCSV);
+                var diploma = this.diplomas.GetById(viewModel.Id).FirstOrDefault();
+                diploma.Title = viewModel.Title.Trim();
+                diploma.Description = viewModel.Description.Trim();
+                diploma.ExperimentalPart = viewModel.ExperimentalPart.Trim();
+                diploma.ContentCSV = string.Join(",", viewModel.ContentCSV);
 
+                diploma.Tags.Clear();
+                this.diplomas.Save();
+
+                var tags = new List<Tag>();
+
+                foreach (var tag in viewModel.TagsNames)
+                {
+                    var tagIndex = 0;
+
+                    if (int.TryParse(tag, out tagIndex))
+                    {
+                        tags.Add(this.tags.GetById(tagIndex).FirstOrDefault());
+                    }
+                    else
+                    {
+                        tags.Add(this.tags.EnsureCategory(tag));
+                    }
+
+                }
+
+                diploma.Tags = tags;
                 this.diplomas.Save();
 
                 this.TempData["Message"] = "Дипломата е променена!";

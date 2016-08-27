@@ -7,7 +7,7 @@
     using DDS.Data.Models;
     using DDS.Web.Infrastructure.Mapping;
 
-    public class EditDiplomaViewModel : IMapTo<Diploma>
+    public class EditDiplomaViewModel : IMapTo<Diploma>, IHaveCustomMappings
     {
         [Required]
         public int Id { get; set; }
@@ -29,8 +29,23 @@
 
         public ICollection<Tag> Tags { get; set; }
 
-        public bool ApprovedByLeader { get; set; }
+        [Required]
+        [Display(Name = "Избрана")]
+        public bool IsSelectedByStudent { get; set; }
 
-        public bool ApprovedByHead { get; set; }
+        [Required]
+        [Display(Name = "Удобрена от ръководителя")]
+        public bool IsApprovedByLeader { get; set; }
+
+        [Required]
+        [Display(Name = "Удобрена от декан")]
+        public bool IsApprovedByHead { get; set; }
+
+        public void CreateMappings(IMapperConfiguration configuration)
+        {
+            configuration.CreateMap<Diploma, EditDiplomaViewModel>()
+                    .ForMember(src => src.ContentCSV, dest => dest.Ignore())
+                    .ForMember(src => src.Tags, dest => dest.Ignore());
+        }
     }
 }
