@@ -15,10 +15,10 @@
     </div>
 }
 
-@if (TempData["Selected"] != null && (bool)TempData["Selected"] == true)
+@if (TempData["Selected"]!= null && (bool)TempData["Selected"] == true)
 {
     <div class="row">
-        @Html.Alert("", this.TempData["Message"].ToString(), AlertType.Warning)
+        @Html.Alert("", this.TempData["Message"].ToString(), AlertType.Success)
     </div>
 }
 

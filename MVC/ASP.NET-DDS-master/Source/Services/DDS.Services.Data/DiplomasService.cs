@@ -3,7 +3,6 @@
     using System;
     using System.Data.Entity;
     using System.Linq;
-    using System.Threading.Tasks;
     using DDS.Data.Common;
     using DDS.Data.Models;
     using Interfaces;
@@ -15,22 +14,9 @@
         {
         }
 
-        public Diploma GetFullObjectById(int id)
-        {
-            var diploma = this.Items.All().Where(d => d.Id == id).Include(e => e.Tags).Include(e => e.Teacher).Include(e => e.Teacher.User);
-            return diploma.FirstOrDefault();
-        }
-
-        public IQueryable<Diploma> GetWithID(int id)
-        {
-            var diploma = this.Items.All().Where(d => d.Id == id);
-            return diploma;
-        }
-
         public IQueryable<Diploma> GetByTeacherId(int id)
         {
-            var diplomas = this.Items.All().Where(d => d.TeacherID == id);
-            return diplomas;
+            return this.Items.All().Where(d => d.TeacherID == id);
         }
 
         public IQueryable<Diploma> GetRandomDiplomas(int count)

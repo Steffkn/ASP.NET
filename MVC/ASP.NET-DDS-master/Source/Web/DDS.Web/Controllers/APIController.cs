@@ -11,7 +11,6 @@
         private readonly IStudentsService students;
         private readonly ITeachersService teachers;
         private readonly IDiplomasService diplomas;
-        private ApplicationUserManager userManager;
 
         public APIController(
             ITagsService tags,

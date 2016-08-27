@@ -1,13 +1,12 @@
 ﻿namespace DDS.Services.Data.Interfaces
 {
     using System.Collections.Generic;
+    using System.Linq;
     using DDS.Data.Models;
 
     public interface ITeachersService : IBaseServices<Teacher>
     {
-        Teacher GetByUserId(string id);
-
-        Teacher GetFullObjectById(int id);
+        IQueryable<Teacher> GetByUserId(string id);
 
         IEnumerable<Diploma> GetAllDiplomas(int id);
 

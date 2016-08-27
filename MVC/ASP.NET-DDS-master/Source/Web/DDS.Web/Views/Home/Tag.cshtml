@@ -9,6 +9,13 @@
 
 <h2>Дипломи по категория</h2>
 
+@if (TempData["Message"] != null)
+{
+    <div class="row">
+        @Html.Alert("", TempData["Message"].ToString(), AlertType.Info)
+    </div>
+}
+
 <div class="row">
     @using (Html.BeginForm("Tag", "Home", FormMethod.Get))
     {

@@ -67,7 +67,7 @@
 
             this.ViewBag.CurrentFilter = searchString;
 
-            var teacher = this.teachers.GetByUserId(this.User.Identity.GetUserId());
+            var teacher = this.teachers.GetByUserId(this.User.Identity.GetUserId()).FirstOrDefault();
             var diplomas = this.diplomas.GetByTeacherId(teacher.Id)
                                             .To<CommonDiplomaViewModel>();
 
@@ -113,7 +113,7 @@
         [ValidateAntiForgeryToken]
         public ActionResult Approve(int Id)
         {
-            var diploma = this.diplomas.GetById(Id);
+            var diploma = this.diplomas.GetObjectById(Id);
             diploma.IsApprovedByLeader = true;
 
             this.diplomas.Save();
@@ -132,7 +132,7 @@
         {
             if (this.ModelState.IsValid)
             {
-                var teacher = this.teachers.GetByUserId(this.User.Identity.GetUserId());
+                var teacher = this.teachers.GetByUserId(this.User.Identity.GetUserId()).FirstOrDefault();
 
                 // create diploma
                 var diploma = new Diploma()
@@ -151,7 +151,7 @@
                     Tag tag;
                     if (int.TryParse(viewModelTag, out tagId))
                     {
-                        tag = this.tags.GetById(tagId);
+                        tag = this.tags.GetObjectById(tagId);
                     }
                     else
                     {
@@ -186,7 +186,7 @@
             }
 
             int intId = id ?? 0;
-            var diploma = this.diplomas.GetById(intId);
+            var diploma = this.diplomas.GetObjectById(intId);
 
             if (diploma == null)
             {
@@ -214,7 +214,7 @@
         {
             if (this.ModelState.IsValid)
             {
-                var dDiploma = this.diplomas.GetById(viewModel.Id);
+                var dDiploma = this.diplomas.GetObjectById(viewModel.Id);
                 dDiploma.Title = viewModel.Title;
                 dDiploma.Description = viewModel.Description;
                 dDiploma.ExperimentalPart = viewModel.ExperimentalPart;
@@ -237,7 +237,7 @@
             }
 
             int intId = id ?? 0;
-            var diploma = this.diplomas.GetById(intId);
+            var diploma = this.diplomas.GetObjectById(intId);
             if (diploma == null)
             {
                 this.TempData["Message"] = "Дипломата не бе намерена!";
@@ -270,7 +270,7 @@
                 Value = t.Id.ToString()
             });
 
-            var teacher = this.teachers.GetFullObjectById(diploma.TeacherID);
+            var teacher = this.teachers.GetById(diploma.TeacherID).Include(t => t.User).FirstOrDefault();
             result.Diploma.TeacherName = string.Format("{0} {1} {2}", teacher.User.ScienceDegree, teacher.User.FirstName, teacher.User.LastName).Trim();
 
             return this.View(result);
@@ -287,35 +287,34 @@
             var student = new SimpleStudentViewModel();
 
             int intId = id ?? 0;
-            var diploma = this.diplomas.GetById(intId);
+            var diploma = this.diplomas.GetObjectById(intId);
             if (diploma == null)
             {
                 this.TempData["Message"] = "Дипломата не бе намерена!";
                 return this.RedirectToAction("Index", "ManageDiplomas");
             }
 
-            var teacher = this.teachers.GetFullObjectById(diploma.TeacherID);
+            var teacher = this.teachers.GetById(diploma.TeacherID).Include(t => t.User);
 
-            //var diplomaModel = new DisplayDiplomaViewModel()
-            //{
-            //    Id = diploma.Id,
-            //    Title = diploma.Title,
-            //    Description = diploma.Description,
-            //    ExperimentalPart = diploma.ExperimentalPart,
-            //    ContentCSV = diploma.ContentCSV
-            //                        .Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries)
-            //                        .ToList(),
-            //    CreatedOn = diploma.CreatedOn.ToString(),
-            //    ModifiedOn = diploma.ModifiedOn.ToString(),
-            //    DeletedOn = diploma.DeletedOn.ToString(),
-            //    IsDeleted = diploma.IsDeleted,
-            //    ApprovedByLeader = diploma.IsApprovedByLeader,
-            //    ApprovedByHead = diploma.IsApprovedByHead,
-            //    IsSelectedByStudent = diploma.IsSelectedByStudent,
-            //    TeacherID = diploma.TeacherID,
-            //    TeacherName = string.Format("{0} {1} {2}", teacher.User.ScienceDegree, teacher.User.FirstName, teacher.User.LastName).Trim()
-            //};
-
+            // var diplomaModel = new DisplayDiplomaViewModel()
+            // {
+            //     Id = diploma.Id,
+            //     Title = diploma.Title,
+            //     Description = diploma.Description,
+            //     ExperimentalPart = diploma.ExperimentalPart,
+            //     ContentCSV = diploma.ContentCSV
+            //                         .Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries)
+            //                         .ToList(),
+            //     CreatedOn = diploma.CreatedOn.ToString(),
+            //     ModifiedOn = diploma.ModifiedOn.ToString(),
+            //     DeletedOn = diploma.DeletedOn.ToString(),
+            //     IsDeleted = diploma.IsDeleted,
+            //     ApprovedByLeader = diploma.IsApprovedByLeader,
+            //     ApprovedByHead = diploma.IsApprovedByHead,
+            //     IsSelectedByStudent = diploma.IsSelectedByStudent,
+            //     TeacherID = diploma.TeacherID,
+            //     TeacherName = string.Format("{0} {1} {2}", teacher.User.ScienceDegree, teacher.User.FirstName, teacher.User.LastName).Trim()
+            // };
             var diplomaModel = this.diplomas.GetAll()
                  .Where(d => d.Id == intId)
                  .Include(d => d.Teacher)
@@ -364,7 +363,7 @@
 
             this.ViewBag.CurrentFilter = searchString;
 
-            var teacher = this.teachers.GetByUserId(this.User.Identity.GetUserId());
+            var teacher = this.teachers.GetByUserId(this.User.Identity.GetUserId()).FirstOrDefault();
             var diplomas = this.diplomas.GetDeleted()
                                         .Where(x => x.Teacher.Id == teacher.Id)
                                         .To<CommonDiplomaViewModel>();
@@ -417,7 +416,7 @@
             }
 
             int intId = id ?? 0;
-            var diploma = this.diplomas.GetById(intId);
+            var diploma = this.diplomas.GetObjectById(intId);
 
             if (diploma == null)
             {
@@ -456,7 +455,7 @@
 
         public ActionResult HardDeleteAll()
         {
-            var teacherID = this.teachers.GetByUserId(this.User.Identity.GetUserId()).Id;
+            var teacherID = this.teachers.GetByUserId(this.User.Identity.GetUserId()).FirstOrDefault().Id;
             var diplomas = this.diplomas.GetDeleted().Where(d => d.TeacherID == teacherID).ToList();
 
             foreach (var diploma in diplomas)

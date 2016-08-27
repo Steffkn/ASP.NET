@@ -41,7 +41,7 @@
                     int id;
                     if (int.TryParse(item, out id))
                     {
-                        tagList.Add(this.tags.GetById(id));
+                        tagList.Add(this.tags.GetObjectById(id));
                     }
                     else
                     {

@@ -37,10 +37,21 @@
     </div>
     <div class="container body-content">
         <br />
-       
+
         @RenderBody()
         <hr />
         <footer>
+            @*<div class="row">
+                    @if (ViewBag["tags"] != null)
+                    {
+                        foreach (var tag in (List<TagViewModel>)ViewBag["tags"])
+                        {
+                            <div class="col-sm-4">
+                                @Html.ActionLink(tag.text, "Tag", "Home", new { area = string.Empty, tag.id }, null)
+                            </div>
+                        }
+                    }
+                </div>*@
             <p>&copy; @DateTime.Now.Year - Дипломна разпределителна система</p>
         </footer>
     </div>

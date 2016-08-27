@@ -1,10 +1,10 @@
 ﻿namespace DDS.Services.Data
 {
+    using System.Data.Entity;
     using System.Linq;
     using Data.Interfaces;
     using DDS.Data.Common;
     using DDS.Data.Models;
-    using System.Data.Entity;
 
     public class StudentsService : BaseService<Student>, IStudentsService
     {
@@ -20,16 +20,10 @@
             base.Edit(entity);
         }
 
-        public Student GetByFNumber(int number)
+        public IQueryable<Student> GetByFNumber(int number)
         {
-            var student = this.Items.All().First(s => s.FNumber == number);
-            return student;
+            return this.Items.All().Where(s => s.FNumber == number);
         }
-
-        //public Student GetByUserId(string userId)
-        //{
-        //    return this.Items.All().FirstOrDefault(t => t.User.Id == userId);
-        //}
 
         public IQueryable<Student> GetByUserId(string userId)
         {
@@ -47,15 +41,14 @@
             this.Items.GetById(studentId).SelectedDiploma = null;
         }
 
-        public Student GetSelectedDiplomaByUser(string userId)
+        public IQueryable<Student> GetStudentWithSelectedDiplomaByUserID(string userId)
         {
-            return this.Items.All().Include(s => s.SelectedDiploma).FirstOrDefault(t => t.User.Id == userId);
+            return this.Items.All().Include(s => s.SelectedDiploma).Where(t => t.User.Id == userId);
         }
 
-        public Student GetSelectedDiploma(int studentId)
+        public IQueryable<Student> GetStudentWithSelectedDiploma(int studentId)
         {
-            return this.Items.All().Include(s => s.SelectedDiploma).FirstOrDefault(t => t.Id == studentId);
+            return this.Items.All().Include(s => s.SelectedDiploma).Where(t => t.Id == studentId);
         }
-
     }
 }

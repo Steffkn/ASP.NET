@@ -169,7 +169,6 @@ namespace DDS.Data.Migrations
                 .ForeignKey("dbo.Diplomas", t => t.Diploma_Id, cascadeDelete: true)
                 .Index(t => t.Tag_Id)
                 .Index(t => t.Diploma_Id);
-
         }
 
         public override void Down()

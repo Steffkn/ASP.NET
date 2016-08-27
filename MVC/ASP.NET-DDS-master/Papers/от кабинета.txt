@@ -1,0 +1,7 @@
+recenzent koito da e po svoboden, avtomati4no
+tagovete da imat prepodavateli sa tyrsene
+student bool isAbsulvent daliEZashtitil enumeration
+zaglaviq
+Pechatane na studenta i rykovoditel
+Statistika na diplomi 
+Sroka pri listvane na isbrani diplomi

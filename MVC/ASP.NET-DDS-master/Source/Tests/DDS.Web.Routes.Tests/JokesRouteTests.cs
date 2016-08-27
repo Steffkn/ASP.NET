@@ -1,11 +1,8 @@
 ﻿namespace DDS.Web.Routes.Tests
 {
     using System.Web.Routing;
-
-    using MvcRouteTester;
-
     using DDS.Web.Controllers;
-
+    using MvcRouteTester;
     using NUnit.Framework;
 
     [TestFixture]

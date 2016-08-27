@@ -1,10 +1,17 @@
 ﻿@model IEnumerable<DDS.Web.ViewModels.Shared.TeacherViewModel>
-
+@using DDS.Web.Helpers;
 @{
     ViewBag.Title = "Teachers";
 }
 
 <h2>Преподаватели</h2>
+
+@if (TempData["Message"] != null)
+{
+    <div class="row">
+        @Html.Alert("", TempData["Message"].ToString(), AlertType.Info)
+    </div>
+}
 
 <table class="table">
     <tr>

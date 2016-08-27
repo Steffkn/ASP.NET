@@ -395,6 +395,7 @@
     <Content Include="Views\Home\TeacherDetails.cshtml" />
     <Content Include="Views\ManageDiplomas\Selected.cshtml" />
     <Content Include="Views\Home\Tag.cshtml" />
+    <Content Include="Views\Shared\_FooterPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

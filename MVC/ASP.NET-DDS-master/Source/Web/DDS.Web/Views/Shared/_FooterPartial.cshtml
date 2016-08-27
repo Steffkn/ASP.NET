@@ -1,0 +1,8 @@
+﻿<div class="row">
+    @foreach (var tag in Model)
+    {
+        <div class="col-sm-4">
+            @Html.ActionLink(tag.text, "Tag", "Home", new { area = string.Empty, tag.id }, null)
+        </div>
+    }
+</div>

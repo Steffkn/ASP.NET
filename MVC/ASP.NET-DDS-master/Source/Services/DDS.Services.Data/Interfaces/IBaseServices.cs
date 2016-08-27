@@ -18,10 +18,12 @@
 
         void Save();
 
-        T GetById(int id);
+        T GetObjectById(int id);
 
         IQueryable<T> GetAll();
 
         IQueryable<T> GetDeleted();
+
+        IQueryable<T> GetById(int id);
     }
 }

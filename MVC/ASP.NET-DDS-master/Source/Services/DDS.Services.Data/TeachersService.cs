@@ -14,16 +14,9 @@
         {
         }
 
-        public Teacher GetFullObjectById(int id)
+        public IQueryable<Teacher> GetByUserId(string id)
         {
-            var teachers = this.Items.All().Where(d => d.Id == id);
-            return teachers.Include(e => e.User).First();
-        }
-
-        public Teacher GetByUserId(string id)
-        {
-            var teacher = this.Items.All().FirstOrDefault(t => t.User.Id == id);
-            return teacher;
+            return this.Items.All().Where(t => t.User.Id == id);
         }
 
         public IEnumerable<Diploma> GetAllDiplomas(int id)

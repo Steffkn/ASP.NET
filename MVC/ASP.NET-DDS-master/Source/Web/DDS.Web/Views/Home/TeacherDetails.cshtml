@@ -1,17 +1,12 @@
 ﻿@model DDS.Web.ViewModels.Shared.TeacherDiplomasViewModel
-@using DDS.Web.Helpers;
+
 
 @{
     ViewBag.Title = "Детайли за предподавателя";
 }
 
 <h2>Детайли за предподавателя</h2>
-@if (TempData["Message"] != null)
-{
-    <div class="row">
-        @Html.Alert("", TempData["Message"].ToString(), AlertType.Info)
-    </div>
-}
+
 
 <dl class="dl-horizontal">
     <dt>

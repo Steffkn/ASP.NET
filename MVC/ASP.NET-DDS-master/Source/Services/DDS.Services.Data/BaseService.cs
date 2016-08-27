@@ -82,9 +82,14 @@
         /// </summary>
         /// <param name="id">id of the entity to look for</param>
         /// <returns>Entity of type <paramref name="T"/></returns>
-        public T GetById(int id)
+        public T GetObjectById(int id)
         {
             return this.Items.GetById(id);
+        }
+
+        public IQueryable<T> GetById(int id)
+        {
+            return this.Items.All().Where(d => d.Id == id);
         }
 
         /// <summary>
