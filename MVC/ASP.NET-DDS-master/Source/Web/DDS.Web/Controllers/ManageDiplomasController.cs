@@ -73,13 +73,27 @@
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                diplomas = diplomas.Where(s => s.Title.Contains(searchString)
-                                       || s.Description.Contains(searchString));
+                if (searchString.ToLower() == "удобрени")
+                {
+                    diplomas = diplomas.Where(d => d.IsApprovedByLeader || d.IsApprovedByHead);
+                }
+                else if (searchString.ToLower() == "избрани")
+                {
+                    diplomas = diplomas.Where(d => d.IsSelectedByStudent);
+                }
+                else if (searchString.ToLower() == "свободни")
+                {
+                    diplomas = diplomas.Where(d => !d.IsSelectedByStudent);
+                }
+                else
+                {
+                    diplomas = diplomas.Where(s => s.Title.Contains(searchString) || s.Description.Contains(searchString));
+                }
             }
 
             if (diplomas.LongCount() <= 0)
             {
-                this.TempData["NotFound"] = true;
+                this.TempData["Message"] = "Не са намерени дипломи!";
             }
             else
             {

@@ -32,6 +32,14 @@
         public bool IsSelectedByStudent { get; set; }
 
         [Required]
+        [Display(Name = "Удобрена от ръководителя")]
+        public bool IsApprovedByLeader { get; set; }
+
+        [Required]
+        [Display(Name = "Удобрена от декан")]
+        public bool IsApprovedByHead { get; set; }
+
+        [Required]
         [Display(Name = "Преподавател")]
         public string TeacherName { get; set; }
 

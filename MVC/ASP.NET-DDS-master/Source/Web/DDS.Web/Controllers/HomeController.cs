@@ -178,7 +178,7 @@
 
             if (diploma == null)
             {
-                this.TempData["Message"] = "Дипломата не бе намерена!";
+                this.TempData["DiplomasNotFound"] = "Дипломата не бе намерена!";
                 return this.RedirectToAction("Diplomas", "Home");
             }
 
@@ -230,7 +230,7 @@
             }
 
             this.TempData["Selected"] = selectedDiploma.IsSelectedByStudent;
-            this.TempData["Message"] = string.Format("Дипломата \'{0}\' е избрана успешно!", selectedDiploma.Title);
+            this.TempData["DiplomaIsSelectedSuccesfully"] = string.Format("Дипломата \'{0}\' е избрана успешно!", selectedDiploma.Title);
 
             return this.RedirectToAction("Diplomas");
         }
@@ -270,8 +270,7 @@
 
             if (diplomas.LongCount() <= 0)
             {
-                this.TempData["NotFound"] = true;
-                this.TempData["Message"] = "Не са намерени дипломи!";
+                this.TempData["DiplomasNotFound"] = "Не са намерени дипломи!";
             }
             else
             {
@@ -333,7 +332,7 @@
 
             TeacherDiplomasViewModel teacherDiplomaVM = new TeacherDiplomasViewModel();
             teacherDiplomaVM.TeacherDetails = teacher;
-            teacherDiplomaVM.Diplomas = this.teachers.GetAllDiplomas(intId);
+            teacherDiplomaVM.Diplomas = this.diplomas.GetAll().Where(d => d.TeacherID == teacher.Id && !d.IsSelectedByStudent).ToList();
 
             return this.View(teacherDiplomaVM);
         }
@@ -387,8 +386,7 @@
 
             if (diplomas.LongCount() <= 0)
             {
-                this.TempData["NotFound"] = true;
-                this.TempData["Message"] = "Не са намерени дипломи!";
+                this.TempData["DiplomasNotFound"] = "Не са намерени дипломи!";
             }
             else
             {

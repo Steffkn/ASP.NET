@@ -8,17 +8,17 @@
 
 <h2>Дипломи</h2>
 
-@if (TempData["Message"] != null && (bool)TempData["NotFound"] == true)
+@if (TempData["DiplomasNotFound"] != null)
 {
     <div class="row">
-        @Html.Alert("", this.TempData["Message"].ToString(), AlertType.Warning)
+        @Html.Alert("", this.TempData["DiplomasNotFound"].ToString(), AlertType.Warning)
     </div>
 }
 
-@if (TempData["Message"] != null && (bool)TempData["Selected"] == true)
+@if (TempData["DiplomaIsSelectedSuccesfully"] != null)
 {
     <div class="row">
-        @Html.Alert("", this.TempData["Message"].ToString(), AlertType.Success)
+        @Html.Alert("", this.TempData["DiplomaIsSelectedSuccesfully"].ToString(), AlertType.Success)
     </div>
 }
 

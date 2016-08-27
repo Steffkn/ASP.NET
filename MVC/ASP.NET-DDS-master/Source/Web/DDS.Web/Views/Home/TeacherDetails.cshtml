@@ -32,6 +32,11 @@
     </dd>
 </dl>
 
+@if (Model.Diplomas.Count() <= 0)
+{
+    <div class="alert alert-info">Този ръководител няма свободни дипломни задания!</div>
+}
+
 <table class="table table-hover table-responsive">
     <thead>
         <tr>

@@ -31,7 +31,7 @@
         {
             // string.Format is not recognised so this happens
             configuration.CreateMap<Teacher, TeacherViewModel>()
-                .ForMember(x => x.TeacherName, opt => opt.MapFrom(x => string.Format("{0} {1} {2}", x.User.ScienceDegree, x.User.FirstName, x.User.LastName)));
+                .ForMember(x => x.TeacherName, opt => opt.MapFrom(x => x.User.ScienceDegree + " " + x.User.FirstName + " " + x.User.LastName));
 
             configuration.CreateMap<Teacher, TeacherViewModel>()
                 .ForMember(x => x.ScienceDegree, opt => opt.MapFrom(x => x.User.ScienceDegree));
