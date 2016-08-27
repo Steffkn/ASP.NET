@@ -7,7 +7,6 @@
     using System.Web;
     using System.Web.Mvc;
     using Common;
-    using Data.Models;
     using Infrastructure;
     using Infrastructure.Mapping;
     using Microsoft.AspNet.Identity;
@@ -16,7 +15,6 @@
     using Services.Data.Interfaces;
     using ViewModels.ManageDiplomas;
     using ViewModels.Shared;
-    using System;
 
     public class HomeController : BaseController
     {
@@ -24,8 +22,6 @@
         private readonly ITeachersService teachers;
         private readonly IStudentsService students;
         private readonly ITagsService tags;
-
-        private IQueryable<TagViewModel> allOptionsList;
 
         private ApplicationUserManager userManager;
 
@@ -39,8 +35,6 @@
             this.teachers = teachers;
             this.students = students;
             this.tags = tags;
-
-            //this.allOptionsList = this.GetSelect2Options();
         }
 
         public ApplicationUserManager UserManager
@@ -240,100 +234,6 @@
 
             return this.RedirectToAction("Diplomas");
         }
-
-        //[HttpGet]
-        //[Authorize(Roles = GlobalConstants.StudentRoleName)]
-        //public ActionResult Edit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return this.RedirectToAction("Index", "Home");
-        //    }
-
-        //    int intId = id ?? 0;
-        //    var diploma = this.diplomas.GetFullObjectById(intId);
-
-        //    if (diploma == null)
-        //    {
-        //        this.TempData["NotFound"] = true;
-        //        this.TempData["Message"] = "Дипломата не бе намерена!";
-        //        return this.RedirectToAction("Index", "Home");
-        //    }
-
-        //    if (diploma.IsSelectedByStudent)
-        //    {
-        //        this.TempData["NotFound"] = true;
-        //        this.TempData["Message"] = "Тази диплома е вече избрана!";
-        //        return this.RedirectToAction("Diplomas", "Home");
-        //    }
-
-        //    var count = diploma.Tags.Count();
-        //    var teacherUser = diploma.Teacher.User;
-        //    var viewModel = new DisplayDiplomaViewModel()
-        //    {
-        //        Id = diploma.Id,
-        //        Title = diploma.Title,
-        //        Description = diploma.Description,
-        //        ExperimentalPart = diploma.ExperimentalPart,
-        //        ContentCSV = diploma.ContentCSV
-        //                            .Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries)
-        //                            .ToList(),
-        //        CreatedOn = diploma.CreatedOn.ToString(),
-        //        TeacherID = diploma.Teacher.Id,
-        //        Tags = diploma.Tags.Select(t =>
-        //                            new SelectListItem
-        //                            {
-        //                                Text = t.Name,
-        //                                Value = t.Name,
-        //                            })
-        //        //TeacherName = diploma.Teacher.User.FirstName,
-        //    };
-
-        //    return this.View(viewModel);
-        //}
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //[Authorize(Roles = GlobalConstants.StudentRoleName)]
-        //public ActionResult Edit(DisplayDiplomaViewModel viewModel)
-        //{
-        //    if (this.ModelState.IsValid)
-        //    {
-        //        var dbDiploma = this.diplomas.GetFullObjectById(viewModel.Id);
-
-        //        dbDiploma.Title = viewModel.Title;
-        //        dbDiploma.Description = viewModel.Description;
-        //        dbDiploma.ExperimentalPart = viewModel.ExperimentalPart;
-        //        dbDiploma.ContentCSV = string.Join(",", viewModel.ContentCSV);
-        //        dbDiploma.IsSelectedByStudent = true;
-        //        //dbDiploma.Tags = new List<Tag>();
-
-        //        foreach (var viewModelTag in viewModel.TagsNames)
-        //        {
-        //            var tagId = 0;
-        //            Tag tag;
-        //            if (int.TryParse(viewModelTag, out tagId))
-        //            {
-        //                tag = this.tags.GetById(tagId);
-        //            }
-        //            else
-        //            {
-        //                tag = this.tags.EnsureCategory(viewModelTag);
-        //            }
-
-        //            dbDiploma.Tags.Add(tag);
-        //        }
-
-        //        this.diplomas.Save();
-
-        //        var student = this.students.GetByUserId(this.User.Identity.GetUserId());
-        //        student.SelectedDiploma = dbDiploma;
-
-        //        this.students.Save();
-        //    }
-
-        //    return this.RedirectToAction("Index");
-        //}
 
         /// <summary>
         /// DONE
@@ -536,21 +436,5 @@
 
             return this.Json(new { Results = results, Total = resultList.Count }, JsonRequestBehavior.AllowGet);
         }
-
-        //public IQueryable<TagViewModel> GetSelect2Options()
-        //{
-        //    var tags = this.tags.GetAll();
-        //    var optionList = new List<TagViewModel>();
-        //    foreach (var tag in tags)
-        //    {
-        //        optionList.Add(new TagViewModel
-        //        {
-        //            id = tag.Id.ToString(),
-        //            text = tag.Name
-        //        });
-        //    }
-
-        //    return optionList.AsQueryable();
-        //}
     }
 }

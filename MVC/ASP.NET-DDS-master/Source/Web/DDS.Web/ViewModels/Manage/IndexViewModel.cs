@@ -2,9 +2,9 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-
-    using Microsoft.AspNet.Identity;
     using Data.Models;
+    using Microsoft.AspNet.Identity;
+
     public class IndexViewModel
     {
         public string UserId { get; set; }

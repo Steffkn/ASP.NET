@@ -296,25 +296,6 @@
 
             var teacher = this.teachers.GetById(diploma.TeacherID).Include(t => t.User);
 
-            // var diplomaModel = new DisplayDiplomaViewModel()
-            // {
-            //     Id = diploma.Id,
-            //     Title = diploma.Title,
-            //     Description = diploma.Description,
-            //     ExperimentalPart = diploma.ExperimentalPart,
-            //     ContentCSV = diploma.ContentCSV
-            //                         .Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries)
-            //                         .ToList(),
-            //     CreatedOn = diploma.CreatedOn.ToString(),
-            //     ModifiedOn = diploma.ModifiedOn.ToString(),
-            //     DeletedOn = diploma.DeletedOn.ToString(),
-            //     IsDeleted = diploma.IsDeleted,
-            //     ApprovedByLeader = diploma.IsApprovedByLeader,
-            //     ApprovedByHead = diploma.IsApprovedByHead,
-            //     IsSelectedByStudent = diploma.IsSelectedByStudent,
-            //     TeacherID = diploma.TeacherID,
-            //     TeacherName = string.Format("{0} {1} {2}", teacher.User.ScienceDegree, teacher.User.FirstName, teacher.User.LastName).Trim()
-            // };
             var diplomaModel = this.diplomas.GetAll()
                  .Where(d => d.Id == intId)
                  .Include(d => d.Teacher)

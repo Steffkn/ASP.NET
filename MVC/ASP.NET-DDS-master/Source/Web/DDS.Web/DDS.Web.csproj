@@ -196,7 +196,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\ApplicationRole.cs" />
     <Compile Include="App_Start\ApplicationRoleManager.cs" />
     <Compile Include="App_Start\ApplicationSignInManager.cs" />
     <Compile Include="App_Start\ApplicationUserManager.cs" />
@@ -218,7 +217,6 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="App_Start\GlimpseSecurityPolicy.cs" />
     <Compile Include="Controllers\ManageDiplomasController.cs" />
-    <Compile Include="Controllers\TagsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -253,9 +251,6 @@
     <Compile Include="ViewModels\Shared\TagViewModel.cs" />
     <Compile Include="ViewModels\Shared\TeacherDiplomasViewModel.cs" />
     <Compile Include="ViewModels\Shared\TeacherViewModel.cs" />
-    <Compile Include="ViewModels\Tags\DiplomaTestViewModel.cs" />
-    <Compile Include="ViewModels\Tags\SelectTagViewModel.cs" />
-    <Compile Include="ViewModels\Teacher\TeacherFullViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
