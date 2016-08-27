@@ -42,6 +42,16 @@ textarea {
 .table-hover {
     cursor: help;
 }
+footer .navbar{
+    background-color: white;
+    background-image: none;
+}
+footer ul li{
+    list-style-type: none;
+}
+footer ul li a{
+    color: black;
+}
 
 @media (min-width: 768px) {
     .dl-horizontal dt {

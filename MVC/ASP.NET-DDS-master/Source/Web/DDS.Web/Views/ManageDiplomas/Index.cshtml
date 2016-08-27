@@ -46,9 +46,9 @@
         @{ int index = (Model.PageNumber - 1) * Model.PageSize;}
         @foreach (var item in Model)
         {
-            <tr class="@(item.IsApprovedByHead ? "bg-success" : 
-                            item.IsApprovedByLeader ? "bg-info" : 
-                                item.IsSelectedByStudent ? "bg-warning" :  
+            <tr class="@(item.IsApprovedByHead ? "bg-success" :
+                            item.IsApprovedByLeader ? "bg-info" :
+                                item.IsSelectedByStudent ? "bg-warning" :
                                     "")">
                 <td class="">
                     @{index++;}
@@ -74,7 +74,7 @@
                         }
                         else
                         {
-                            <span class="text-success">Избрана</span>
+                           //<span class="text-success">Избрана от студент</span>
                         }
                     </div>
                 </td>
@@ -85,6 +85,32 @@
 <br />
 <div class="row">
     @Html.Partial("_Pager", Model, new ViewDataDictionary { { "ActionName", "Index" } })
+ 
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="row">
+            <div class="col-sm-1">
+                <div class="alert-warning well-sm"></div>
+            </div>
+            <div class="col-sm-3">
+                <p>Избрана от студент</p>
+            </div>
+            <div class="col-sm-1">
+                <div class="alert-info well-sm"></div>
+            </div>
+            <div class="col-sm-3">
+                <p>Удобрена от ръководител</p>
+            </div>
+            <div class="col-sm-1">
+                <div class="alert-success well-sm"></div>
+            </div>
+            <div class="col-sm-3">
+                <p>Удобрена и подписана от декан</p>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section scripts{

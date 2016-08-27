@@ -212,17 +212,6 @@
                 return this.RedirectToAction("Index", "ManageDiplomas");
             }
 
-            //var viewModel = new EditDiplomaViewModel()
-            //{
-            //    Id = diploma.Id,
-            //    Title = diploma.Title,
-            //    Description = diploma.Description,
-            //    ExperimentalPart = diploma.ExperimentalPart,
-            //    ContentCSV = diploma.ContentCSV
-            //                        .Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries)
-            //                        .ToList()
-            //};
-
             diplomaModel.ContentCSV = diploma.ContentCSV.Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries).ToList();
             diplomaModel.Tags = diploma.Tags.Select(t => new SelectListItem
             {

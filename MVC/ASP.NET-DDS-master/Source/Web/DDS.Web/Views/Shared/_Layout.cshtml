@@ -37,21 +37,22 @@
     </div>
     <div class="container body-content">
         <br />
-
         @RenderBody()
         <hr />
         <footer>
-            @*<div class="row">
-                    @if (ViewBag["tags"] != null)
+            <nav id="da" class="row navbar-light bg-faded">
+                @*@if (this.ViewBag["tags"] != null)
                     {
-                        foreach (var tag in (List<TagViewModel>)ViewBag["tags"])
+                        var tags = (List<DDS.Web.ViewModels.Shared.TagViewModel>)this.ViewBag["tags"];
+                        foreach (var tag in tags)
                         {
                             <div class="col-sm-4">
                                 @Html.ActionLink(tag.text, "Tag", "Home", new { area = string.Empty, tag.id }, null)
                             </div>
                         }
-                    }
-                </div>*@
+                    }*@
+            </nav>
+            <hr />
             <p>&copy; @DateTime.Now.Year - Дипломна разпределителна система</p>
         </footer>
     </div>
@@ -60,5 +61,28 @@
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/select2")
     @RenderSection("scripts", required: false)
+
+    <script>
+        var dbdata = '@Url.Action("GetAllTags", "Home", null)';
+
+        $.getJSON(dbdata, { searchTerm: "", pageSize: 30, pageNumber: 1 }, function (data) {
+            var result = data.Results;
+            var ul = $('<ul>').addClass('class="list-unstyled"');
+            for (var i in result) {
+                var id = result[i].id;
+                var text = result[i].text;
+
+                var li = $('<li>').addClass("nav-item col-sm-2");
+
+                var url = '@Html.ActionLink("link", "Tag", "Home", new { id = "idOfTag" }, null)';
+                url = url.replace("link", text);
+                url = url.replace("idOfTag", id);
+                li.append(url);
+                ul.append(li);
+                $('#da').append(ul);
+            }
+        }, "json");
+
+    </script>
 </body>
 </html>
