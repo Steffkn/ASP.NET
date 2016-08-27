@@ -50,9 +50,6 @@
             builder.Register(x => new HttpCacheService())
                 .As<ICacheService>()
                 .InstancePerRequest();
-            builder.Register(x => new IdentifierProvider())
-                .As<IIdentifierProvider>()
-                .InstancePerRequest();
 
             var servicesAssembly = Assembly.GetAssembly(typeof(IDiplomasService));
             builder.RegisterAssemblyTypes(servicesAssembly).AsImplementedInterfaces();
