@@ -5,3 +5,4 @@ zaglaviq
 Pechatane na studenta i rykovoditel
 Statistika na diplomi 
 Sroka pri listvane na isbrani diplomi
+Валидация на данните

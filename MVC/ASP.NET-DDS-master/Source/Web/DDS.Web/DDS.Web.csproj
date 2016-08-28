@@ -217,7 +217,6 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="App_Start\GlimpseSecurityPolicy.cs" />
     <Compile Include="Controllers\ManageDiplomasController.cs" />
-    <Compile Include="Controllers\TagController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -357,15 +356,12 @@
     <Content Include="Views\ManageDiplomas\Edit.cshtml" />
     <Content Include="Views\ManageDiplomas\Details.cshtml" />
     <Content Include="Views\Home\Details.cshtml" />
-    <Content Include="Views\Home\Edit.cshtml" />
-    <Content Include="Views\Home\Select.cshtml" />
     <Content Include="Views\ManageDiplomas\Deleted.cshtml" />
     <Content Include="Views\Home\Diplomas.cshtml" />
     <Content Include="Views\Shared\_SearchBoxPartial.cshtml" />
     <Content Include="Views\Shared\_Pager.cshtml" />
     <Content Include="Views\Home\Teachers.cshtml" />
     <Content Include="Views\Home\TeacherDetails.cshtml" />
-    <Content Include="Views\ManageDiplomas\Selected.cshtml" />
     <Content Include="Views\Home\Tag.cshtml" />
   </ItemGroup>
   <ItemGroup>

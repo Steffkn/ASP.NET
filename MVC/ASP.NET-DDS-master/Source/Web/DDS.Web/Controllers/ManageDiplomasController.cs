@@ -312,56 +312,6 @@
             return this.View(result);
         }
 
-        public ActionResult Selected(int? id)
-        {
-            if (id == null)
-            {
-                return this.RedirectToAction("Index", "ManageDiplomas");
-            }
-
-            var result = new StudentDiplomaViewModel();
-            var student = new SimpleStudentViewModel();
-
-            int intId = id ?? 0;
-            var diploma = this.diplomas.GetObjectById(intId);
-            if (diploma == null)
-            {
-                this.TempData["Message"] = "Дипломата не бе намерена!";
-                return this.RedirectToAction("Index", "ManageDiplomas");
-            }
-
-            var teacher = this.teachers.GetById(diploma.TeacherID).Include(t => t.User);
-
-            var diplomaModel = this.diplomas.GetAll()
-                 .Where(d => d.Id == intId)
-                 .Include(d => d.Teacher)
-                 .Include(d => d.Tags)
-                 .To<DisplayDiplomaViewModel>();
-
-            var studentDetails = this.students.GetAll()
-                 .Where(s => s.SelectedDiploma.Id == diploma.Id)
-                 .Include(s => s.User)
-                 .To<SimpleStudentViewModel>()
-                 .FirstOrDefault();
-
-            result.Diploma = diplomaModel.FirstOrDefault();
-
-            result.Diploma.ContentCSV = diploma.ContentCSV
-                                    .Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries)
-                                    .ToList();
-
-            result.Diploma.Tags = diploma.Tags.Select(t => new SelectListItem
-            {
-                Text = t.Name,
-                Disabled = true,
-                Selected = true,
-                Value = t.Id.ToString()
-            });
-
-            result.Student = studentDetails;
-            return this.View(result);
-        }
-
         // GET: Deleted
         public ActionResult Deleted(string sortOrder, string currentFilter, string searchString, int? page)
         {
