@@ -41,16 +41,6 @@
         <hr />
         <footer>
             <nav id="da" class="row navbar-light bg-faded">
-                @*@if (this.ViewBag["tags"] != null)
-                    {
-                        var tags = (List<DDS.Web.ViewModels.Shared.TagViewModel>)this.ViewBag["tags"];
-                        foreach (var tag in tags)
-                        {
-                            <div class="col-sm-4">
-                                @Html.ActionLink(tag.text, "Tag", "Home", new { area = string.Empty, tag.id }, null)
-                            </div>
-                        }
-                    }*@
             </nav>
             <hr />
             <p>&copy; @DateTime.Now.Year - Дипломна разпределителна система</p>
