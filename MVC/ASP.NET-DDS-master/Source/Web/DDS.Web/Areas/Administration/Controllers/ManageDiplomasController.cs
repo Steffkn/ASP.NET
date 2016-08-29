@@ -47,7 +47,7 @@
             this.ViewBag.CurrentFilter = searchString;
 
             //var teacher = this.teachers.GetByUserId(this.User.Identity.GetUserId()).FirstOrDefault();
-            var diplomas = this.diplomas.GetAll()
+            var diplomas = this.diplomas.GetAll().Where(d => d.IsApprovedByLeader)
                                             .To<CommonDiplomaViewModel>();
 
             if (!string.IsNullOrEmpty(searchString))
@@ -59,10 +59,6 @@
                 else if (searchString.ToLower() == "избрани")
                 {
                     diplomas = diplomas.Where(d => d.IsSelectedByStudent);
-                }
-                else if (searchString.ToLower() == "свободни")
-                {
-                    diplomas = diplomas.Where(d => !d.IsSelectedByStudent);
                 }
                 else
                 {
@@ -147,6 +143,17 @@
             result.Diploma.TeacherName = string.Format("{0} {1} {2}", teacher.User.ScienceDegree, teacher.User.FirstName, teacher.User.LastName).Trim();
 
             return this.View(result);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Approve(int id)
+        {
+            var diploma = this.diplomas.GetObjectById(id);
+            diploma.IsApprovedByHead = true;
+            this.diplomas.Save();
+
+            return this.RedirectToAction("Details", "ManageDiplomas", new { @id = id });
         }
     }
 }

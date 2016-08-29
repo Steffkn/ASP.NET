@@ -112,9 +112,10 @@
                 ScienceDegree = user.ScienceDegree,
             };
 
-            if (this.teachers.GetByUserId(model.UserId) == null)
+            var student = this.students.GetByUserId(model.UserId).FirstOrDefault();
+            if (this.students.GetByUserId(model.UserId) != null)
             {
-                user.Student = this.students.GetByUserId(userId).FirstOrDefault();
+                user.Student = student;
                 model.Address = user.Student.Address;
                 model.FNumber = user.Student.FNumber;
                 this.TempData["Student"] = true;
@@ -145,9 +146,10 @@
             user.ScienceDegree = model.ScienceDegree;
             this.UserManager.Update(user);
 
-            if (this.teachers.GetByUserId(model.UserId) == null)
+            var student = this.students.GetByUserId(model.UserId).FirstOrDefault();
+            if (this.students.GetByUserId(model.UserId) != null)
             {
-                user.Student = this.students.GetByUserId(model.UserId).FirstOrDefault();
+                user.Student = student;
                 user.Student.FNumber = model.FNumber;
                 user.Student.Address = model.Address;
                 this.students.Save();

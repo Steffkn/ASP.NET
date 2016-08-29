@@ -52,6 +52,13 @@
 <h4>Информация за дипломната работа</h4>
 <dl class="dl-horizontal">
     <dt>
+        @Html.DisplayNameFor(model => model.Diploma.TeacherName)
+    </dt>
+
+    <dd>
+        @Html.ActionLink(Model.Diploma.TeacherName, "TeacherDetails", "Home", new { Area = string.Empty, id = Model.Diploma.TeacherID }, new { @class = "btn-link" })
+    </dd>
+    <dt>
         @Html.DisplayNameFor(model => model.Diploma.Title)
     </dt>
 
@@ -72,10 +79,10 @@
     </dt>
     <dd>
         <ol>
-            @foreach (var item in Model.Diploma.ContentCSV)
-            {
-                <li>@item</li>
-            }
+        @foreach (var item in Model.Diploma.ContentCSV)
+        {
+                <li> @item </li>
+        }
         </ol>
     </dd>
 
@@ -95,7 +102,7 @@
     <dd>
         @foreach (var item in Model.Diploma.Tags)
         {
-            @Html.ActionLink(@item.Text, "Tag", "Home", new { id = item.Value }, new { @class = "btn-link" })<text> </text>
+            @Html.ActionLink(@item.Text, "Tag", "Home", new { id = item.Value }, new { @class = "btn-link" }) <text> </text>
         }
     </dd>
 
@@ -136,48 +143,53 @@
         </dt>
         <dd>
             <span class="success" style="padding: 5px">Избрана</span>
-            @*@Html.DisplayFor(model => model.Diploma.IsSelectedByStudent)*@
         </dd>
 
         <dt>
             @Html.DisplayNameFor(model => model.Diploma.IsApprovedByLeader)
         </dt>
-        <dd>
-            @if (Model.Diploma.IsApprovedByLeader)
-            {
-                <span class="text-success" style="padding: 5px">Удобрена</span>
-            }
-            else
-            {
-                <span class="text-warning" style="padding: 5px">Не удобрена</span>
-            }
-        </dd>
+            <dd>
+                @if (Model.Diploma.IsApprovedByLeader)
+                {
+                    <span class="text-success" style="padding: 5px">Удобрена</span>
+                }
+                else
+                {
+                    <span class="text-warning" style="padding: 5px">Не удобрена</span>
+                }
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Diploma.IsApprovedByHead)
-        </dt>
-        <dd>
-            @if (Model.Diploma.IsApprovedByHead)
-            {
-                <span class="text-success" style="padding: 5px">Удобрена</span>
-            }
-            else
-            {
-                <span class="text-warning" style="padding: 5px">Не удобрена</span>
-            }
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Diploma.IsApprovedByHead)
+            </dt>
+            <dd>
+                @if (Model.Diploma.IsApprovedByHead)
+                {
+                    <span class="text-success" style="padding: 5px">Удобрена</span>
+                }
+                else
+                {
+                    <span class="text-warning" style="padding: 5px">Не удобрена</span>
+                }
+            </dd>
 
     }
     <dt></dt>
     <dd>
-        @if (Model.Diploma.IsSelectedByStudent && !Model.Diploma.IsApprovedByLeader)
-        {
-            using (Html.BeginForm("Approve", "ManageDiplomas", new { Id = Model.Diploma.Id }, FormMethod.Post))
+        <div class="row">
+            <div class="col-sm-1">
+                @if (Model.Diploma.IsApprovedByLeader && !Model.Diploma.IsApprovedByHead)
             {
-                @Html.AntiForgeryToken()
-                <input type="submit" value="Удобри" class="btn btn-primary" />
-            }
-        }
-        @Html.ActionLink("Обратно", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
+                using (Html.BeginForm("Approve", "ManageDiplomas", new { Id = Model.Diploma.Id }, FormMethod.Post))
+                {
+                        @Html.AntiForgeryToken()
+                        <input type="submit" value="Удобри" class="btn btn-primary" />
+                    }
+                }
+            </div>
+            <div class="col-sm-1">
+                @Html.ActionLink("Обратно", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
+            </div>
+        </div>
     </dd>
 </dl>

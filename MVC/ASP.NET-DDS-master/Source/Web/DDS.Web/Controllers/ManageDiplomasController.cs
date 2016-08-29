@@ -125,14 +125,14 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Approve(int Id)
+        public ActionResult Approve(int id)
         {
-            var diploma = this.diplomas.GetObjectById(Id);
+            var diploma = this.diplomas.GetObjectById(id);
             diploma.IsApprovedByLeader = true;
 
             this.diplomas.Save();
 
-            return this.RedirectToAction("Details", "ManageDiplomas", new { @id = Id });
+            return this.RedirectToAction("Details", "ManageDiplomas", new { @id = id });
         }
 
         public ActionResult Create()
