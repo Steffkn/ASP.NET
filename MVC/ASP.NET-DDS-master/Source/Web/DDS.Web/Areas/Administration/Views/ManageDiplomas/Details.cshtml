@@ -1,0 +1,183 @@
+﻿@model DDS.Web.ViewModels.ManageDiplomas.StudentDiplomaViewModel
+
+@{
+    ViewBag.Title = "Детайли";
+}
+
+@if (Model.Diploma.IsSelectedByStudent)
+{
+    <h4>Информация за студента</h4>
+    <dl class="panel dl-horizontal">
+        <dt class="">
+            @Html.DisplayNameFor(model => model.Student.FirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Student.ScienceDegree)  @Html.DisplayFor(model => model.Student.FirstName) @Html.DisplayFor(model => model.Student.MiddleName) @Html.DisplayFor(model => model.Student.LastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Student.FNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Student.FNumber)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Student.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Student.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Student.Address)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Student.Address)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Student.PhoneNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Student.PhoneNumber)
+        </dd>
+    </dl>
+}
+
+<h4>Информация за дипломната работа</h4>
+<dl class="dl-horizontal">
+    <dt>
+        @Html.DisplayNameFor(model => model.Diploma.Title)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.Diploma.Title)
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.Diploma.Description)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.Diploma.Description)
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.Diploma.ContentCSV)
+    </dt>
+    <dd>
+        <ol>
+            @foreach (var item in Model.Diploma.ContentCSV)
+            {
+                <li>@item</li>
+            }
+        </ol>
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.Diploma.ExperimentalPart)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.Diploma.ExperimentalPart)
+    </dd>
+
+
+    <dt>
+        @Html.DisplayNameFor(model => model.Diploma.Tags)
+    </dt>
+
+    <dd>
+        @foreach (var item in Model.Diploma.Tags)
+        {
+            @Html.ActionLink(@item.Text, "Tag", "Home", new { id = item.Value }, new { @class = "btn-link" })<text> </text>
+        }
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.Diploma.CreatedOn)
+    </dt>
+    <dd>
+        @Html.DisplayFor(model => model.Diploma.CreatedOn)
+    </dd>
+
+    @if (Model.Diploma.ModifiedOn != null)
+    {
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Diploma.ModifiedOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Diploma.ModifiedOn)
+        </dd>
+    }
+
+    @if (Model.Diploma.IsDeleted)
+    {
+        <dt>
+            @Html.DisplayNameFor(model => model.Diploma.DeletedOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Diploma.DeletedOn)
+        </dd>
+    }
+
+    @if (Model.Diploma.IsSelectedByStudent)
+    {
+        <dt>
+            @Html.DisplayNameFor(model => model.Diploma.IsSelectedByStudent)
+        </dt>
+        <dd>
+            <span class="success" style="padding: 5px">Избрана</span>
+            @*@Html.DisplayFor(model => model.Diploma.IsSelectedByStudent)*@
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Diploma.IsApprovedByLeader)
+        </dt>
+        <dd>
+            @if (Model.Diploma.IsApprovedByLeader)
+            {
+                <span class="text-success" style="padding: 5px">Удобрена</span>
+            }
+            else
+            {
+                <span class="text-warning" style="padding: 5px">Не удобрена</span>
+            }
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Diploma.IsApprovedByHead)
+        </dt>
+        <dd>
+            @if (Model.Diploma.IsApprovedByHead)
+            {
+                <span class="text-success" style="padding: 5px">Удобрена</span>
+            }
+            else
+            {
+                <span class="text-warning" style="padding: 5px">Не удобрена</span>
+            }
+        </dd>
+
+    }
+    <dt></dt>
+    <dd>
+        @if (Model.Diploma.IsSelectedByStudent && !Model.Diploma.IsApprovedByLeader)
+        {
+            using (Html.BeginForm("Approve", "ManageDiplomas", new { Id = Model.Diploma.Id }, FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <input type="submit" value="Удобри" class="btn btn-primary" />
+            }
+        }
+        @Html.ActionLink("Обратно", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
+    </dd>
+</dl>

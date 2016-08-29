@@ -1,9 +1,28 @@
 ﻿@model IEnumerable<DDS.Web.Areas.Administration.ViewModels.UserViewModel>
 
+@using DDS.Web.Helpers;
 @{
     ViewBag.Title = "View users Page";
 }
-<table class="table">
+
+@if (TempData["Message"] != null)
+{
+    <div class="row">
+        @Html.Alert("", this.TempData["Message"].ToString(), AlertType.Info)
+    </div>
+}
+
+<div class="row">
+    <div class="col-xs-6">
+    </div>
+    @using (Html.BeginForm("Index", "Administration", FormMethod.Get))
+    {
+        @Html.Partial("~/Views/Shared/_SearchBoxPartial.cshtml")
+    }
+</div>
+<br />
+
+<table class="table table-responsive">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.FirstName)
@@ -45,17 +64,17 @@
             </td>
             <td>
                 <span>
-                    @foreach (var role in item.RolesList)
-                    {
-                        @Html.Label(role.Text, new { @class = "control-label " + role.Text })
-                        @Html.Raw(" ")
-                    }
-                </span>
+                        @foreach (var role in item.RolesList)
+                        {
+                            @Html.Label(role.Text, new { @class = "control-label " + role.Text })
+                            @Html.Raw(" ")
+                        }
+                    </span>
+
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id })
             </td>
         </tr>
     }
-
 </table>

@@ -17,8 +17,8 @@
 
 <div class="row">
     <div class="col-xs-6">
-        @Html.ActionLink("Нова", "Create", null, htmlAttributes: new { @class = "btn btn-success" })
-        @Html.ActionLink("Кошче", "Deleted", null, htmlAttributes: new { @class = "btn btn-primary" })
+        @*@Html.ActionLink("Нова", "Create", null, htmlAttributes: new { @class = "btn btn-success" })
+        @Html.ActionLink("Кошче", "Deleted", null, htmlAttributes: new { @class = "btn btn-primary" })*@
     </div>
     @using (Html.BeginForm("Index", "ManageDiplomas", FormMethod.Get))
     {
@@ -65,7 +65,7 @@
                     @Html.DisplayFor(modelItem => item.CreatedOn)
                 </td>
                 <td>
-                    <div class="btn-group-xs">
+                    @*<div class="btn-group-xs">
                         @if (!item.IsSelectedByStudent)
                         {
                             @Html.ActionLink("Промени", "Edit", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-primary" })
@@ -74,9 +74,9 @@
                         }
                         else
                         {
-                           //<span class="text-success">Избрана от студент</span>
+                            //<span class="text-success">Избрана от студент</span>
                         }
-                    </div>
+                    </div>*@
                 </td>
             </tr>
                         }

@@ -28,6 +28,8 @@
         [DisplayName("Права")]
         public IEnumerable<SelectListItem> RolesList { get; set; }
 
+        public string SelectedRole { get; set; }
+
         public List<string> RolesValues { get; set; }
     }
 }

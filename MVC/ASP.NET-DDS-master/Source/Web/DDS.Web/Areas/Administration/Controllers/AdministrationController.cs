@@ -15,6 +15,7 @@
     using Microsoft.AspNet.Identity.Owin;
     using Services.Data.Interfaces;
     using ViewModels;
+    using System.Collections.Generic;
 
     [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
     public class AdministrationController : BaseController
@@ -57,9 +58,26 @@
         }
 
         [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
+            this.ViewBag.CurrentSort = sortOrder;
+            this.ViewBag.NameSortParm = string.IsNullOrEmpty(sortOrder) ? "name_desc" : string.Empty;
+            this.ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            this.ViewBag.CurrentFilter = searchString;
+
+
             var allusers = this.users.GetAll().ToList();
+
             var viewModel = allusers.Select(
                 user => new UserViewModel
                 {
@@ -69,12 +87,30 @@
                     Email = user.Email,
                     LastName = user.LastName,
                     PhoneNumber = user.PhoneNumber,
+                    SelectedRole = this.UserManager.GetRoles(user.Id).FirstOrDefault(),
                     RolesList = this.UserManager.GetRoles(user.Id)
-                                                .Select(role => new SelectListItem { Text = role, Value = role, Selected = true })
-                })
-                    .ToList();
+                                            .Select(role => new SelectListItem { Text = role, Value = role, Selected = true })
+                });
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                viewModel = viewModel.Where(s => s.FirstName.Contains(searchString) || s.LastName.Contains(searchString)
+                || s.Email.Contains(searchString) || s.UserName.Contains(searchString) || (s.PhoneNumber != null && s.PhoneNumber.Contains(searchString)));
+            }
+
+            if (viewModel.LongCount() <= 0)
+            {
+                this.TempData["Message"] = "Не са намерени потребители!";
+            }
 
             return this.View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public void SaveRole(IEnumerable<UserViewModel> viewModel)
+        {
+            var model = viewModel;
         }
 
         // GET: Administration/Administration/Edit/5
@@ -102,11 +138,9 @@
             UserViewModel userViewModel = new UserViewModel
             {
                 Id = user.Id,
-                UserName = user.UserName,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                PhoneNumber = user.PhoneNumber,
                 RolesList = this.UserManager.GetRoles(user.Id)
                                             .Select(role => new SelectListItem { Text = role, Value = role, Selected = true })
                                             .Concat(allRoles)
@@ -124,28 +158,31 @@
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,FirstName,LastName,Email,PhoneNumber,UserName,RolesValues")] UserViewModel model)
+        public async Task<ActionResult> Edit(UserViewModel model)
         {
             if (this.ModelState.IsValid)
             {
                 var userRoles = await this.UserManager.GetRolesAsync(model.Id);
-                var result = await this.UserManager.AddToRolesAsync(model.Id, model.RolesValues.Except(userRoles).ToArray());
 
-                if (!result.Succeeded)
+                if (!this.UserManager.IsInRole(model.Id, model.SelectedRole))
                 {
-                    this.ModelState.AddModelError("", result.Errors.First());
-                    return this.View();
-                }
+                    var addResult = await this.UserManager.AddToRoleAsync(model.Id, model.SelectedRole);
 
-                result = await this.UserManager.RemoveFromRolesAsync(model.Id, userRoles.Except(model.RolesValues).ToArray());
+                    var result = await this.UserManager.RemoveFromRolesAsync(model.Id, userRoles.ToArray());
 
-                if (!result.Succeeded)
-                {
-                    this.ModelState.AddModelError("", result.Errors.First());
-                    return this.View();
+                    if (!result.Succeeded)
+                    {
+                        this.ModelState.AddModelError("", result.Errors.First());
+                        return this.RedirectToAction("Index", "Home");
+                    }
                 }
 
                 var user = this.UserManager.FindById(model.Id);
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+                user.Email = model.Email;
+                this.UserManager.Update(user);
+
                 var teacher = this.users.GetAllTeachers().FirstOrDefault(t => t.User.Id == model.Id);
 
                 if (this.UserManager.IsInRole(model.Id, GlobalConstants.TeacherRoleName))
