@@ -10,7 +10,7 @@
     using Microsoft.AspNet.Identity.Owin;
     using Microsoft.Owin.Security;
     using Services.Data.Interfaces;
-
+    using Common;
     [Authorize]
     public class ManageController : BaseController
     {
@@ -112,10 +112,11 @@
                 ScienceDegree = user.ScienceDegree,
             };
 
-            var student = this.students.GetByUserId(model.UserId).FirstOrDefault();
-            if (this.students.GetByUserId(model.UserId) != null)
+            if (this.UserManager.IsInRole(model.UserId, GlobalConstants.StudentRoleName))
             {
+                var student = this.students.GetByUserId(model.UserId).FirstOrDefault();
                 user.Student = student;
+                model.Student = user.Student;
                 model.Address = user.Student.Address;
                 model.FNumber = user.Student.FNumber;
                 this.TempData["Student"] = true;
@@ -124,8 +125,6 @@
             {
                 this.TempData["Student"] = false;
             }
-
-            model.Student = user.Student;
 
             return this.View(model);
         }
@@ -226,7 +225,7 @@
             // If we got this far, something failed, redisplay form
             return this.View(model);
         }
-        
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && this.userManager != null)

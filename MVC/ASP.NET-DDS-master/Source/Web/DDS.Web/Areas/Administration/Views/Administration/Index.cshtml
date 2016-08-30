@@ -64,16 +64,14 @@
             </td>
             <td>
                 <span>
-                        @foreach (var role in item.RolesList)
-                        {
-                            @Html.Label(role.Text, new { @class = "control-label " + role.Text })
-                            @Html.Raw(" ")
-                        }
-                    </span>
-
+                    @foreach (var role in item.RolesList)
+                    {
+                        @Html.Label(role.Text, new { @class = "control-label " + role.Text })
+                    }
+                </span>
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                @Html.ActionLink("Промени", "Edit", new { id = item.Id }, new { @class = "btn-sm btn-default" })
             </td>
         </tr>
     }
