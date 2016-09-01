@@ -15,12 +15,13 @@
     using Services.Data.Interfaces;
     using ViewModels.ManageDiplomas;
     using ViewModels.Shared;
-
+    using Data.Models;
     public class HomeController : BaseController
     {
         private readonly IDiplomasService diplomas;
         private readonly ITeachersService teachers;
         private readonly IStudentsService students;
+        private readonly IMessagesService messages;
         private readonly ITagsService tags;
 
         private ApplicationUserManager userManager;
@@ -29,11 +30,13 @@
             IDiplomasService diplomas,
             ITeachersService teachers,
             IStudentsService students,
+            IMessagesService messages,
             ITagsService tags)
         {
             this.diplomas = diplomas;
             this.teachers = teachers;
             this.students = students;
+            this.messages = messages;
             this.tags = tags;
         }
 
@@ -170,6 +173,11 @@
                 if (currentStudent.SelectedDiploma != null)
                 {
                     this.TempData["DiplomaIsSelected"] = "Вече сте избрали диплома";
+
+                    if (currentStudent.SelectedDiploma.Id == id)
+                    {
+                        this.TempData["IsOwnDiploma"] = true;
+                    }
                 }
             }
 
@@ -199,6 +207,20 @@
             var teacher = this.teachers.GetById(diploma.TeacherID).Include(t => t.User).FirstOrDefault();
             result.TeacherName = string.Format("{0} {1} {2}", teacher.User.ScienceDegree, teacher.User.FirstName, teacher.User.LastName).Trim();
 
+            var userId = this.User.Identity.GetUserId();
+            var messages = this.messages.GetAll().Where(mes => mes.SelectedDiploma.Id == diploma.Id
+                                                            && (mes.ResieverUserId == userId
+                                                            || mes.SenderUserId == userId))
+                                                            .To<MessageViewModel>().ToList();
+            foreach (var message in messages)
+            {
+                message.SenderUser = this.UserManager.FindById(message.SenderUserId);
+                message.ResieverUser = this.UserManager.FindById(message.ResieverUserId);
+            }
+
+            this.ViewBag.Messages = messages;
+            this.ViewBag.CurrentUserId = userID;
+
             return this.View(result);
         }
 
@@ -209,6 +231,15 @@
         {
             var selectedDiploma = this.diplomas.GetById(id).Include(d => d.Teacher).FirstOrDefault();
             var student = this.students.GetByUserId(this.User.Identity.GetUserId()).Include(s => s.User).FirstOrDefault();
+
+            if (student != null)
+            {
+                if (student.Address == null || student.FNumber == 0 || student.User.PhoneNumber == null)
+                {
+                    this.TempData["UpdateProfile"] = "Моля попълнете личната си информация преди да изберете дипломна работа!";
+                    return this.RedirectToAction("Details", new { id = id });
+                }
+            }
 
             if (selectedDiploma.Teacher != null)
             {
@@ -223,13 +254,6 @@
                 this.students.Save();
             }
 
-            if (student.Address == null || student.FNumber == 0 || student.User.PhoneNumber == null)
-            {
-                this.TempData["UpdateProfile"] = "Моля попълнете личната си информация преди да изберете дипломна работа!";
-                this.RedirectToAction("Details", new { id = id });
-            }
-
-            this.TempData["Selected"] = selectedDiploma.IsSelectedByStudent;
             this.TempData["DiplomaIsSelectedSuccesfully"] = string.Format("Дипломата \'{0}\' е избрана успешно!", selectedDiploma.Title);
 
             return this.RedirectToAction("Diplomas");
@@ -433,6 +457,35 @@
                                                     .ToList();
 
             return this.Json(new { Results = results, Total = resultList.Count }, JsonRequestBehavior.AllowGet);
+        }
+
+        [ValidateAntiForgeryToken]
+        public ActionResult SendMessage(FormCollection formCollection, int diplomaId, int teacherId)
+        {
+            string message = formCollection["message"];
+            if (this.ModelState.IsValid)
+            {
+                var senderId = this.User.Identity.GetUserId();
+                var resieverId = this.teachers.GetById(teacherId)
+                                                .Include(s => s.User)
+                                                .Select(s => s.User.Id)
+                                                .FirstOrDefault();
+
+                Diploma selectedDiploma = this.diplomas.GetById(diplomaId).FirstOrDefault();
+
+                var messageEntity = new Message()
+                {
+                    SenderUserId = senderId,
+                    ResieverUserId = resieverId,
+                    MessageSend = message,
+                    SelectedDiploma = selectedDiploma,
+                    IsRead = false,
+                };
+
+                this.messages.Create(messageEntity);
+            }
+
+            return this.RedirectToAction("Details", new { Id = diplomaId });
         }
     }
 }

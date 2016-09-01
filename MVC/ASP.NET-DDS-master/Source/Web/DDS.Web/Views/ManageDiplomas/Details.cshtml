@@ -176,8 +176,47 @@
             {
                 @Html.AntiForgeryToken()
                 <input type="submit" value="Удобри" class="btn btn-primary" />
+                @Html.ActionLink("Обратно", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
             }
+
         }
-        @Html.ActionLink("Обратно", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
+        else {
+            @Html.ActionLink("Обратно", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
+        }
     </dd>
 </dl>
+
+@if (Model.Diploma.IsSelectedByStudent && !Model.Diploma.IsApprovedByLeader)
+{
+<h3>Съобщение за неудобрение</h3>
+<div class="row">
+    <div class="col-lg-6">
+        @foreach (var item in Model.MessageBox)
+        {
+            <div class="row">
+                @if (item.SenderUserId == Model.CurrentUserId)
+                {
+                    <div class="col-lg-10 col-sm-offset-2 alert bg-info">
+                        <div>Вие, @item.CreatedOn:</div>
+                        <p>@item.MessageSend</p>
+                    </div>
+                }
+                else {
+                    <div class="col-lg-10 alert bg-grey">
+                        <div>@item.SenderUser.FirstName, @item.CreatedOn:</div>
+                        <p>@item.MessageSend</p>
+                    </div>
+                }
+            </div>
+        }
+
+
+        @using (Ajax.BeginForm("SendMessage", new { diplomaId = Model.Diploma.Id, studentId = Model.Student.Id }, new AjaxOptions { UpdateTargetId = "result" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.TextArea("message", null, new { @class = "form-control", @required = "required", placeholder = "Съобщение", type = "text" })
+            <input type="submit" value="Изпрати" class="btn btn-primary form-control" />
+        }
+    </div>
+</div>
+}

@@ -62,6 +62,8 @@
     <Compile Include="AdministrationService.cs" />
     <Compile Include="BaseService.cs" />
     <Compile Include="DiplomasService.cs" />
+    <Compile Include="MessagesService.cs" />
+    <Compile Include="Interfaces\IMessagesService.cs" />
     <Compile Include="Interfaces\IAdministrationService.cs" />
     <Compile Include="Interfaces\IBaseServices.cs" />
     <Compile Include="Interfaces\IDiplomasService.cs" />

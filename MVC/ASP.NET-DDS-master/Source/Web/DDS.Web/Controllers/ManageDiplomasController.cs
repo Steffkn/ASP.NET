@@ -1,5 +1,6 @@
 ﻿namespace DDS.Web.Controllers
 {
+    using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
@@ -22,18 +23,22 @@
         private readonly IDiplomasService diplomas;
         private readonly IStudentsService students;
         private readonly ITagsService tags;
+        private readonly IMessagesService messages;
+
         private ApplicationUserManager userManager;
 
         public ManageDiplomasController(
             ITeachersService teachers,
             IDiplomasService diplomas,
             IStudentsService students,
-            ITagsService tags)
+            ITagsService tags,
+            IMessagesService messages)
         {
             this.teachers = teachers;
             this.diplomas = diplomas;
             this.students = students;
             this.tags = tags;
+            this.messages = messages;
         }
 
         public ApplicationUserManager UserManager
@@ -135,6 +140,28 @@
             return this.RedirectToAction("Details", "ManageDiplomas", new { @id = id });
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Release(int id)
+        {
+            var diploma = this.diplomas.GetObjectById(id);
+            diploma.IsSelectedByStudent = false;
+            diploma.IsApprovedByLeader = false;
+            this.diplomas.Save();
+
+            var student = this.students.GetAll().Where(s => s.SelectedDiploma.Id == id).FirstOrDefault();
+            student.SelectedDiploma = null;
+
+            var teacher = this.teachers.GetByUserId(this.User.Identity.GetUserId()).FirstOrDefault();
+            teacher.Students.Remove(student);
+
+            this.students.Save();
+            this.teachers.Save();
+
+            return this.RedirectToAction("Details", "ManageDiplomas", new { @id = id });
+        }
+
+        [HttpGet]
         public ActionResult Create()
         {
             return this.View();
@@ -309,6 +336,20 @@
             var teacher = this.teachers.GetById(diploma.TeacherID).Include(t => t.User).FirstOrDefault();
             result.Diploma.TeacherName = string.Format("{0} {1} {2}", teacher.User.ScienceDegree, teacher.User.FirstName, teacher.User.LastName).Trim();
 
+            var userId = this.User.Identity.GetUserId();
+            var messages = this.messages.GetAll().Where(mes => mes.SelectedDiploma.Id == diploma.Id
+                                                            && (mes.ResieverUserId == userId
+                                                            || mes.SenderUserId == userId))
+                                                            .To<MessageViewModel>().ToList();
+            foreach (var message in messages)
+            {
+                message.SenderUser = this.UserManager.FindById(message.SenderUserId);
+                message.ResieverUser = this.UserManager.FindById(message.ResieverUserId);
+            }
+
+            result.MessageBox = messages;
+
+            result.CurrentUserId = userId;
             return this.View(result);
         }
 
@@ -452,6 +493,38 @@
             this.diplomas.UnDelete(diploma);
             this.TempData["Message"] = "Дипломата е върната!";
             return this.RedirectToAction("Index", "ManageDiplomas");
+        }
+
+        [ValidateAntiForgeryToken]
+        public ActionResult SendMessage(FormCollection formCollection, int diplomaId, int studentId)
+        {
+            string message = formCollection["message"];
+            if (this.ModelState.IsValid)
+            {
+                var senderId = this.User.Identity.GetUserId();
+                var resieverId = this.students.GetById(studentId)
+                                                .Include(s => s.User)
+                                                .Select(s => s.User.Id)
+                                                .FirstOrDefault();
+
+                var senderUser = this.UserManager.FindById(senderId);
+                var resieverUser = this.UserManager.FindById(resieverId);
+
+                Diploma selectedDiploma = this.diplomas.GetById(diplomaId).FirstOrDefault();
+
+                var messageEntity = new Message()
+                {
+                    SenderUserId = senderId,
+                    ResieverUserId = resieverId,
+                    MessageSend = message,
+                    SelectedDiploma = selectedDiploma,
+                    IsRead = false,
+                };
+
+                this.messages.Create(messageEntity);
+            }
+
+            return this.RedirectToAction("Details", new { Id = diplomaId });
         }
     }
 }

@@ -21,6 +21,8 @@
 
         public IDbSet<Diploma> Diplomas { get; set; }
 
+        public IDbSet<Message> Messages { get; set; }
+
         public IDbSet<Tag> Tags { get; set; }
 
         public static ApplicationDbContext Create()

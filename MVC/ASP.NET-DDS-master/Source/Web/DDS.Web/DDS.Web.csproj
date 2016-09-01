@@ -230,6 +230,7 @@
     <Compile Include="ViewModels\Shared\CommonDiplomaViewModel.cs" />
     <Compile Include="ViewModels\ManageDiplomas\CreateDiplomaViewModel.cs" />
     <Compile Include="ViewModels\ManageDiplomas\EditDiplomaViewModel.cs" />
+    <Compile Include="ViewModels\Shared\MessageViewModel.cs" />
     <Compile Include="ViewModels\Shared\SimpleStudentViewModel.cs" />
     <Compile Include="ViewModels\ManageDiplomas\StudentDiplomaViewModel.cs" />
     <Compile Include="ViewModels\ManageDiplomas\StudentViewModel.cs" />

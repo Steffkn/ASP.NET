@@ -5,7 +5,7 @@
     using AutoMapper;
     using Data.Models;
     using Infrastructure.Mapping;
-
+    using System;
     public class CommonDiplomaViewModel : IMapFrom<Diploma>, IHaveCustomMappings
     {
         [Required]
@@ -26,6 +26,10 @@
         [Required]
         [Display(Name = "Създадена на")]
         public string CreatedOn { get; set; }
+
+        [Required]
+        [Display(Name = "Модифицирана на")]
+        public DateTime? ModifiedOn { get; set; }
 
         [Required]
         [Display(Name = "Избрана")]

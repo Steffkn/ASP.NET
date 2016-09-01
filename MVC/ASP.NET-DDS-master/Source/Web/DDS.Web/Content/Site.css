@@ -53,6 +53,10 @@ footer ul li a{
     color: black;
 }
 
+.bg-grey{
+    background-color: #ededed;
+}
+
 @media (min-width: 768px) {
     .dl-horizontal dt {
         width:220px;

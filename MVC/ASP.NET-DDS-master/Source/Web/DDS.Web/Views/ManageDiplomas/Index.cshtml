@@ -14,7 +14,6 @@
     </div>
 }
 
-
 <div class="row">
     <div class="col-xs-6">
         @Html.ActionLink("Нова", "Create", null, htmlAttributes: new { @class = "btn btn-success" })
@@ -74,7 +73,17 @@
                         }
                         else
                         {
-                           //<span class="text-success">Избрана от студент</span>
+                            var expirationalDate = item.ModifiedOn.Value.AddYears(1);
+                            if (true)
+                            {
+                                //expirationalDate > DateTime.Now.AddYears(1)
+                                <span class="text-danger">@expirationalDate.ToShortDateString()</span>
+                                <div id="release" class="btn btn-warning" data-release-id="@item.Id">Освободи</div>
+                            }
+                            else
+                            {
+                                <span class="text-success">@expirationalDate.ToShortDateString()</span>
+                            }
                         }
                     </div>
                 </td>
@@ -124,6 +133,16 @@
         }
 
         $(function () {
+            $("#release").click(function () {
+
+                $.post(
+                        '@Url.Action("Release")',
+                       AddAntiForgeryToken({ id: $(this).attr('data-release-id') })).fail(function (data) {
+                           alert("Записът не бе променен!");
+                       });
+                return false;
+            });
+
             $("a.delete-link").click(function () {
                 var deleteLink = $(this);
                 deleteLink.hide();
@@ -147,7 +166,7 @@
                                parentRow.remove();
                            });
                        }).fail(function (data) {
-                           alert("error");
+                           alert("Записът не бе променен!");
                        });
                     return false;
                 };

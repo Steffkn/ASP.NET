@@ -6,24 +6,24 @@
 
 <h3>Детайли на дипломната работа</h3>
 
-@if (this.TempData["selected"] != null)
-{
-    <div class="row">
-        @Html.Alert("", this.TempData["selected"].ToString(), AlertType.Warning)
-    </div>
-}
-
-@if (this.TempData["DiplomaIsSelected"] != null)
-{
-    <div class="row">
-        @Html.Alert("", this.TempData["DiplomaIsSelected"].ToString(), AlertType.Danger)
-    </div>
-}
+@*@if (this.TempData["DiplomaIsSelectedSuccesfully"] != null)
+    {
+        <div class="row">
+            @Html.Alert("", this.TempData["DiplomaIsSelectedSuccesfully"].ToString(), AlertType.Warning)
+        </div>
+    }*@
 
 @if (this.TempData["UpdateProfile"] != null)
 {
     <div class="row">
         @Html.Alert("", this.TempData["UpdateProfile"].ToString(), AlertType.Danger)
+    </div>
+}
+
+@if (this.TempData["DiplomaIsSelected"] != null && this.TempData["IsOwnDiploma"] == null)
+{
+    <div class="row">
+        @Html.Alert("", this.TempData["DiplomaIsSelected"].ToString(), AlertType.Danger)
     </div>
 }
 
@@ -135,4 +135,38 @@
         </dd>
 
     </dl>
+}
+@if (this.TempData["IsOwnDiploma"] != null)
+{
+    <h3>Въпроси и информация:</h3>
+    <div class="row">
+        <div class="col-lg-6">
+            @foreach (var item in this.ViewBag.Messages)
+            {
+                <div class="row">
+                    @if (item.SenderUserId == this.ViewBag.CurrentUserId)
+                    {
+                        <div class="col-lg-10 col-sm-offset-2 alert bg-info">
+                            <div>Вие, @item.CreatedOn:</div>
+                            <p>@item.MessageSend</p>
+                        </div>
+                    }
+                    else {
+                        <div class="col-lg-10 alert bg-grey">
+                            <div>@item.SenderUser.FirstName, @item.CreatedOn:</div>
+                            <p>@item.MessageSend</p>
+                        </div>
+                    }
+                </div>
+            }
+
+
+            @using (Ajax.BeginForm("SendMessage", new { diplomaId = Model.Id, teacherId = Model.TeacherID }, new AjaxOptions { UpdateTargetId = "result" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.TextArea("message", null, new { @class = "form-control", @required = "required", placeholder = "Съобщение", type = "text" })
+                <input type="submit" value="Изпрати" class="btn btn-primary form-control" />
+            }
+        </div>
+    </div>
 }

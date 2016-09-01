@@ -16,6 +16,13 @@
     </div>
 }
 
+@if (TempData["DiplomasNotFound"] != null)
+{
+    <div class="row">
+        @Html.Alert("", TempData["DiplomasNotFound"].ToString(), AlertType.Info)
+    </div>
+}
+
 <div class="row">
     @using (Html.BeginForm("Tag", "Home", FormMethod.Get))
     {

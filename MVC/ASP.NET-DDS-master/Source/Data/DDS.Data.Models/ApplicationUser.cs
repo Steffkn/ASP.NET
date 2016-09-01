@@ -1,6 +1,6 @@
 ﻿namespace DDS.Data.Models
 {
-    using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
     using System.Security.Claims;
     using System.Threading.Tasks;
 
@@ -10,10 +10,13 @@
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
     {
+        [Required(ErrorMessage = "Моля въведете име.")]
         public string FirstName { get; set; }
 
+        [Required(ErrorMessage = "Моля въведете презиме.")]
         public string LastName { get; set; }
 
+        [Required(ErrorMessage = "Моля въведете фамилия.")]
         public string MiddleName { get; set; }
 
         public string ScienceDegree { get; set; }

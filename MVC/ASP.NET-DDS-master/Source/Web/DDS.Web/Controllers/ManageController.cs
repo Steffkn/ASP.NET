@@ -11,6 +11,7 @@
     using Microsoft.Owin.Security;
     using Services.Data.Interfaces;
     using Common;
+    using System.Data.Entity;
     [Authorize]
     public class ManageController : BaseController
     {
@@ -39,17 +40,11 @@
         public enum ManageMessageId
         {
             AddPhoneSuccess,
-
             ChangePasswordSuccess,
-
             SetTwoFactorSuccess,
-
             SetPasswordSuccess,
-
             RemoveLoginSuccess,
-
             RemovePhoneSuccess,
-
             Error
         }
 
@@ -114,11 +109,16 @@
 
             if (this.UserManager.IsInRole(model.UserId, GlobalConstants.StudentRoleName))
             {
-                var student = this.students.GetByUserId(model.UserId).FirstOrDefault();
-                user.Student = student;
-                model.Student = user.Student;
-                model.Address = user.Student.Address;
-                model.FNumber = user.Student.FNumber;
+                var student = this.students.GetByUserId(model.UserId).Include(s => s.SelectedDiploma).FirstOrDefault();
+
+                if (student.SelectedDiploma != null)
+                {
+                    model.DiplomaId = student.SelectedDiploma.Id;
+                    this.TempData["HasDiploma"] = true;
+                }
+
+                model.Address = student.Address;
+                model.FNumber = student.FNumber;
                 this.TempData["Student"] = true;
             }
             else

@@ -4,6 +4,7 @@
     using System.ComponentModel.DataAnnotations;
     using Data.Models;
     using Microsoft.AspNet.Identity;
+    using Shared;
 
     public class IndexViewModel
     {
@@ -17,7 +18,7 @@
 
         public bool BrowserRemembered { get; set; }
 
-        public Student Student { get; set; }
+        public int DiplomaId { get; set; }
 
         [Display(Name = "Телефон")]
         public string PhoneNumber { get; set; }

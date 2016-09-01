@@ -36,6 +36,8 @@ namespace DDS.Data.Migrations
                 roleManager.Create(role);
                 role = new IdentityRole { Name = GlobalConstants.AdministratorRoleName };
                 roleManager.Create(role);
+                role = new IdentityRole { Name = GlobalConstants.ManagementRoleName };
+                roleManager.Create(role);
 
                 // Create admin user
                 var userStore = new UserStore<ApplicationUser>(context);
@@ -45,6 +47,7 @@ namespace DDS.Data.Migrations
                     UserName = AdministratorUserName,
                     Email = AdministratorUserName,
                     FirstName = Name,
+                    MiddleName = Name,
                     LastName = Name
                 };
                 userManager.Create(user, AdministratorPassword);
@@ -59,153 +62,138 @@ namespace DDS.Data.Migrations
 
         private void SeedUsers(UserManager<ApplicationUser> userManager, DDS.Data.ApplicationDbContext context)
         {
+
             var hasher = new PasswordHasher();
-
-            var userName = "misheto98";
             var userPassword = "1qaz@WSX";
-            var firstName = "Маргарита";
-            var middleName = "Стоименова";
-            var lastName = "Кара-Качанова";
 
-            var user = new ApplicationUser
+            List<SimpleUser> users = new List<SimpleUser>();
+
+            users.Add(new SimpleUser()
             {
-                UserName = userName,
-                Email = userName + "@abv.bg",
-                FirstName = firstName,
-                MiddleName = middleName,
-                LastName = lastName,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                PasswordHash = hasher.HashPassword(userPassword),
-            };
+                UserName = "misheto98",
+                FirstName = "Маргарита",
+                MiddleName = "Стоименова",
+                LastName = "Кара-Качанова",
+            });
 
-            var student = new Student()
+            users.Add(new SimpleUser()
             {
-                User = user
-            };
+                UserName = "niko",
+                FirstName = "Никола",
+                MiddleName = "Иванов",
+                LastName = "Захариев",
+            });
 
-            var teacher = new Teacher()
+            users.Add(new SimpleUser()
             {
-                User = user
-            };
+                UserName = "cveti",
+                FirstName = "Цветелина",
+                MiddleName = "Георгиева",
+                LastName = "Попова",
+            });
 
-            //user.Teacher = new Teacher()
-            //{
-            //    CreatedOn = DateTime.Now,
-            //};
-
-            context.Students.Add(student);
-            context.Teachers.Add(teacher);
-            context.SaveChanges();
-
-            //userManager.Update(user);
-
-            userManager.AddToRole(user.Id, GlobalConstants.StudentRoleName);
-            userManager.AddToRole(user.Id, GlobalConstants.TeacherRoleName);
-
-            userName = "niko";
-            firstName = "Никола";
-            middleName = "Иванов";
-            lastName = "Захариев";
-
-            user = new ApplicationUser
+            users.Add(new SimpleUser()
             {
-                UserName = userName,
-                Email = userName + "@abv.bg",
-                FirstName = firstName,
-                MiddleName = middleName,
-                LastName = lastName,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                PasswordHash = hasher.HashPassword(userPassword),
-            };
+                UserName = "rali",
+                FirstName = "Ралица",
+                MiddleName = "Спасова",
+                LastName = "Стоянова",
+            });
 
-            student = new Student()
+            users.Add(new SimpleUser()
             {
-                User = user
-            };
+                UserName = "steff",
+                FirstName = "Стефан",
+                MiddleName = "Тодоров",
+                LastName = "Чуфидов",
+            });
 
-            context.Students.Add(student);
-            context.SaveChanges();
-
-            userManager.AddToRole(user.Id, GlobalConstants.StudentRoleName);
-
-            userName = "cveti";
-            firstName = "Цветелина";
-            middleName = "Георгиева";
-            lastName = "Попова";
-
-            user = new ApplicationUser
+            users.Add(new SimpleUser()
             {
-                UserName = userName,
-                Email = userName + "@abv.bg",
-                FirstName = firstName,
-                MiddleName = middleName,
-                LastName = lastName,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                PasswordHash = hasher.HashPassword(userPassword),
-                ScienceDegree = "гл.ас."
-            };
+                UserName = "krisi",
+                FirstName = "Кристина",
+                MiddleName = "Малинова",
+                LastName = "Капинова",
+            });
 
-            student = new Student()
+            users.Add(new SimpleUser()
             {
-                User = user
-            };
+                UserName = "stamat",
+                FirstName = "Стамат",
+                MiddleName = "Валентинов",
+                LastName = "Костадинов",
+            });
 
-            context.Students.Add(student);
-            context.SaveChanges();
-            userManager.AddToRole(user.Id, GlobalConstants.StudentRoleName);
-
-            userName = "rali";
-            firstName = "Ралица";
-            middleName = "Спасова";
-            lastName = "Стоянова";
-
-            user = new ApplicationUser
+            users.Add(new SimpleUser()
             {
-                UserName = userName,
-                Email = userName + "@abv.bg",
-                FirstName = firstName,
-                MiddleName = middleName,
-                LastName = lastName,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                PasswordHash = hasher.HashPassword(userPassword),
-                ScienceDegree = "ас."
-            };
+                UserName = "drago",
+                FirstName = "Драгомир",
+                MiddleName = "Иванов",
+                LastName = "Тодоров",
+            });
 
-            teacher = new Teacher()
+            users.Add(new SimpleUser()
             {
-                User = user
-            };
+                UserName = "boji",
+                FirstName = "Божидаря",
+                MiddleName = "Маринова",
+                LastName = "Таскова",
+            });
 
-            context.Teachers.Add(teacher);
-            context.SaveChanges();
-            userManager.AddToRole(user.Id, GlobalConstants.TeacherRoleName);
-
-            userName = "steff";
-            firstName = "Стефан";
-            middleName = "Тодоров";
-            lastName = "Чуфидов";
-
-            user = new ApplicationUser
+            foreach (var user in users)
             {
-                UserName = userName,
-                Email = userName + "@abv.bg",
-                FirstName = firstName,
-                MiddleName = middleName,
-                LastName = lastName,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                PasswordHash = hasher.HashPassword(userPassword),
-                ScienceDegree = "инж"
-            };
+                var appUser = new ApplicationUser
+                {
+                    UserName = user.UserName,
+                    Email = user.UserName + "@abv.bg",
+                    FirstName = user.FirstName,
+                    MiddleName = user.MiddleName,
+                    LastName = user.LastName,
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                    PasswordHash = hasher.HashPassword(userPassword),
+                };
 
-            student = new Student()
+                context.Students.Add(new Student() { User = appUser });
+                context.SaveChanges();
+
+                userManager.AddToRole(appUser.Id, GlobalConstants.StudentRoleName);
+            }
+
+            List<SimpleUser> teachers = new List<SimpleUser>();
+
+            teachers.Add(new SimpleUser()
             {
-                User = user
-            };
+                UserName = "georgi",
+                FirstName = "Георги",
+                MiddleName = "Божидаров",
+                LastName = "Стоянов",
+            });
+            teachers.Add(new SimpleUser()
+            {
+                UserName = "kosi",
+                FirstName = "Константина",
+                MiddleName = "Кирилова",
+                LastName = "Соколова",
+            });
 
-            context.Students.Add(student);
-            context.SaveChanges();
+            foreach (var user in teachers)
+            {
+                var appUser = new ApplicationUser
+                {
+                    UserName = user.UserName,
+                    Email = user.UserName + "@abv.bg",
+                    FirstName = user.FirstName,
+                    MiddleName = user.MiddleName,
+                    LastName = user.LastName,
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                    PasswordHash = hasher.HashPassword(userPassword),
+                };
 
-            userManager.AddToRole(user.Id, GlobalConstants.StudentRoleName);
+                context.Teachers.Add(new Teacher() { User = appUser });
+                context.SaveChanges();
+
+                userManager.AddToRole(appUser.Id, GlobalConstants.TeacherRoleName);
+            }
         }
 
         private void SeedDiplomas(UserManager<ApplicationUser> userManager, DDS.Data.ApplicationDbContext context)
@@ -224,7 +212,7 @@ namespace DDS.Data.Migrations
 
             context.SaveChanges();
 
-            var userTeacher = userManager.FindByName("misheto98").Teacher;
+            var userTeacher = userManager.FindByName("georgi").Teacher;
             var teacher = context.Teachers.FirstOrDefault(t => t.Id == userTeacher.Id);
             var count = teacher.Tags.Count;
 
@@ -379,7 +367,7 @@ namespace DDS.Data.Migrations
                 teacher.Tags.Add(tag);
             }
 
-            userTeacher = userManager.FindByName("rali").Teacher;
+            userTeacher = userManager.FindByName("kosi").Teacher;
             teacher = context.Teachers.FirstOrDefault(t => t.Id == userTeacher.Id);
 
             diplomaTags = new List<Tag>();
@@ -444,6 +432,17 @@ namespace DDS.Data.Migrations
             {
                 teacher.Tags.Add(tag);
             }
+        }
+
+        private struct SimpleUser
+        {
+            public string UserName { get; set; }
+
+            public string FirstName { get; set; }
+
+            public string MiddleName { get; set; }
+
+            public string LastName { get; set; }
         }
     }
 }

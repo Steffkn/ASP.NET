@@ -60,13 +60,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationDbContext.cs" />
-    <Compile Include="Migrations\201607092054444_Initial.cs" />
-    <Compile Include="Migrations\201607092054444_Initial.Designer.cs">
-      <DependentUpon>201607092054444_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201608022205258_TeacherTagRelation.cs" />
-    <Compile Include="Migrations\201608022205258_TeacherTagRelation.Designer.cs">
-      <DependentUpon>201608022205258_TeacherTagRelation.cs</DependentUpon>
+    <Compile Include="Migrations\201609011530147_Initial.cs" />
+    <Compile Include="Migrations\201609011530147_Initial.Designer.cs">
+      <DependentUpon>201609011530147_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -100,11 +96,8 @@
     </AdditionalFiles>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201607092054444_Initial.resx">
-      <DependentUpon>201607092054444_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201608022205258_TeacherTagRelation.resx">
-      <DependentUpon>201608022205258_TeacherTagRelation.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201609011530147_Initial.resx">
+      <DependentUpon>201609011530147_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
