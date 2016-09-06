@@ -34,11 +34,11 @@
         public bool IsSelectedByStudent { get; set; }
 
         [Required]
-        [Display(Name = "Удобрена от ръководителя")]
+        [Display(Name = "Одобрена от ръководителя")]
         public bool IsApprovedByLeader { get; set; }
 
         [Required]
-        [Display(Name = "Удобрена от декан")]
+        [Display(Name = "Одобрена от декан")]
         public bool IsApprovedByHead { get; set; }
 
         public void CreateMappings(IMapperConfiguration configuration)

@@ -13,7 +13,7 @@
         [Required]
         public int Id { get; set; }
 
-        [Display(Name = "Преподавател")]
+        [Display(Name = "Ръководител")]
         public string TeacherName { get; set; }
 
         [Display(Name = "Емайл")]

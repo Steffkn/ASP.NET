@@ -1,5 +1,5 @@
 ﻿@model DDS.Web.ViewModels.ManageDiplomas.StudentDiplomaViewModel
-
+@using DDS.Web.Areas.Administration.ViewModels
 @{
     ViewBag.Title = "Детайли";
 }
@@ -79,10 +79,10 @@
     </dt>
     <dd>
         <ol>
-        @foreach (var item in Model.Diploma.ContentCSV)
-        {
+            @foreach (var item in Model.Diploma.ContentCSV)
+            {
                 <li> @item </li>
-        }
+            }
         </ol>
     </dd>
 
@@ -101,7 +101,7 @@
 
     <dd>
         @foreach (var item in Model.Diploma.Tags)
-        {
+            {
             @Html.ActionLink(@item.Text, "Tag", "Home", new { id = item.Value }, new { @class = "btn-link" }) <text> </text>
         }
     </dd>
@@ -148,16 +148,16 @@
         <dt>
             @Html.DisplayNameFor(model => model.Diploma.IsApprovedByLeader)
         </dt>
-            <dd>
-                @if (Model.Diploma.IsApprovedByLeader)
+        <dd>
+            @if (Model.Diploma.IsApprovedByLeader)
                 {
-                    <span class="text-success" style="padding: 5px">Удобрена</span>
-                }
-                else
-                {
-                    <span class="text-warning" style="padding: 5px">Не удобрена</span>
-                }
-            </dd>
+                <span class="text-success" style="padding: 5px">одобрена</span>
+            }
+            else
+            {
+                <span class="text-warning" style="padding: 5px">Не одобрена</span>
+            }
+        </dd>
 
             <dt>
                 @Html.DisplayNameFor(model => model.Diploma.IsApprovedByHead)
@@ -165,11 +165,11 @@
             <dd>
                 @if (Model.Diploma.IsApprovedByHead)
                 {
-                    <span class="text-success" style="padding: 5px">Удобрена</span>
+                    <span class="text-success" style="padding: 5px">одобрена</span>
                 }
                 else
                 {
-                    <span class="text-warning" style="padding: 5px">Не удобрена</span>
+                    <span class="text-warning" style="padding: 5px">Не одобрена</span>
                 }
             </dd>
 
@@ -183,7 +183,7 @@
                 using (Html.BeginForm("Approve", "ManageDiplomas", new { Id = Model.Diploma.Id }, FormMethod.Post))
                 {
                         @Html.AntiForgeryToken()
-                        <input type="submit" value="Удобри" class="btn btn-primary" />
+                        <input type="submit" value="Одобри" class="btn btn-primary" />
                     }
                 }
             </div>
@@ -193,3 +193,15 @@
         </div>
     </dd>
 </dl>
+
+@if (Model.Duplicates != null)
+{
+    foreach (var item in Model.Duplicates)
+    {
+        <div class="row">
+            <div class="col-sm-12">
+                @Html.ActionLink(item.Title, "Details", new { id = item.Id })
+            </div>
+        </div>
+    }
+}

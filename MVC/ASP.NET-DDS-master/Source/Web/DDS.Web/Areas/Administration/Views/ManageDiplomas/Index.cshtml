@@ -17,8 +17,6 @@
 
 <div class="row">
     <div class="col-xs-6">
-        @*@Html.ActionLink("Нова", "Create", null, htmlAttributes: new { @class = "btn btn-success" })
-        @Html.ActionLink("Кошче", "Deleted", null, htmlAttributes: new { @class = "btn btn-primary" })*@
     </div>
     @using (Html.BeginForm("Index", "ManageDiplomas", FormMethod.Get))
     {
@@ -30,7 +28,7 @@
     <thead>
         <tr>
             <th class="">#</th>
-            <th class="col-md-3">
+            <th class="col-md-5">
                 @Html.ActionLink("Заглавие", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
             </th>
             <th class="col-md-5">
@@ -39,7 +37,6 @@
             <th class="col-md-2">
                 @Html.ActionLink("Дата на добавяне", "Index", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
             </th>
-            <th class="col-md-2"></th>
         </tr>
     </thead>
     <tbody>
@@ -64,20 +61,6 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.CreatedOn)
                 </td>
-                <td>
-                    @*<div class="btn-group-xs">
-                        @if (!item.IsSelectedByStudent)
-                        {
-                            @Html.ActionLink("Промени", "Edit", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-primary" })
-                            <a class="btn btn-warning delete-link" href="@Url.Action("Delete", new {id = item.Id})">Изтрий</a>
-                            <div class="btn btn-danger delete-confirm" style="display:none" data-delete-id="@item.Id">Изтрий?</div>
-                        }
-                        else
-                        {
-                            //<span class="text-success">Избрана от студент</span>
-                        }
-                    </div>*@
-                </td>
             </tr>
                         }
     </tbody>
@@ -100,13 +83,13 @@
                 <div class="alert-info well-sm"></div>
             </div>
             <div class="col-sm-3">
-                <p>Удобрена от ръководител</p>
+                <p>Одобрена от ръководител</p>
             </div>
             <div class="col-sm-1">
                 <div class="alert-success well-sm"></div>
             </div>
             <div class="col-sm-3">
-                <p>Удобрена и подписана от декан</p>
+                <p>Одобрена и подписана от декан</p>
             </div>
         </div>
     </div>

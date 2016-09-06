@@ -3,12 +3,17 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Web.Mvc;
+    using Common;
     using Infrastructure.Mapping;
     using PagedList;
     using Services.Data.Interfaces;
+    using ViewModels;
     using Web.Controllers;
-    using Web.ViewModels.Shared;
     using Web.ViewModels.ManageDiplomas;
+    using Web.ViewModels.Shared;
+    using System;
+
+    [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
     public class ManageDiplomasController : BaseController
     {
         private readonly ITeachersService teachers;
@@ -52,7 +57,7 @@
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                if (searchString.ToLower() == "удобрени")
+                if (searchString.ToLower() == "одобрени")
                 {
                     diplomas = diplomas.Where(d => d.IsApprovedByLeader || d.IsApprovedByHead);
                 }
@@ -95,6 +100,9 @@
 
             int pageSize = 5;
             int pageNumber = page ?? 1;
+
+            throw new NullReferenceException();
+
             return this.View(diplomas.ToPagedList(pageNumber, pageSize));
         }
 
@@ -142,6 +150,10 @@
             var teacher = this.teachers.GetById(diploma.TeacherID).Include(t => t.User).FirstOrDefault();
             result.Diploma.TeacherName = string.Format("{0} {1} {2}", teacher.User.ScienceDegree, teacher.User.FirstName, teacher.User.LastName).Trim();
 
+            var dipl = this.diplomas.GetAll().Select(d => new DiplomaTitleViewModel { Title = d.Title, Id = d.Id }).ToList();
+
+            var duplicates = dipl.Where(d => Infrastructure.StringComparer.CalculateSimilarity(d.Title, result.Diploma.Title) >= 0.8 && d.Id != result.Diploma.Id);
+            result.Duplicates = duplicates;
             return this.View(result);
         }
 

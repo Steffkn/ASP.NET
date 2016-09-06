@@ -145,11 +145,11 @@
         <dd>
             @if (Model.Diploma.IsApprovedByLeader)
             {
-                <span class="text-success" style="padding: 5px">Удобрена</span>
+                <span class="text-success" style="padding: 5px">Одобрена</span>
             }
             else
             {
-                <span class="text-warning" style="padding: 5px">Не удобрена</span>
+                <span class="text-warning" style="padding: 5px">Не одобрена</span>
             }
         </dd>
 
@@ -159,11 +159,11 @@
         <dd>
             @if (Model.Diploma.IsApprovedByHead)
             {
-                <span class="text-success" style="padding: 5px">Удобрена</span>
+                <span class="text-success" style="padding: 5px">Одобрена</span>
             }
             else
             {
-                <span class="text-warning" style="padding: 5px">Не удобрена</span>
+                <span class="text-warning" style="padding: 5px">Не одобрена</span>
             }
         </dd>
 
@@ -175,7 +175,7 @@
             using (Html.BeginForm("Approve", "ManageDiplomas", new { Id = Model.Diploma.Id }, FormMethod.Post))
             {
                 @Html.AntiForgeryToken()
-                <input type="submit" value="Удобри" class="btn btn-primary" />
+                <input type="submit" value="Одобри" class="btn btn-primary" />
                 @Html.ActionLink("Обратно", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
             }
 
@@ -188,7 +188,7 @@
 
 @if (Model.Diploma.IsSelectedByStudent && !Model.Diploma.IsApprovedByLeader)
 {
-<h3>Съобщение за неудобрение</h3>
+<h3>Съобщение за не одобрение</h3>
 <div class="row">
     <div class="col-lg-6">
         @foreach (var item in Model.MessageBox)

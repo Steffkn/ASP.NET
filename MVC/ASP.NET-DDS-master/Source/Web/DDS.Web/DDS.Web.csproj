@@ -209,10 +209,12 @@
     <Compile Include="Areas\Administration\AdministrationAreaRegistration.cs" />
     <Compile Include="Areas\Administration\Controllers\AdministrationController.cs" />
     <Compile Include="Areas\Administration\Controllers\ManageDiplomasController.cs" />
+    <Compile Include="Areas\Administration\ViewModels\DiplomaTitleViewModel.cs" />
     <Compile Include="Areas\Administration\ViewModels\UserViewModel.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\APIController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="App_Start\GlimpseSecurityPolicy.cs" />
@@ -343,7 +345,7 @@
     </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Error\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
@@ -351,7 +353,6 @@
     <Content Include="Views\Manage\ChangePassword.cshtml" />
     <Content Include="Views\Manage\Index.cshtml" />
     <Content Include="Views\Manage\SetPassword.cshtml" />
-    <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Scripts\jquery-2.2.0.min.map" />
     <Content Include="Views\ManageDiplomas\Index.cshtml" />
@@ -366,13 +367,13 @@
     <Content Include="Views\Home\Teachers.cshtml" />
     <Content Include="Views\Home\TeacherDetails.cshtml" />
     <Content Include="Views\Home\Tag.cshtml" />
+    <Content Include="Views\Error\PageNotFound.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Administration\Models\" />
     <Folder Include="Areas\Administration\Views\Default\" />
     <Folder Include="Areas\Administration\Views\Shared\" />
-    <Folder Include="Views\Tag\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

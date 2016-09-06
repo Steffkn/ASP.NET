@@ -7,7 +7,7 @@
     using AutoMapper;
     using Data.Models;
     using Infrastructure.Mapping;
-
+    using Areas.Administration.ViewModels;
     public class DisplayDiplomaViewModel : IMapFrom<Diploma>, IHaveCustomMappings
     {
         [Required]
@@ -38,10 +38,10 @@
         [Display(Name = "Ръководител")]
         public string TeacherName { get; set; }
 
-        [Display(Name = "Удобрена от ръководител")]
+        [Display(Name = "Одобрена от ръководител")]
         public bool IsApprovedByLeader { get; set; }
 
-        [Display(Name = "Удобрена от канцелария")]
+        [Display(Name = "Одобрена от канцелария")]
         public bool IsApprovedByHead { get; set; }
 
         [Display(Name = "Избрана от студент")]

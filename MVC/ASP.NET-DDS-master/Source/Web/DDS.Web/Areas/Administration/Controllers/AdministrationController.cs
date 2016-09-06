@@ -94,8 +94,9 @@
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                viewModel = viewModel.Where(s => s.FirstName.Contains(searchString) || s.LastName.Contains(searchString)
-                || s.Email.Contains(searchString) || s.UserName.Contains(searchString) || (s.PhoneNumber != null && s.PhoneNumber.Contains(searchString)));
+                searchString = searchString.ToLower();
+                viewModel = viewModel.Where(s => s.FirstName.ToLower().Contains(searchString) || s.LastName.ToLower().Contains(searchString)
+                || s.Email.ToLower().Contains(searchString) || s.UserName.ToLower().Contains(searchString) || (s.PhoneNumber != null && s.PhoneNumber.Contains(searchString)));
             }
 
             if (viewModel.LongCount() <= 0)
@@ -104,13 +105,6 @@
             }
 
             return this.View(viewModel);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public void SaveRole(IEnumerable<UserViewModel> viewModel)
-        {
-            var model = viewModel;
         }
 
         // GET: Administration/Administration/Edit/5

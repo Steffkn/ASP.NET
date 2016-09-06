@@ -23,7 +23,7 @@
                     @if (User.IsInRole("Administrator"))
                     {
                         <li>@Html.ActionLink("Администрация", "Index", "Administration", new { area = "Administration" }, null)</li>
-                        <li>@Html.ActionLink("Дипломиза удобрение", "Index", "ManageDiplomas", new { area = "Administration" }, null)</li>
+                        <li>@Html.ActionLink("Дипломи за одобрение", "Index", "ManageDiplomas", new { area = "Administration" }, null)</li>
                     }
                     @if (User.IsInRole("Teacher"))
                     {

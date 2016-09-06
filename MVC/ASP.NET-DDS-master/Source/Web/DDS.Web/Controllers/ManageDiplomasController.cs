@@ -78,7 +78,7 @@
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                if (searchString.ToLower() == "удобрени")
+                if (searchString.ToLower() == "одобрени")
                 {
                     diplomas = diplomas.Where(d => d.IsApprovedByLeader || d.IsApprovedByHead);
                 }
@@ -147,6 +147,7 @@
             var diploma = this.diplomas.GetObjectById(id);
             diploma.IsSelectedByStudent = false;
             diploma.IsApprovedByLeader = false;
+            diploma.IsApprovedByHead = false;
             this.diplomas.Save();
 
             var student = this.students.GetAll().Where(s => s.SelectedDiploma.Id == id).FirstOrDefault();

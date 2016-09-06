@@ -30,6 +30,7 @@
     {
         <tr>
             <td>
+                @Html.Hidden("RedirectToDetails", Url.Action("TeacherDetails", "Home", new { id = item.Id }))
                 @Html.ActionLink(item.ScienceDegree + " " + item.TeacherName, "TeacherDetails", "Home", new { id = item.Id }, new { @class = "font-color-blue" })
             </td>
             <td>
@@ -45,3 +46,14 @@
     }
 
 </table>
+
+@section scripts{
+    <script type="text/javascript">
+        window.onload = function () {
+            $('.table > tbody > tr').on('click', function () {
+                var url = $(this).find("#RedirectToDetails").val();
+                location.href = url;
+            });
+        }
+    </script>
+}
