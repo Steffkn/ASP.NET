@@ -186,9 +186,9 @@
     </dd>
 </dl>
 
-@if (Model.Diploma.IsSelectedByStudent && !Model.Diploma.IsApprovedByLeader)
+@if (Model.Diploma.IsSelectedByStudent)
 {
-<h3>Съобщение за не одобрение</h3>
+<h3>Съобщение до студента одобрение</h3>
 <div class="row">
     <div class="col-lg-6">
         @foreach (var item in Model.MessageBox)

@@ -7,5 +7,6 @@
         public const string TeacherRoleName = "Teacher";
         public const string ManagementRoleName = "Management";
         public const int PageSize = 5;
+        public const char ContentSeparator = ';';
     }
 }

@@ -183,7 +183,7 @@
                     Title = viewModel.Title,
                     Description = viewModel.Description,
                     ExperimentalPart = viewModel.ExperimentalPart,
-                    ContentCSV = string.Join(",", viewModel.ContentCSV),
+                    ContentCSV = string.Join(GlobalConstants.ContentSeparator.ToString(), viewModel.ContentCSV),
                 };
 
                 var listOfTags = new List<Tag>();
@@ -240,7 +240,7 @@
                 return this.RedirectToAction("Index", "ManageDiplomas");
             }
 
-            diplomaModel.ContentCSV = diploma.ContentCSV.Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries).ToList();
+            diplomaModel.ContentCSV = diploma.ContentCSV.Split(new char[] { GlobalConstants.ContentSeparator }, System.StringSplitOptions.RemoveEmptyEntries).ToList();
             diplomaModel.Tags = diploma.Tags.Select(t => new SelectListItem
             {
                 Text = t.Name,
@@ -261,7 +261,7 @@
                 diploma.Title = viewModel.Title.Trim();
                 diploma.Description = viewModel.Description.Trim();
                 diploma.ExperimentalPart = viewModel.ExperimentalPart.Trim();
-                diploma.ContentCSV = string.Join(",", viewModel.ContentCSV);
+                diploma.ContentCSV = string.Join(GlobalConstants.ContentSeparator.ToString(), viewModel.ContentCSV);
 
                 diploma.Tags.Clear();
                 this.diplomas.Save();
@@ -324,7 +324,7 @@
                                              .To<DisplayDiplomaViewModel>();
 
             result.Diploma = diplomaModel.FirstOrDefault();
-            result.Diploma.ContentCSV = diploma.ContentCSV.Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries).ToList();
+            result.Diploma.ContentCSV = diploma.ContentCSV.Split(new char[] { GlobalConstants.ContentSeparator }, System.StringSplitOptions.RemoveEmptyEntries).ToList();
             result.Diploma.TeacherID = diploma.TeacherID;
             result.Diploma.Tags = diploma.Tags.Select(t => new SelectListItem
             {

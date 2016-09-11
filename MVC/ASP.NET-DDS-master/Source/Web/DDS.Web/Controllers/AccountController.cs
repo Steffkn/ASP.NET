@@ -5,14 +5,13 @@
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
+    using Common;
     using DDS.Data.Models;
     using DDS.Web.ViewModels.Account;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.Owin;
     using Microsoft.Owin.Security;
-    using Services.Data;
     using Services.Data.Interfaces;
-    using Common;
 
     [Authorize]
     public class AccountController : BaseController

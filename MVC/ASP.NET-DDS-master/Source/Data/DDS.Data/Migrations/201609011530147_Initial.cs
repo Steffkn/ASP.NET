@@ -1,4 +1,4 @@
-namespace DDS.Data.Migrations
+﻿namespace DDS.Data.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
@@ -207,53 +207,53 @@ namespace DDS.Data.Migrations
 
         public override void Down()
         {
-            DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
-            DropForeignKey("dbo.Messages", "SelectedDiploma_Id", "dbo.Diplomas");
-            DropForeignKey("dbo.Diplomas", "TeacherID", "dbo.Teachers");
-            DropForeignKey("dbo.Teachers", "User_Id", "dbo.AspNetUsers");
-            DropForeignKey("dbo.TeacherTags", "Tag_Id", "dbo.Tags");
-            DropForeignKey("dbo.TeacherTags", "Teacher_Id", "dbo.Teachers");
-            DropForeignKey("dbo.Students", "Teacher_Id", "dbo.Teachers");
-            DropForeignKey("dbo.Students", "User_Id", "dbo.AspNetUsers");
-            DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.Students", "SelectedDiploma_Id", "dbo.Diplomas");
-            DropForeignKey("dbo.TagDiplomas", "Diploma_Id", "dbo.Diplomas");
-            DropForeignKey("dbo.TagDiplomas", "Tag_Id", "dbo.Tags");
-            DropIndex("dbo.TeacherTags", new[] { "Tag_Id" });
-            DropIndex("dbo.TeacherTags", new[] { "Teacher_Id" });
-            DropIndex("dbo.TagDiplomas", new[] { "Diploma_Id" });
-            DropIndex("dbo.TagDiplomas", new[] { "Tag_Id" });
-            DropIndex("dbo.AspNetRoles", "RoleNameIndex");
-            DropIndex("dbo.Messages", new[] { "SelectedDiploma_Id" });
-            DropIndex("dbo.Messages", new[] { "IsDeleted" });
-            DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
-            DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
-            DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
-            DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
-            DropIndex("dbo.AspNetUsers", "UserNameIndex");
-            DropIndex("dbo.Students", new[] { "Teacher_Id" });
-            DropIndex("dbo.Students", new[] { "User_Id" });
-            DropIndex("dbo.Students", new[] { "SelectedDiploma_Id" });
-            DropIndex("dbo.Students", new[] { "IsDeleted" });
-            DropIndex("dbo.Teachers", new[] { "User_Id" });
-            DropIndex("dbo.Teachers", new[] { "IsDeleted" });
-            DropIndex("dbo.Tags", new[] { "IsDeleted" });
-            DropIndex("dbo.Diplomas", new[] { "IsDeleted" });
-            DropIndex("dbo.Diplomas", new[] { "TeacherID" });
-            DropTable("dbo.TeacherTags");
-            DropTable("dbo.TagDiplomas");
-            DropTable("dbo.AspNetRoles");
-            DropTable("dbo.Messages");
-            DropTable("dbo.AspNetUserRoles");
-            DropTable("dbo.AspNetUserLogins");
-            DropTable("dbo.AspNetUserClaims");
-            DropTable("dbo.AspNetUsers");
-            DropTable("dbo.Students");
-            DropTable("dbo.Teachers");
-            DropTable("dbo.Tags");
-            DropTable("dbo.Diplomas");
+            this.DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
+            this.DropForeignKey("dbo.Messages", "SelectedDiploma_Id", "dbo.Diplomas");
+            this.DropForeignKey("dbo.Diplomas", "TeacherID", "dbo.Teachers");
+            this.DropForeignKey("dbo.Teachers", "User_Id", "dbo.AspNetUsers");
+            this.DropForeignKey("dbo.TeacherTags", "Tag_Id", "dbo.Tags");
+            this.DropForeignKey("dbo.TeacherTags", "Teacher_Id", "dbo.Teachers");
+            this.DropForeignKey("dbo.Students", "Teacher_Id", "dbo.Teachers");
+            this.DropForeignKey("dbo.Students", "User_Id", "dbo.AspNetUsers");
+            this.DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
+            this.DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
+            this.DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
+            this.DropForeignKey("dbo.Students", "SelectedDiploma_Id", "dbo.Diplomas");
+            this.DropForeignKey("dbo.TagDiplomas", "Diploma_Id", "dbo.Diplomas");
+            this.DropForeignKey("dbo.TagDiplomas", "Tag_Id", "dbo.Tags");
+            this.DropIndex("dbo.TeacherTags", new[] { "Tag_Id" });
+            this.DropIndex("dbo.TeacherTags", new[] { "Teacher_Id" });
+            this.DropIndex("dbo.TagDiplomas", new[] { "Diploma_Id" });
+            this.DropIndex("dbo.TagDiplomas", new[] { "Tag_Id" });
+            this.DropIndex("dbo.AspNetRoles", "RoleNameIndex");
+            this.DropIndex("dbo.Messages", new[] { "SelectedDiploma_Id" });
+            this.DropIndex("dbo.Messages", new[] { "IsDeleted" });
+            this.DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
+            this.DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
+            this.DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
+            this.DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
+            this.DropIndex("dbo.AspNetUsers", "UserNameIndex");
+            this.DropIndex("dbo.Students", new[] { "Teacher_Id" });
+            this.DropIndex("dbo.Students", new[] { "User_Id" });
+            this.DropIndex("dbo.Students", new[] { "SelectedDiploma_Id" });
+            this.DropIndex("dbo.Students", new[] { "IsDeleted" });
+            this.DropIndex("dbo.Teachers", new[] { "User_Id" });
+            this.DropIndex("dbo.Teachers", new[] { "IsDeleted" });
+            this.DropIndex("dbo.Tags", new[] { "IsDeleted" });
+            this.DropIndex("dbo.Diplomas", new[] { "IsDeleted" });
+            this.DropIndex("dbo.Diplomas", new[] { "TeacherID" });
+            this.DropTable("dbo.TeacherTags");
+            this.DropTable("dbo.TagDiplomas");
+            this.DropTable("dbo.AspNetRoles");
+            this.DropTable("dbo.Messages");
+            this.DropTable("dbo.AspNetUserRoles");
+            this.DropTable("dbo.AspNetUserLogins");
+            this.DropTable("dbo.AspNetUserClaims");
+            this.DropTable("dbo.AspNetUsers");
+            this.DropTable("dbo.Students");
+            this.DropTable("dbo.Teachers");
+            this.DropTable("dbo.Tags");
+            this.DropTable("dbo.Diplomas");
         }
     }
 }

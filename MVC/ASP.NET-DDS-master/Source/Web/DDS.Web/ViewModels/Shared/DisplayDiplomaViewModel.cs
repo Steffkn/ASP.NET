@@ -7,7 +7,7 @@
     using AutoMapper;
     using Data.Models;
     using Infrastructure.Mapping;
-    using Areas.Administration.ViewModels;
+
     public class DisplayDiplomaViewModel : IMapFrom<Diploma>, IHaveCustomMappings
     {
         [Required]

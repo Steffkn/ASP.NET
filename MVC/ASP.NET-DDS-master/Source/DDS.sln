@@ -39,8 +39,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDS.Common", "DDS.Common\DD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDS.Services.Data.Tests", "Tests\DDS.Services.Data.Tests\DDS.Services.Data.Tests.csproj", "{E9F8AE28-F84E-48FA-8EFB-BCE59DD71B65}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DocXFiles", "DocXFiles", "{59E156C0-1B40-43DC-A4E1-B0BCE22864BC}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

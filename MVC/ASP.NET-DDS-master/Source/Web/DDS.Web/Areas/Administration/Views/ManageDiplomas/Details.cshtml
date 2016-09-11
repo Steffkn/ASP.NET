@@ -151,7 +151,7 @@
         <dd>
             @if (Model.Diploma.IsApprovedByLeader)
                 {
-                <span class="text-success" style="padding: 5px">одобрена</span>
+                <span class="text-success" style="padding: 5px">Одобрена</span>
             }
             else
             {
@@ -165,7 +165,7 @@
             <dd>
                 @if (Model.Diploma.IsApprovedByHead)
                 {
-                    <span class="text-success" style="padding: 5px">одобрена</span>
+                    <span class="text-success" style="padding: 5px">Одобрена</span>
                 }
                 else
                 {
@@ -187,7 +187,7 @@
                     }
                 }
             </div>
-            <div class="col-sm-1">
+            <div class="col-sm-1 btn">
                 @Html.ActionLink("Обратно", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
             </div>
         </div>
@@ -200,7 +200,7 @@
     {
         <div class="row">
             <div class="col-sm-12">
-                @Html.ActionLink(item.Title, "Details", new { id = item.Id })
+                @Html.ActionLink(item.Title, "Details", new { id = item.Id }, new { @class= "btn btn-link"})
             </div>
         </div>
     }

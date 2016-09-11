@@ -27,7 +27,7 @@
                 return appUser.Email;
             }
 
-            return "";
+            return string.Empty;
         }
     }
 }

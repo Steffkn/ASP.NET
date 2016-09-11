@@ -1,11 +1,12 @@
 ﻿namespace DDS.Web.ViewModels.Shared
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using AutoMapper;
     using Data.Models;
     using Infrastructure.Mapping;
-    using System;
+
     public class CommonDiplomaViewModel : IMapFrom<Diploma>, IHaveCustomMappings
     {
         [Required]

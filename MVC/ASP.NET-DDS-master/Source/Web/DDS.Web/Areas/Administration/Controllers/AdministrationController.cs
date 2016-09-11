@@ -15,7 +15,6 @@
     using Microsoft.AspNet.Identity.Owin;
     using Services.Data.Interfaces;
     using ViewModels;
-    using System.Collections.Generic;
 
     [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
     public class AdministrationController : BaseController
@@ -75,7 +74,6 @@
 
             this.ViewBag.CurrentFilter = searchString;
 
-
             var allusers = this.users.GetAll().ToList();
 
             var viewModel = allusers.Select(
@@ -112,7 +110,7 @@
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return this.RedirectToAction("Index");
             }
 
             var user = this.users.GetById(id);
@@ -166,7 +164,7 @@
 
                     if (!result.Succeeded)
                     {
-                        this.ModelState.AddModelError("", result.Errors.First());
+                        //this.ModelState.AddModelError("", result.Errors.First());
                         return this.RedirectToAction("Index", "Home");
                     }
                 }

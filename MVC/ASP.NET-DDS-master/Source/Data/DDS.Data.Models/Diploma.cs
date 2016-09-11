@@ -14,7 +14,7 @@
 
         [Required(ErrorMessage = "Описанието е задължително")]
         public string Description { get; set; }
-        
+
         [Required(ErrorMessage = "Експерименталната част е задължителна")]
         public string ExperimentalPart { get; set; }
 

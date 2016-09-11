@@ -2,9 +2,7 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using Data.Models;
     using Microsoft.AspNet.Identity;
-    using Shared;
 
     public class IndexViewModel
     {
@@ -20,6 +18,9 @@
 
         public int DiplomaId { get; set; }
 
+        public bool IsStudent { get; set; }
+
+        [Required(ErrorMessage = "Полето за телефон е задължително!")]
         [Display(Name = "Телефон")]
         public string PhoneNumber { get; set; }
 

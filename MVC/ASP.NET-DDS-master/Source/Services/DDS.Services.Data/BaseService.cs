@@ -28,7 +28,7 @@
         /// <summary>
         /// Marks entity of type BaseModel<int> as deleted. Calls Items.Save() method!
         /// </summary>
-        /// <param name="entity">Given entity of type BaseModel<int></param>
+        /// <param name="entity">Given entity of type BaseModel</param>
         public void Delete(T entity)
         {
             this.Items.Delete(entity);

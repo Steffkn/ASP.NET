@@ -7,6 +7,7 @@
     using System.Web;
     using System.Web.Mvc;
     using Common;
+    using Data.Models;
     using Infrastructure;
     using Infrastructure.Mapping;
     using Microsoft.AspNet.Identity;
@@ -15,7 +16,7 @@
     using Services.Data.Interfaces;
     using ViewModels.ManageDiplomas;
     using ViewModels.Shared;
-    using Data.Models;
+
     public class HomeController : BaseController
     {
         private readonly IDiplomasService diplomas;
@@ -91,6 +92,21 @@
                                               .FirstOrDefault();
             result.Student = studentDetails;
 
+            if (result.Student != null)
+            {
+                if (string.IsNullOrEmpty(result.Student.Address) || string.IsNullOrEmpty(result.Student.Email)
+                    || string.IsNullOrEmpty(result.Student.FirstName) || string.IsNullOrEmpty(result.Student.MiddleName)
+                    || string.IsNullOrEmpty(result.Student.LastName) || string.IsNullOrEmpty(result.Student.PhoneNumber)
+                    || result.Student.FNumber == 0)
+                {
+                    return this.RedirectToAction("Index", "Home");
+                }
+            }
+            else
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
             var diplomaModel = this.diplomas.GetAll()
                                              .Where(d => d.Id == intId)
                                              .Include(d => d.Teacher)
@@ -98,7 +114,7 @@
                                              .To<DisplayDiplomaViewModel>();
 
             result.Diploma = diplomaModel.FirstOrDefault();
-            result.Diploma.ContentCSV = diploma.ContentCSV.Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries).ToList();
+            result.Diploma.ContentCSV = diploma.ContentCSV.Split(new char[] { GlobalConstants.ContentSeparator }, System.StringSplitOptions.RemoveEmptyEntries).ToList();
             result.Diploma.TeacherID = diploma.TeacherID;
             result.Diploma.Tags = diploma.Tags.Select(t => new SelectListItem
             {
@@ -111,6 +127,20 @@
             var teacher = this.teachers.GetById(diploma.TeacherID).Include(t => t.User).FirstOrDefault();
             result.Diploma.TeacherName = string.Format("{0} {1}. {2}", teacher.User.ScienceDegree, teacher.User.FirstName[0], teacher.User.LastName).Trim();
 
+            if (result.Diploma != null)
+            {
+                if (result.Diploma.ContentCSV.Count == 0 || string.IsNullOrEmpty(result.Diploma.ExperimentalPart)
+                    || result.Diploma.Tags.Count() == 0 || string.IsNullOrEmpty(result.Diploma.TeacherName)
+                    || string.IsNullOrEmpty(result.Diploma.Title) || string.IsNullOrEmpty(result.Diploma.ModifiedOn.ToString()))
+                {
+                    return this.RedirectToAction("Index", "Home");
+                }
+            }
+            else
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
             Dictionary<string, string> proparties = new Dictionary<string, string>();
 
             proparties.Add("[USER_NAME]", string.Format("{0} {1} {2} {3}", result.Student.ScienceDegree, result.Student.FirstName, result.Student.MiddleName, result.Student.LastName));
@@ -119,10 +149,12 @@
             proparties.Add("[USER_TEL]", result.Student.PhoneNumber);
             proparties.Add("[USER_EMAIL]", result.Student.Email);
             proparties.Add("[DOC_TITLE]", result.Diploma.Title.ToString());
-            proparties.Add("[DOC_BEGINDATE]", result.Diploma.ModifiedOn.Value.Date.ToString());
-            proparties.Add("[DOC_ENDDATA]", result.Diploma.ModifiedOn.Value.AddYears(1).ToString());
+            proparties.Add("[DOC_BEGINDATE]", result.Diploma.ModifiedOn.Value.ToString("dd/MM/yyyy"));
+            proparties.Add("[DOC_ENDDATA]", result.Diploma.ModifiedOn.Value.AddYears(1).ToString("dd/MM/yyyy"));
             proparties.Add("[DOC_EXP]", result.Diploma.ExperimentalPart);
             proparties.Add("[TEACHER]", result.Diploma.TeacherName);
+            proparties.Add("[CONSULTANT]", string.Empty);
+            proparties.Add("[DEP_HEAD]", "доц. д-р М. Лазарова");
             proparties.Add("[DEAN]", "проф. д-р Д. Гоцева");
 
             int i = 1;
@@ -139,18 +171,19 @@
             }
 
             StringBuilder tags = new StringBuilder();
+
             foreach (var tag in result.Diploma.Tags)
             {
                 tags.Append(tag.Text + ", ");
             }
 
-            string tagsString = tags.ToString();
+            string tagsString = tags.Remove(tags.Length - 2, 2).ToString();
 
             proparties.Add("[DOC_TECH]", tagsString.ToString());
 
-            DocXGenerator.Generate(proparties);
+            var filePath = DocXGenerator.Generate(proparties, this.Server.MapPath("~/Content/DocxFiles/Templates/DiplomaTemplate.docx"));
 
-            return this.File(@"F:\DocXExample.docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+            return this.File(filePath, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", proparties["[USER_FNUMBER]"]);
         }
 
         /// <summary>
@@ -195,7 +228,7 @@
                                         .Include(d => d.Teacher)
                                         .To<DisplayDiplomaViewModel>().FirstOrDefault();
 
-            result.ContentCSV = diploma.ContentCSV.Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries).ToList();
+            result.ContentCSV = diploma.ContentCSV.Split(new char[] { GlobalConstants.ContentSeparator }, System.StringSplitOptions.RemoveEmptyEntries).ToList();
             result.Tags = diploma.Tags.Select(t => new SelectListItem
             {
                 Text = t.Name,

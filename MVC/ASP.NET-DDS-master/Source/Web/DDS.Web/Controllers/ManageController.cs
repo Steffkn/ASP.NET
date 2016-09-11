@@ -1,29 +1,27 @@
 ﻿namespace DDS.Web.Controllers
 {
+    using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
-
+    using Common;
     using DDS.Web.ViewModels.Manage;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.Owin;
     using Microsoft.Owin.Security;
     using Services.Data.Interfaces;
-    using Common;
-    using System.Data.Entity;
+
     [Authorize]
     public class ManageController : BaseController
     {
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
-        private ApplicationSignInManager signInManager;
-
-        private ApplicationUserManager userManager;
-
         private readonly IStudentsService students;
         private readonly ITeachersService teachers;
+        private ApplicationSignInManager signInManager;
+        private ApplicationUserManager userManager;
 
         public ManageController(IStudentsService students, ITeachersService teachers)
         {
@@ -119,11 +117,12 @@
 
                 model.Address = student.Address;
                 model.FNumber = student.FNumber;
+                model.IsStudent = true;
                 this.TempData["Student"] = true;
             }
             else
             {
-                this.TempData["Student"] = false;
+                model.IsStudent = false;
             }
 
             return this.View(model);
@@ -134,27 +133,27 @@
         [ValidateAntiForgeryToken]
         public ActionResult SaveInfo(IndexViewModel model)
         {
-            if (!this.ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
-                return this.RedirectToAction("Index");
+                var user = this.UserManager.FindById(model.UserId);
+
+                user.PhoneNumber = model.PhoneNumber;
+                user.ScienceDegree = model.ScienceDegree;
+                this.UserManager.Update(user);
+
+                var student = this.students.GetByUserId(model.UserId).FirstOrDefault();
+                if (this.students.GetByUserId(model.UserId) != null)
+                {
+                    user.Student = student;
+                    user.Student.FNumber = model.FNumber;
+                    user.Student.Address = model.Address;
+                    this.students.Save();
+                }
+
+                return this.RedirectToAction("Index", "Home", null);
             }
 
-            var user = this.UserManager.FindById(model.UserId);
-
-            user.PhoneNumber = model.PhoneNumber;
-            user.ScienceDegree = model.ScienceDegree;
-            this.UserManager.Update(user);
-
-            var student = this.students.GetByUserId(model.UserId).FirstOrDefault();
-            if (this.students.GetByUserId(model.UserId) != null)
-            {
-                user.Student = student;
-                user.Student.FNumber = model.FNumber;
-                user.Student.Address = model.Address;
-                this.students.Save();
-            }
-
-            return this.RedirectToAction("Index", "Home", null);
+            return this.View("Index", model);
         }
 
         // GET: /Manage/ChangePassword

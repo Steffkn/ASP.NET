@@ -3,12 +3,12 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Data;
+    using Data.Interfaces;
     using DDS.Data.Common;
     using DDS.Data.Models;
     using Moq;
     using NUnit.Framework;
-    using Data;
-    using Data.Interfaces;
 
     [TestFixture]
     public class DiplomaServicesTests

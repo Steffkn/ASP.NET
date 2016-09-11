@@ -10,10 +10,10 @@
         <dt>Парола:</dt>
         <dd>
             [
-            @(Model.HasPassword ? Html.ActionLink("Смени паролата си", "ChangePassword") : Html.ActionLink("Create", "SetPassword"))
+            @(Model.HasPassword ? Html.ActionLink("Смени паролата си", "ChangePassword") : Html.ActionLink("Създай нова парола", "SetPassword"))
             ]
         </dd>
-        @if ((bool)this.TempData["Student"] == true && this.TempData["HasDiploma"] != null)
+        @if (Model.IsStudent && Model.DiplomaId != 0)
         {
             <dt>Диплома:</dt>
             <dd>
@@ -21,12 +21,19 @@
             </dd>
         }
     </dl>
+
+
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+
     @using (Html.BeginForm("SaveInfo", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(model => model.UserId)
+        @Html.HiddenFor(model => model.DiplomaId)
+        @Html.HiddenFor(model => model.HasPassword)
+        @Html.HiddenFor(model => model.IsStudent)
         <dl class="dl-horizontal">
-            @if ((bool)this.TempData["Student"] == true)
+            @if (Model.IsStudent)
             {
                 <dt>@Html.LabelFor(mode => mode.FNumber, htmlAttributes: new { @class = "control-label" })</dt>
                 <dd>@Html.EditorFor(mode => mode.FNumber)</dd>

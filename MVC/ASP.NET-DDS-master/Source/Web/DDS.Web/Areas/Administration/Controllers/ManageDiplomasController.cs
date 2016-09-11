@@ -11,7 +11,6 @@
     using Web.Controllers;
     using Web.ViewModels.ManageDiplomas;
     using Web.ViewModels.Shared;
-    using System;
 
     [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
     public class ManageDiplomasController : BaseController
@@ -101,8 +100,6 @@
             int pageSize = 5;
             int pageNumber = page ?? 1;
 
-            throw new NullReferenceException();
-
             return this.View(diplomas.ToPagedList(pageNumber, pageSize));
         }
 
@@ -137,7 +134,7 @@
                                              .To<DisplayDiplomaViewModel>();
 
             result.Diploma = diplomaModel.FirstOrDefault();
-            result.Diploma.ContentCSV = diploma.ContentCSV.Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries).ToList();
+            result.Diploma.ContentCSV = diploma.ContentCSV.Split(new char[] { GlobalConstants.ContentSeparator }, System.StringSplitOptions.RemoveEmptyEntries).ToList();
             result.Diploma.TeacherID = diploma.TeacherID;
             result.Diploma.Tags = diploma.Tags.Select(t => new SelectListItem
             {

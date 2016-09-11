@@ -103,26 +103,33 @@
             </dd>
         }
 
-        @if (Model.IsApprovedByLeader)
-        {
-            <dt>
-                @Html.DisplayNameFor(model => model.IsApprovedByLeader)
-            </dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsApprovedByLeader)
+        </dt>
+        <dd>
+            @if (Model.IsApprovedByLeader)
+            {
+                <span class="text-success" style="padding: 5px">Одобрена</span>
+            }
+            else
+            {
+                <span class="text-warning" style="padding: 5px">Не одобрена</span>
+            }
+        </dd>
 
-            <dd>
-                @Html.DisplayFor(model => model.IsApprovedByLeader)
-            </dd>
-        }
-        @if (Model.IsApprovedByHead)
-        {
-            <dt>
-                @Html.DisplayNameFor(model => model.IsApprovedByHead)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.IsApprovedByHead)
-            </dd>
-        }
+        <dt>
+            @Html.DisplayNameFor(model => model.IsApprovedByHead)
+        </dt>
+        <dd>
+            @if (Model.IsApprovedByHead)
+            {
+                <span class="text-success" style="padding: 5px">Одобрена</span>
+            }
+            else
+            {
+                <span class="text-warning" style="padding: 5px">Не одобрена</span>
+            }
+        </dd>
 
         <dt></dt>
         <dd>
