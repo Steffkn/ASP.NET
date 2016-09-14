@@ -211,10 +211,6 @@
 
                 return this.RedirectToAction("Index", "ManageDiplomas");
             }
-            else
-            {
-                this.TempData["Message"] = "Дипломата е не пълна!";
-            }
 
             return this.View(viewModel);
         }

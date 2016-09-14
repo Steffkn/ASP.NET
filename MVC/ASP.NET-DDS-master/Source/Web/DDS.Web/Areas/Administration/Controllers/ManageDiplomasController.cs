@@ -147,9 +147,9 @@
             var teacher = this.teachers.GetById(diploma.TeacherID).Include(t => t.User).FirstOrDefault();
             result.Diploma.TeacherName = string.Format("{0} {1} {2}", teacher.User.ScienceDegree, teacher.User.FirstName, teacher.User.LastName).Trim();
 
-            var dipl = this.diplomas.GetAll().Select(d => new DiplomaTitleViewModel { Title = d.Title, Id = d.Id }).ToList();
+            var dipl = this.diplomas.GetAll().Where(d => d.IsApprovedByLeader).Select(d => new DiplomaTitleViewModel { Title = d.Title, Id = d.Id }).ToList();
 
-            var duplicates = dipl.Where(d => Infrastructure.StringComparer.CalculateSimilarity(d.Title, result.Diploma.Title) >= 0.8 && d.Id != result.Diploma.Id);
+            var duplicates = dipl.Where(d => Infrastructure.StringComparer.CalculateSimilarity(d.Title, result.Diploma.Title) >= 0.75 && d.Id != result.Diploma.Id);
             result.Duplicates = duplicates;
             return this.View(result);
         }

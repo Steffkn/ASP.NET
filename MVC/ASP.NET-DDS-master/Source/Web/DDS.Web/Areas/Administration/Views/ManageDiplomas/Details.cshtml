@@ -159,49 +159,49 @@
             }
         </dd>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.Diploma.IsApprovedByHead)
-            </dt>
-            <dd>
-                @if (Model.Diploma.IsApprovedByHead)
+        <dt>
+            @Html.DisplayNameFor(model => model.Diploma.IsApprovedByHead)
+        </dt>
+        <dd>
+            @if (Model.Diploma.IsApprovedByHead)
                 {
-                    <span class="text-success" style="padding: 5px">Одобрена</span>
-                }
-                else
-                {
-                    <span class="text-warning" style="padding: 5px">Не одобрена</span>
-                }
-            </dd>
+                <span class="text-success" style="padding: 5px">Одобрена</span>
+            }
+            else
+            {
+                <span class="text-warning" style="padding: 5px">Не одобрена</span>
+            }
+        </dd>
 
     }
     <dt></dt>
     <dd>
         <div class="row">
-            <div class="col-sm-1">
-                @if (Model.Diploma.IsApprovedByLeader && !Model.Diploma.IsApprovedByHead)
+            @if (Model.Diploma.IsApprovedByLeader && !Model.Diploma.IsApprovedByHead)
             {
                 using (Html.BeginForm("Approve", "ManageDiplomas", new { Id = Model.Diploma.Id }, FormMethod.Post))
                 {
-                        @Html.AntiForgeryToken()
-                        <input type="submit" value="Одобри" class="btn btn-primary" />
-                    }
+                    @Html.AntiForgeryToken()
+                    <input type="submit" value="Одобри" class="btn btn-primary col-sm-1" />
                 }
-            </div>
-            <div class="col-sm-1 btn">
-                @Html.ActionLink("Обратно", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
-            </div>
+            }
+            @Html.ActionLink("Обратно", "Index", null, htmlAttributes: new { @class = "btn btn-default col-sm-1" })
         </div>
     </dd>
 </dl>
 
-@if (Model.Duplicates != null)
-{
-    foreach (var item in Model.Duplicates)
-    {
-        <div class="row">
-            <div class="col-sm-12">
-                @Html.ActionLink(item.Title, "Details", new { id = item.Id }, new { @class= "btn btn-link"})
-            </div>
-        </div>
-    }
-}
+<div class="row">
+    <div class="col-md-12">
+        @if (Model.Duplicates != null)
+            {
+                foreach (var item in Model.Duplicates)
+                {
+                <div class="row">
+                    <div class="col-sm-12">
+                        @Html.ActionLink(item.Title, "Details", new { id = item.Id }, new { @class = "btn btn-link" })
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

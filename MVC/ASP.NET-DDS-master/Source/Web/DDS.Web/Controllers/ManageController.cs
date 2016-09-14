@@ -141,8 +141,8 @@
                 user.ScienceDegree = model.ScienceDegree;
                 this.UserManager.Update(user);
 
-                var student = this.students.GetByUserId(model.UserId).FirstOrDefault();
-                if (this.students.GetByUserId(model.UserId) != null)
+                var student = this.students.GetByUserId(model.UserId).Where(s => !s.IsDeleted).FirstOrDefault();
+                if (student != null)
                 {
                     user.Student = student;
                     user.Student.FNumber = model.FNumber;
