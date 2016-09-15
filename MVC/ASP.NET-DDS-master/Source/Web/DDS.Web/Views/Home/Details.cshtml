@@ -137,12 +137,17 @@
             {
                 <input type="submit" value="Избери" class="btn btn-primary" />
             }
+            else if (Model.IsApprovedByHead)
+            {
+                @Html.ActionLink("Изтегли", "DownloadFile", "Home", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-success" })
+            }
 
             @Html.ActionLink("Обратно", "Diplomas", null, htmlAttributes: new { @class = "btn btn-default" })
         </dd>
 
     </dl>
 }
+
 @if (this.TempData["IsOwnDiploma"] != null)
 {
     <h3>Въпроси и информация:</h3>

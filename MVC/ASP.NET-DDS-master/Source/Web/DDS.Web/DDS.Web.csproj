@@ -274,7 +274,6 @@
     <Content Include="Areas\Administration\Views\Administration\Index.cshtml" />
     <Content Include="Areas\Administration\Views\Administration\Edit.cshtml" />
     <Content Include="Areas\Administration\Views\ManageDiplomas\Index.cshtml" />
-    <Content Include="Areas\Administration\Views\Administration\Graduates.cshtml" />
     <Content Include="Areas\Administration\Views\ManageDiplomas\Details.cshtml" />
     <Content Include="Content\DocXFiles\DiplomaTemplate.docx" />
     <None Include="Scripts\jquery-2.2.0.intellisense.js" />

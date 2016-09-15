@@ -182,8 +182,8 @@
             proparties.Add("[DOC_TECH]", tagsString.ToString());
 
             var filePath = DocXGenerator.Generate(proparties, this.Server.MapPath("~/Content/DocxFiles/Templates/DiplomaTemplate.docx"));
-
-            return this.File(filePath, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", proparties["[USER_FNUMBER]"]);
+            var fileName = string.Format("{0}.docx", proparties["[USER_FNUMBER]"]);
+            return this.File(filePath, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", fileName);
         }
 
         /// <summary>
