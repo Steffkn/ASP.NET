@@ -72,8 +72,9 @@
             int[,] distance = new int[sourceWordCount + 1, targetWordCount + 1];
 
             // Step 2
-            // for (int i = 0; i <= sourceWordCount; distance[i, 0] = i++);
-            // for (int j = 0; j <= targetWordCount; distance[0, j] = j++);
+            for (int i = 0; i <= sourceWordCount; distance[i, 0] = i++);
+            for (int j = 0; j <= targetWordCount; distance[0, j] = j++);
+
             for (int i = 1; i <= sourceWordCount; i++)
             {
                 for (int j = 1; j <= targetWordCount; j++)

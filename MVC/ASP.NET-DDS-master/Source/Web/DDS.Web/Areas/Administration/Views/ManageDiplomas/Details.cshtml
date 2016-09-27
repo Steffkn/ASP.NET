@@ -192,10 +192,14 @@
 
 <div class="row">
     <div class="col-md-12">
-        @if (Model.Duplicates != null)
+        @if (this.Model.Duplicates.Count() > 0)
             {
-                foreach (var item in Model.Duplicates)
-                {
+            <div class="row">
+                <h4>Подобни дипломни задания</h4>
+            </div>
+
+            foreach (var item in Model.Duplicates)
+            {
                 <div class="row">
                     <div class="col-sm-12">
                         @Html.ActionLink(item.Title, "Details", new { id = item.Id }, new { @class = "btn btn-link" })

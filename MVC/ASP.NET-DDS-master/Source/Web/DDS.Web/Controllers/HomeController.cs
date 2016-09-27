@@ -360,7 +360,7 @@
         /// <returns>Returns all teachers with their tags</returns>
         public ActionResult Teachers()
         {
-            var teachers = this.teachers.GetAll().Include(t => t.Tags).To<TeacherViewModel>();
+            var teachers = this.teachers.GetAll().Include(t => t.Tags).To<TeacherViewModel>().OrderBy(t => t.TeacherName);
 
             return this.View(teachers);
         }
@@ -389,7 +389,7 @@
 
             TeacherDiplomasViewModel teacherDiplomaVM = new TeacherDiplomasViewModel();
             teacherDiplomaVM.TeacherDetails = teacher;
-            teacherDiplomaVM.Diplomas = this.diplomas.GetAll().Where(d => d.TeacherID == teacher.Id && !d.IsSelectedByStudent).ToList();
+            teacherDiplomaVM.Diplomas = this.diplomas.GetAll().Where(d => d.TeacherID == teacher.Id && !d.IsSelectedByStudent).OrderBy(d => d.Title).ToList();
 
             return this.View(teacherDiplomaVM);
         }
