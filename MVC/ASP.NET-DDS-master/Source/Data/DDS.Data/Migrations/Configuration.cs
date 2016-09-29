@@ -104,8 +104,8 @@ namespace DDS.Data.Migrations
             {
                 UserName = "steff",
                 FirstName = "Стефан",
-                MiddleName = "Тодоров",
-                LastName = "Чуфидов",
+                MiddleName = "Николов",
+                LastName = "Петров",
             });
 
             users.Add(new SimpleUser()
