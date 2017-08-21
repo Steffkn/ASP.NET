@@ -17,6 +17,8 @@
 
         public IDbSet<Character> Characters { get; set; }
 
+        public IDbSet<ServerSettings> ServerSettings { get; set; }
+
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
@@ -50,6 +52,10 @@
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // configure ServerSettings
+            modelBuilder.Entity<ServerSettings>()
+                        .HasKey(ss => ss.Id);
 
             // configure Character
             modelBuilder.Entity<Character>()

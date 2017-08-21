@@ -1,7 +1,6 @@
 ﻿namespace ElementsWeb.Data.Models
 {
     using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
     using ElementsWeb.Data.Common.Models;
 
     public class Character : BaseModel<int>
