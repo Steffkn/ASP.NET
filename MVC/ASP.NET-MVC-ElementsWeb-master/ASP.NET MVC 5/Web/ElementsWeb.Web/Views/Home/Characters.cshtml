@@ -1,0 +1,10 @@
+﻿@model IList<ElementsWeb.Web.ViewModels.Home.CharacterViewModel>
+@{
+    ViewBag.Title = "Characters";
+}
+
+<h2>Characters for @User.Identity.Name</h2>
+@foreach (var character in Model)
+{
+    <div>@character.Name</div>
+}
