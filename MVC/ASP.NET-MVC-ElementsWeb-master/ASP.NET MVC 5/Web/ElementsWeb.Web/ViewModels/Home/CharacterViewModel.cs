@@ -12,7 +12,7 @@
         [Display(Name = "Name")]
         public string Name { get; set; }
 
-        public string UserID { get; set; }
+        public string UserId { get; set; }
 
         [Display(Name = "User")]
         public string Username { get; set; }
@@ -21,7 +21,6 @@
         {
             configuration.CreateMap<Character, CharacterViewModel>()
                 .ForMember(x => x.Username, opt => opt.MapFrom(x => x.User.UserName));
-
         }
     }
 }

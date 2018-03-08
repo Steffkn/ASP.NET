@@ -1,7 +1,7 @@
 ﻿namespace ElementsWeb.Data.Models
 {
-    using ElementsWeb.Data.Common.Models;
     using System.ComponentModel.DataAnnotations;
+    using Common.Models;
 
     public class ServerSettings : BaseModel<int>
     {

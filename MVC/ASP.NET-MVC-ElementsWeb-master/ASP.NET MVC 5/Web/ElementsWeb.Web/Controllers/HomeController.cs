@@ -1,6 +1,6 @@
 ﻿namespace ElementsWeb.Web.Controllers
 {
-    using System;
+    using System.Linq;
     using System.Web;
     using System.Web.Mvc;
     using ElementsWeb.Data.Models;
@@ -9,7 +9,6 @@
     using ElementsWeb.Web.ViewModels.Home;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.Owin;
-    using System.Linq;
 
     public class HomeController : BaseController
     {
@@ -61,7 +60,6 @@
                 var newCharacter = new Character()
                 {
                     Name = viewModel.Name,
-                    RandomNumber = new Random().Next(1000),
                 };
 
                 this.users.CreateCharacter(this.User.Identity.GetUserId(), newCharacter);

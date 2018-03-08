@@ -17,6 +17,10 @@
 
         public IDbSet<Character> Characters { get; set; }
 
+        public IDbSet<BaseAtributes> BaseAtributes { get; set; }
+
+        public IDbSet<CharacterClass> CharacterClasss { get; set; }
+
         public IDbSet<ServerSettings> ServerSettings { get; set; }
 
         public static ApplicationDbContext Create()

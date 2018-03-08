@@ -4,23 +4,17 @@
     using System.Reflection;
     using System.Web;
     using System.Web.Mvc;
-
     using Autofac;
     using Autofac.Integration.Mvc;
-
     using Controllers;
-
     using Data;
     using Data.Common;
-
+    using ElementsWeb.Data.Models;
+    using ElementsWeb.Services.Data.Interfaces;
     using Microsoft.AspNet.Identity.EntityFramework;
     using Microsoft.AspNet.Identity.Owin;
     using Microsoft.Owin.Security;
-
-    using ElementsWeb.Data.Models;
-
     using Services.Web;
-    using ElementsWeb.Services.Data.Interfaces;
 
     public static class AutofacConfig
     {

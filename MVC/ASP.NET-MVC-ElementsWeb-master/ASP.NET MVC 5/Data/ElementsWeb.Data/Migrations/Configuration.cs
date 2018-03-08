@@ -1,27 +1,29 @@
 ﻿namespace ElementsWeb.Data.Migrations
 {
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity.Migrations;
     using System.Linq;
     using ElementsWeb.Common;
     using ElementsWeb.Data.Models;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
-    using System.Collections.Generic;
 
     public sealed class Configuration : DbMigrationsConfiguration<ElementsWeb.Data.ApplicationDbContext>
     {
         public Configuration()
         {
-            this.AutomaticMigrationsEnabled = false;
-            this.AutomaticMigrationDataLossAllowed = false;
+            this.AutomaticMigrationsEnabled = true;
+            this.AutomaticMigrationDataLossAllowed = true;
         }
 
         protected override void Seed(ElementsWeb.Data.ApplicationDbContext context)
         {
             const string Name = "admin";
-            const string AdministratorUserName = Name;
+            const string AdministratorUserName = "admin@admin.bg";
             const string AdministratorPassword = "1qaz@WSX";
+
+            this.SeedAtributes(context);
 
             if (!context.Roles.Any())
             {
@@ -44,13 +46,13 @@
                 var userManager = new UserManager<ApplicationUser>(userStore);
                 var user = new ApplicationUser
                 {
-                    UserName = AdministratorUserName,
+                    UserName = Name,
                     Email = AdministratorUserName,
                 };
 
                 userManager.Create(user, AdministratorPassword);
 
-                //user = userManager.FindByName(AdministratorUserName);
+                // user = userManager.FindByName(AdministratorUserName);
 
                 // Assign user to admin role
                 userManager.AddToRole(user.Id, GlobalConstants.AdministratorRoleName);
@@ -62,10 +64,70 @@
             {
                 ServerSettings firstServerSettings = new ServerSettings()
                 {
-                    Version = "1.0.0",
+                    Version = "0.0.1",
                     CreatedOn = DateTime.UtcNow,
                     URL = "noUrl"
                 };
+
+                context.ServerSettings.Add(firstServerSettings);
+            }
+        }
+
+        private void SeedAtributes(ApplicationDbContext context)
+        {
+            if (!context.CharacterClasss.Any())
+            {
+                CharacterClass elemental = new CharacterClass()
+                {
+                    Name = "Elemental",
+                    Description = "The force of the elements",
+                    CreatedOn = DateTime.UtcNow
+                };
+
+                CharacterClass warrior = new CharacterClass()
+                {
+                    Name = "Warrior",
+                    Description = "Mighty hero",
+                    CreatedOn = DateTime.UtcNow
+                };
+
+                context.CharacterClasss.Add(elemental);
+                context.CharacterClasss.Add(warrior);
+
+                if (!context.BaseAtributes.Any())
+                {
+                    context.BaseAtributes.Add(new BaseAtributes()
+                    {
+                        MaxHealth = 100,
+                        MaxResource = 50,
+                        HealthRegen = 1.2f,
+                        ResourceRegen = 0.8f,
+                        Agility = 0,
+                        Armor = 2,
+                        AttackDamage = 10,
+                        MagicDamage = 11,
+                        Intellect = 3,
+                        Stamina = 2,
+                        Strength = 0,
+                        CharacterClass = context.CharacterClasss.FirstOrDefault(ch => ch.Name.Equals("Elemental"))
+                    });
+
+                    context.BaseAtributes.Add(new BaseAtributes()
+                    {
+                        MaxHealth = 110,
+                        MaxResource = 100,
+                        HealthRegen = 1.2f,
+                        ResourceRegen = 0.0f,
+                        Agility = 0,
+                        Armor = 4,
+                        AttackDamage = 20,
+                        MagicDamage = 0,
+                        Intellect = 0,
+                        Stamina = 2,
+                        Strength = 3,
+                        CharacterClass = context.CharacterClasss.FirstOrDefault(ch => ch.Name.Equals("Warrior"))
+                    });
+                }
             }
         }
 
@@ -92,14 +154,11 @@
             // Assign user to role
             userManager.AddToRole(user.Id, GlobalConstants.UserRoleName);
 
-            Random rand = new Random();
             var character = new Character
             {
                 Name = "Peshkircho",
-                RandomNumber = rand.Next(1000),
                 User = user,
-                MaxHealth = 100,
-                MaxResource = 80,
+                Class = context.CharacterClasss.FirstOrDefault(ch => ch.Name.Equals("Elemental"))
             };
 
             user.Characters = new List<Character>();

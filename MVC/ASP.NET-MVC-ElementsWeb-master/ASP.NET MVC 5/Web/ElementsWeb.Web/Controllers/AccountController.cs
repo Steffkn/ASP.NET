@@ -4,13 +4,11 @@
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
-
+    using ElementsWeb.Data.Models;
+    using ElementsWeb.Web.ViewModels.Account;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.Owin;
     using Microsoft.Owin.Security;
-
-    using ElementsWeb.Data.Models;
-    using ElementsWeb.Web.ViewModels.Account;
 
     [Authorize]
     public class AccountController : BaseController

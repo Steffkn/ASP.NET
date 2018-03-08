@@ -60,7 +60,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationUser.cs" />
+    <Compile Include="BaseAtributes.cs" />
     <Compile Include="Character.cs" />
+    <Compile Include="CharacterClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerSettings.cs" />
   </ItemGroup>

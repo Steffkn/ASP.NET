@@ -4,12 +4,10 @@
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
-
+    using ElementsWeb.Web.ViewModels.Manage;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.Owin;
     using Microsoft.Owin.Security;
-
-    using ElementsWeb.Web.ViewModels.Manage;
 
     [Authorize]
     public class ManageController : BaseController

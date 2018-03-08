@@ -1,5 +1,8 @@
-﻿namespace ElementsWeb.Web.Controllers
+﻿using System.Security.Claims;
+
+namespace ElementsWeb.Web.Controllers
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web;
@@ -7,18 +10,18 @@
     using ElementsWeb.Data.Models;
     using ElementsWeb.Services.Data.Interfaces;
     using ElementsWeb.Web.Infrastructure.Mapping;
+    using ElementsWeb.Web.ViewModels.API;
     using ElementsWeb.Web.ViewModels.Home;
     using Microsoft.AspNet.Identity.Owin;
-    using ElementsWeb.Web.ViewModels.API;
 
-    public class APIController : BaseController
+    public class ApiController : BaseController
     {
         private readonly IUserService users;
         private readonly ICharacterService characters;
 
         private ApplicationSignInManager signInManager;
 
-        public APIController(
+        public ApiController(
             IUserService users,
             ICharacterService characters,
             ApplicationSignInManager signInManager)
@@ -28,18 +31,11 @@
             this.SignInManager = signInManager;
         }
 
-
         public ApplicationSignInManager SignInManager
         {
-            get
-            {
-                return this.signInManager ?? this.HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-            }
+            get { return this.signInManager ?? this.HttpContext.GetOwinContext().Get<ApplicationSignInManager>(); }
 
-            private set
-            {
-                this.signInManager = value;
-            }
+            private set { this.signInManager = value; }
         }
 
         // GET: API
@@ -48,6 +44,7 @@
             return this.Json(new { Results = "Error" }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
         public JsonResult GetCharacters(string username)
         {
             var characters = this.characters.GetAllByUserName(username).To<CharacterViewModel>().ToList();
@@ -58,17 +55,18 @@
         [AllowAnonymous]
         public JsonResult CreateCharacter(string foo)
         {
-            //var characterJson = System.Web.Helpers.Json.Decode(json);
-            //string userName = (string)characterJson.UserName;
-
+            // var characterJson = System.Web.Helpers.Json.Decode(json);
+            // string userName = (string)characterJson.UserName;
             var data = foo.Split(new char[] { '_' });
             string userName = data[0];
             string characterName = data[1];
-            var userko = this.users.GetAll().Where(u => u.UserName == userName).FirstOrDefault();
-
+            var userko = this.users.GetAll().FirstOrDefault(u => u.UserName == userName);
             var newCharacter = new Character()
             {
                 Name = characterName,
+                Level = 1,
+                CurentExperiense = 0,
+                CreatedOn = DateTime.UtcNow,
             };
 
             this.users.CreateCharacter(userko.Id, newCharacter);
@@ -80,29 +78,45 @@
         // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
-        //[ValidateAntiForgeryToken]
         public async Task<JsonResult> LogIn(string input)
         {
             var data = input.Split(new char[] { '_' });
             string userName = data[0];
             string passowrd = data[1];
 
-            //// This doesn't count login failures towards account lockout
-            //// To enable password failures to trigger account lockout, change to shouldLockout: true
+            string[] computer_name = System.Net.Dns.GetHostEntry(Request.ServerVariables["remote_addr"]).HostName.Split(new Char[] { '.' });
+            String ecn = System.Environment.MachineName;
+            // JsonSerializer js = new JsonSerializer();
+            // JsonReader j = new JsonTextReader(TextReader.Null);
+            // object o = js.Deserialize(j);
+
+            // This doesn't count login failures towards account lockout
+            // To enable password failures to trigger account lockout, change to shouldLockout: true
             var result = await this.SignInManager.PasswordSignInAsync(
                 userName,
                 passowrd,
                 isPersistent: false,
                 shouldLockout: false);
 
-            var characters = this.characters.GetAllByUserName(userName).To<SimpleCharacterViewModel>().ToArray();
+            var user = this.users.GetAll().FirstOrDefault(u => u.UserName == userName);
 
-            var userId = this.users.GetAll().Where(u => u.UserName == userName).FirstOrDefault().Id;
+            if (user == null)
+            {
+                result = SignInStatus.RequiresVerification;
+            }
 
             switch (result)
             {
                 case SignInStatus.Success:
-                    return this.Json(new { Results = true, Characters = characters, UserId = userId }, JsonRequestBehavior.AllowGet);
+                    var characters = this.characters.GetAllByUserName(userName).To<SimpleCharacterViewModel>().ToArray();
+                    return this.Json(
+                        new
+                        {
+                            Results = true,
+                            Characters = characters,
+                            UserId = user.Id,
+                            Claims = computer_name[0].ToString()
+                        }, behavior: JsonRequestBehavior.AllowGet);
                 case SignInStatus.LockedOut:
                     return this.Json(new { Results = false }, JsonRequestBehavior.AllowGet);
                 case SignInStatus.RequiresVerification:
@@ -126,13 +140,9 @@
 
             if (userId != string.Empty || userId != null)
             {
-
                 var newCharacter = new Character()
                 {
                     Name = input,
-                    MaxHealth = 100,
-                    MaxResource = 100,
-                    RandomNumber = 666
                 };
 
                 this.users.CreateCharacter(userId, newCharacter);
